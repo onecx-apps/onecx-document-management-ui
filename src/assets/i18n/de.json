@@ -1,0 +1,345 @@
+{
+  "GENERAL": {
+    "YES": "Ja",
+    "NO": "Nein",
+    "ACTION": "Aktion",
+    "CREATE": "Erstellen",
+    "ADD": "hinzufügen",
+    "SAVE": "Speichern",
+    "EDIT": "Bearbeitung",
+    "CLOSE": "Schließen",
+    "DELETE": "Löschen",
+    "SUBMIT": "Abschicken",
+    "NEXT": "Weiter",
+    "CANCEL": "Abbruch",
+    "BACK": "Zurück",
+    "FORM_INVALID": "Fehler, Formular ist ungültig.",
+    "DOWNLOAD": "Herunterladen",
+    "DOWNLOAD_ZIP": "ZIP herunterladen",
+    "SORT": "Sortieren",
+    "PROCESSING": "Wird bearbeitet...",
+    "NAME": "Name",
+    "CONFIRM": "Bestätigen",
+    "REMOVE": "Entfernen",
+    "SUCCESS": "Erfolg",
+    "FAILED": "Fehlgeschlagen",
+    "LOAD_MORE": "Mehr laden"
+  },
+  "DOCUMENT_MORE": {
+    "DOCUMENT_BULK": "Massenänderungen"
+  },
+  "DOCUMENT_MENU": {
+    "DOCUMENT_CREATE": {
+      "HEADER": "Dokument-Erstellung",
+      "CREATE_SUCCESS": "Das Dokument wurde erfolgreich erstellen.",
+      "CREATE_ERROR": "Fehler, das Dokument konnte nicht erstellen werden."
+    },
+    "DOCUMENT_MORE": {
+      "DOCUMENT_BULK": {
+        "HEADER": "Massenänderungen",
+        "CHOOSE_DOCUMENT": "Wählen Sie Dokumente",
+        "CHOOSE_MODIFICATION": "Wählen Sie Modifikation",
+        "MODIFICATION_CONFIRMATION": "Änderungsdetails und Bestätigung bei Aktualisierungen",
+        "UPDATE_MODIFICATION_DETAILS": "Modification Details & Confirmation on updates",
+        "UPDATE_MODIFICATION_NOTIFICATION": "The modified data will be updated in selected documents"
+      },
+      "DOCUMENT_MODIFICATION": {
+        "EDIT_DOCUMENTS": "Dokumentdetails bearbeiten",
+        "DELETE_DOCUMENTS": "Dokumente löschen",
+        "ADD_ATTACHMENTS": "Anhänge hinzufügen",
+        "DELETE_ATTACHMENTS": "Anhänge löschen",
+        "DOWNLOAD_ATTACHMENTS": "Anhänge herunterladen",
+        "ADD_CHARACTERISTICS": "Merkmale hinzufügen",
+        "DELETE_CHARACTERISTICS": "Merkmale löschen",
+        "EDIT_DOCUMENTS_DESC": "Aktualisiert Feldwerte ausgewählter Dokumente",
+        "DELETE_DOCUMENTS_DESC": "Löscht die ausgewählten Dokumente",
+        "ADD_ATTACHMENTS_DESC": "Fügen Sie der bestehenden Anhangsliste einen oder mehrere Anhänge hinzu",
+        "DELETE_ATTACHMENTS_DESC": "Löschen Sie einen oder mehrere Anhänge aus der bestehenden Anhangsliste",
+        "DOWNLOAD_ATTACHMENTS_DESC": "Lädt alle vorhandenen Anhänge ausgewählter Dokumente in einer ZIP-Datei herunter",
+        "ADD_CHARACTERISTICS_DESC": "Fügen Sie den vorhandenen Merkmalen von Dokumenten ein oder mehrere Merkmale hinzu",
+        "DELETE_CHARACTERISTICS_DESC": "Löschen Sie ein oder mehrere Merkmale aus den vorhandenen Merkmalen von Dokumenten"
+      },
+      "SELECTED_DOCUMENTS": {
+        "UPDATE_SUCCESS": "Ausgewählte(s) Dokument(e) erfolgreich aktualisiert",
+        "DELETE_SUCCESS": "Ausgewählte(s) Dokument(e) erfolgreich gelöscht",
+        "BULK_ERROR": "Massenänderungen fehlgeschlagen"
+      }
+    },
+    "BULK_CHANGE": {
+      "HEADER": "Massenänderungen",
+      "CHOOSE_DOCUMENT": "Wählen Sie Dokumente",
+      "CHOOSE_MODIFICATION": "Wählen Sie Modifikation",
+      "MODIFICATION_CONFIRMATION": "Änderungsdetails und Bestätigung bei Aktualisierungen",
+      "DELETE_DOCUMENT_NOTIFICATION": "Die folgenden Dokumente werden gelöscht"
+    },
+    "DOCUMENT_EXPORT": "Exportieren Sie alle Dokumente",
+    "DOCUMENT_EDIT": {
+      "HEADER": "Dokument-Bearbeitung",
+      "SUBHEADER": "Dokument",
+      "TYPE": "Dokumentenart",
+      "CREATED_BY": "Erstellt von",
+      "CREATED_ON": "Erstellt am",
+      "STATUS": "Status",
+      "DOCUMENT_DETAILS": "Dokumentdetails",
+      "RELATED_OBJECT": "Verwandtes Objekt",
+      "ATTACHMENT": "Anhänge",
+      "CHARACTERISTICS": "Eingenschaften",
+      "UPDATE_SUCCESS": "Das Dokument wurde erfolgreich aktualisieren.",
+      "UPDATE_ERROR": "Fehler, das Dokument konnte nicht aktualisieren werden.",
+      "FETCH_ERROR": "Das Dokument konnte nicht abgerufen werden",
+      "EMPTY_REQUIRED_FIELD_ERROR": "Pflichtfelder fehlen",
+      "NEGATIVE_VALUE_ERROR": "Negative Werte sind nicht zulässig.",
+      "INVALID_VALUE_ERROR": "Bitte geben Sie einen gültigen Wert ein."
+    },
+    "DOCUMENT_DELETE": {
+      "DELETE_HEADER": "Löschen ein Dokument",
+      "DELETE_MESSAGE": "Sind Sie sicher, dass Sie dieses Dokument löschen möchten?",
+      "DELETE_SUCESS": "Das Dokument wurde erfolgreich gelöscht.",
+      "DELETE_ERROR": "Fehler, das Dokument konnte nicht gelöscht werden."
+    },
+    "BREADCRUMB": "Dokument-Verwaltung"
+  },
+  "DOCUMENT_DETAIL": {
+    "HEADER": "Dokumentdetails",
+    "SUBHEADER": "Verwandtes Objekt",
+    "COLUMN_TEMPLATES": {
+      "PLACEHOLDER": "Table View",
+      "EXTENDED": "Extended",
+      "FULL": "Full"
+    },
+    "DOCUMENT_CANCEL_MODAL": {
+      "CANCEL_CONFIRM_MESSAGE": "Nicht gespeicherte Daten gehen verloren und das Dokument wird nicht erstellt. Möchten Sie abbrechen?"
+    },
+    "ACCORDION_HEADERS": {
+      "TAGS": "Tags",
+      "CHANNEL": "Kanal",
+      "ATTACHMENTS": "Anhänge",
+      "CATEGORIES": "Kategorien",
+      "CHARACTERISTICS": "Eingenschaften",
+      "RELATED_OBJECT": "Verwandtes Objekt",
+      "RELATED_PARTIES": "Beteiligte Parteien",
+      "DOCUMENT_RELATIONSHIP": "Dokumentbeziehung"
+    },
+    "BULK_UPDATE": {
+      "UPDATE_MODIFICATION_DETAILS": "Änderungsdetails und Bestätigung bei Aktualisierungen",
+      "UPDATE_MODIFICATION_CAPTION": "Die geänderten Daten werden in ausgewählten Dokumenten aktualisiert",
+      "UPDATE_DOCUMENT_TYPE": "Dokumenttyp aktualisieren",
+      "UPDATE_DOCUMENT_VERSION": "Version aktualisieren",
+      "UPDATE_DOCUMENT_CHANNEL": "Kanal aktualisieren",
+      "UPDATE_DOCUMENT_SPECIFICATION": "Spezifikation aktualisieren",
+      "UPDATE_DOCUMENT_STATUS": "Status aktualisieren",
+      "UPDATE_DOCUMENT_INVOLVEMENT": "Beteiligung aktualisieren",
+      "UPDATE_OBJECT_REFERENCE_TYPE": "Objektreferenztyp aktualisieren",
+      "UPDATE_OBJECT_REFERENCE_ID": "Objektreferenz-ID aktualisieren",
+      "UPDATE_ATTACHMENT_VALIDITY": "Gültigkeit des Anhangs aktualisieren",
+      "UPDATE_DOCUMENT_DESCRIPTION": "Dokumentbeschreibung aktualisieren",
+      "UPDATE_ATTACHMENT_DESCRIPTION": "Anhangsbeschreibung aktualisieren",
+      "VALIDITY_INFO": " Die Gültigkeit wird nur in den Dokumenten aktualisiert, die Anhänge haben",
+      "ATTACHMENT_DESCRIPTION_INFO": " Die Beschreibung wird nur in den Dokumenten aktualisiert, die Anhänge haben"
+    },
+    "BASIC_FIELDS": {
+      "DOCUMENT_NAME": "Dokumentname",
+      "DOCUMENT_TYPE": "Dokumentenart",
+      "DOCUMENT_VERSION": "Ausführung",
+      "DOCUMENT_CHANNEL": "Kanal",
+      "DOCUMENT_SPECIFICATION": "Spezifizierung",
+      "DOCUMENT_STATUS": "Status",
+      "DOCUMENT_DESCRIPTION": "Beschreibung"
+    },
+    "CHANNEL": {
+      "NAME": "Kanalname"
+    },
+    "CATEGORY": {
+      "NAME": "Kategoriename",
+      "VERSION": "Kategorie Version"
+    },
+    "RELATED_PARTY_REF": {
+      "ID": "Id",
+      "NAME": "Name",
+      "ROLE": "Rolle",
+      "VALID_FROM": "Gültig von",
+      "VALID_TO": "Gültig bis"
+    },
+    "RELATED_OBJECT": {
+      "INVOLVEMENT": "Engagement",
+      "OBJECT_REFERENCE_TYPE": "Objektreferenz Typ",
+      "OBJECT_REFERENCE_ID": "Objektreferenz-ID"
+    },
+    "ATTACHMENTS": {
+      "HEADER": "Anhänge hinzufügen",
+      "NAME": "Name",
+      "DESCRIPTION": "Beschreibung",
+      "UNIT": "Einheit",
+      "TYPE": "Typ",
+      "SIZE": "Größe",
+      "VALIDITY": "Gültigkeit",
+      "TIME_PERIOD": "Zeitraum",
+      "STORAGE": "Speicher",
+      "STORAGE_URL": "Speicher-URL",
+      "MIME_TYPE": "Mime Typ",
+      "UPLOAD_SUCCESS": "Datei erfolgreich hochgeladen",
+      "UPLOAD_ERROR": "Datei konnte nicht hochgeladen werden",
+      "DELETE_SUCCESS": "Datei erfolgreich gelöscht",
+      "DELETE_ERROR": "Datei konnte nicht gelöscht werden",
+      "CHOOSE_BTN_TITLE": "Wählen",
+      "ALLOWED_FILETYPE_MESSAGE": "Erlaubte Dateitypen: Word, Excel, PPT, PDF, Bild, Video, Audio",
+      "ALLOWED_FILESIZE_MESSAGE": "Größenbeschränkung: bis zu 2 MB",
+      "FILESIZE_ERROR_MESSAGE": "Die Dateigröße überschreitet die maximale Grenze. Die maximal zulässige Dateigröße beträgt 2 MB",
+      "DRAG_DROP": "Dateien per Drag & Drop hierher ziehen",
+      "OR": "oder",
+      "FILE_SIZE_LIMIT": "Überschreitet die Größenbeschränkung von 2 MB",
+      "UPLOAD_STATUS": "Upload-Status"
+    },
+    "RELATIONSHIP": {
+      "NAME": "Name",
+      "TYPE": "Typ",
+      "DOCUMENT_REF_ID": "Dokumentreferenz-ID"
+    },
+    "CHARACTERISTICS": {
+      "HEADER": "Merkmale hinzufügen",
+      "NAME": "Name",
+      "VALUE": "Wert"
+    },
+    "MULTIPLE_ATTACHMENTS": {
+      "UPLOAD_SUCCESS": "Datei(en) erfolgreich hochgeladen",
+      "UPLOAD_ERROR": "Datei(en) konnte nicht hochgeladen werden",
+      "DELETE_SUCCESS": "Datei(en) erfolgreich gelöscht",
+      "DELETE_ERROR": "Datei(en) konnte nicht gelöscht werden",
+      "NO_DATA": "Keine Anhänge gefunden"
+    }
+  },
+  "DOCUMENT_TIMELINE": {
+    "TITLE": "Status des Lebenszyklus",
+    "MISSING_TIMELINE": "Es ist kein Zeitplan verfügbar"
+  },
+  "DOCUMENT_SEARCH": {
+    "HEADER": "Suchen eines Dokument",
+    "QUICK_UPLOAD": "Schnelles Hochladen",
+    "CREATE_DOCUMENT": "Neues Dokument erstellen",
+    "MSG_NO_RESULTS": "Die Suche ergab keine Treffer.",
+    "CRITERIA": {
+      "NAME": "Dokumentname",
+      "DOCUMENT_ID": "Dokument-ID",
+      "DOCUMENT_TYPE": "Typ",
+      "DOCUMENT_STATE": "Status",
+      "DOCUMENT_START_DATE": "Erstellt von",
+      "DOCUMENT_END_DATE": "Erstellt für",
+      "DOCUMENT_CREATEDBY": "Erstellt von",
+      "DOCUMENT_OBJECTREFERENCEID": "Objektreferenz-ID",
+      "DOCUMENT_OBJECTREFERENCETYPE": "Objektreferenztyp",
+      "CHANNEL": "Kanal",
+      "SEARCH": "Suchen",
+      "SEARCH_TOOLTIP": "Suchen nach Dokumente mit vorgegeben Kriterien",
+      "RESET": "Zurücksetzen",
+      "RESET_TOOLTIP": "Löschen die vorgegebenen Kriterien"
+    },
+    "TABLE": {
+      "HEADER": {
+        "NAME": "Name",
+        "DESCRIPTION": "Beschreibung",
+        "DOCUMENT_TYPE": "Typ",
+        "CHANNEL": "Kanal",
+        "DOCUMENT_STATE": "Status",
+        "DOCUMENT_SPECIFICATION": "Spezifizierung",
+        "DOCUMENT_VERSION": "Version",
+        "ACTIONS": "Aktionen",
+        "MODIFICATION_DATE": "Änderungsdatum",
+        "EDITED": "Bearbeitet"
+      }
+    },
+    "DELETE_DOCUMENT": "Dieses Dokument löschen"
+  },
+  "RESULTS": {
+    "NO_DATA": "Keine Dokumente gefunden",
+    "EDITED": "Bearbeitet",
+    "TITLE": "Titel",
+    "DATE_CREATED": "Datum erstellt",
+    "LAST_MODIFIED": "Zuletzt bearbeitet",
+    "CREATED": "Erstellt von",
+    "CREATED_ON": "Erstellt am",
+    "NAME": "Dokumentname",
+    "DOCUMENT_TYPE": "Dokumentenart",
+    "STATUS": "Status",
+    "MODIFICATION_DATE": "Änderungsdatum",
+    "VERSION": "Version"
+  },
+  "DELETE_DOCUMENT": {
+    "DELETE_MESSAGE": "Möchten Sie dieses Dokument wirklich löschen?",
+    "SUCCESS": "Dokument erfolgreich gelöscht",
+    "ERROR": "Dokument nicht gelöscht"
+  },
+  "DOCUMENT_SPECIFICATION": {
+    "HEADERS": {
+      "CREATE": "Dokumentspezifikation-Erstellung",
+      "EDIT": "Dokumentspezifikation-Bearbeitung",
+      "LIST": "Dokumentspezifikation"
+    },
+    "FIELDS": {
+      "NAME": "Spezifikationsname",
+      "VERSION": "Spezifikation Version"
+    },
+    "CREATE": {
+      "CREATE_SUCCESS": "Das Dokumentspezifikation wurde erfolgreich erstellen.",
+      "CREATE_ERROR": "Fehler, das Dokumentspezifikation konnte nicht erstellen werden."
+    },
+    "EDIT": {
+      "UPDATE_SUCCESS": "Das Dokumentspezifikation wurde erfolgreich aktualisieren.",
+      "UPDATE_ERROR": "Fehler, das Dokumentspezifikation konnte nicht aktualisieren werden."
+    },
+    "DELETE": {
+      "DELETE_HEADER": "Löschen ein Dokumentspezifikation",
+      "MESSAGE": "Sind Sie sicher, dass Sie dieses Dokumentspezifikation löschen möchten?",
+      "DELETE_SUCCESS": "Das Dokumentspezifikation wurde erfolgreich gelöscht.",
+      "DELETE_ERROR": "Fehler, das Dokumentspezifikation konnte nicht gelöscht werden."
+    }
+  },
+  "MIME_TYPE": {
+    "HEADERS": {
+      "CREATE": "Anhang Mime Typ-Erstellung",
+      "EDIT": "Anhang Mime Typ-Bearbeitung",
+      "LIST": "Anhang Mime Typ"
+    },
+    "FIELDS": {
+      "NAME": "Name",
+      "DESCRIPTION": "Beschreibung"
+    },
+    "CREATE": {
+      "CREATE_SUCCESS": "Das Mime Typ wurde erfolgreich erstellen.",
+      "CREATE_ERROR": "Fehler, das Mime Typ konnte nicht erstellen werden."
+    },
+    "EDIT": {
+      "UPDATE_SUCCESS": "Das Mime Typ wurde erfolgreich aktualisieren.",
+      "UPDATE_ERROR": "Fehler, das Mime Typ konnte nicht aktualisieren werden."
+    },
+    "DELETE": {
+      "DELETE_HEADER": "Löschen ein Mime Typ",
+      "MESSAGE": "Sind Sie sicher, dass Sie dieses Mime Typ löschen möchten?",
+      "DELETE_SUCCESS": "Das Mime Typ wurde erfolgreich gelöscht.",
+      "DELETE_ERROR": "Fehler, das Mime Typ konnte nicht gelöscht werden."
+    }
+  },
+  "DOCUMENT_TYPE": {
+    "HEADERS": {
+      "CREATE": "Dokumenttyp-Erstellung",
+      "EDIT": "Dokumenttyp-Bearbeitung",
+      "LIST": "Dokumenttyp"
+    },
+    "FIELDS": {
+      "NAME": "Name"
+    },
+    "CREATE": {
+      "CREATE_SUCCESS": "Das Dokumenttyp wurde erfolgreich erstellen.",
+      "CREATE_ERROR": "Fehler, das Dokumenttyp konnte nicht erstellen werden."
+    },
+    "EDIT": {
+      "UPDATE_SUCCESS": "Das Dokumenttyp wurde erfolgreich aktualisieren.",
+      "UPDATE_ERROR": "Fehler, das Dokumenttyp konnte nicht aktualisieren werden."
+    },
+    "DELETE": {
+      "DELETE_HEADER": "Löschen ein Dokumenttyp",
+      "MESSAGE": "Sind Sie sicher, dass Sie dieses Dokumenttyp löschen möchten?",
+      "DELETE_SUCCESS": "Das Dokumenttyp wurde erfolgreich gelöscht.",
+      "DELETE_ERROR": "Fehler, das Dokumenttyp konnte nicht gelöscht werden."
+    }
+  }
+}

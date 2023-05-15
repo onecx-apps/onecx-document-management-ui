@@ -1,0 +1,22 @@
+::ng-deep .p-menu-list {
+  min-width: max-content !important ;
+}
+
+.next-button {
+  float: right;
+  top: -4rem;
+  right: 1rem;
+}
+
+.next-button-view {
+  float: right;
+  top: -3.25rem;
+  right: 1rem;
+}
+
+@media screen and (min-width: 768px) {
+  app-criteria {
+    width: 790px;
+    margin-right: 10px;
+  }
+}

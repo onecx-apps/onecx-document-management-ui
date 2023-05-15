@@ -1,0 +1,20 @@
+#attachmentDescription,
+#documentDescription {
+  resize: none !important;
+  min-height: 9rem;
+}
+.alert-danger {
+  color: var(--error-color);
+}
+
+.remaning {
+  float: right;
+}
+.info-icon {
+  background-color: rgb(21, 116, 147);
+  border-radius: 50%;
+  color: white;
+}
+::ng-deep .p-calendar-clear-icon {
+  right: 0.5rem;
+}

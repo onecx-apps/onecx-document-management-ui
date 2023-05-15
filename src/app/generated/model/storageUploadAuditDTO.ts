@@ -1,0 +1,31 @@
+export interface storageUploadAuditDTO {
+  attachmentDescription?: string;
+  attachmentId?: string;
+  channelId?: string;
+  channelName?: string;
+  controlTraceabilityManual?: boolean;
+  creationDate?: string;
+  creationUser?: string;
+  documentDescription?: string;
+  documentId?: string;
+  documentName?: string;
+  documentTypeId?: string;
+  documentTypeName?: string;
+  documentVersion?: string;
+  fileName?: string;
+  id?: string;
+  involvement?: string;
+  lifeCycleState?: string;
+  mimeTypeId?: string;
+  mimeTypeName?: string;
+  modificationCount?: number;
+  modificationDate?: string;
+  modificationUser?: string;
+  name?: string;
+  objectReferenceId?: string;
+  objectReferenceType?: string;
+  persisted?: boolean;
+  relatedObjectId?: string;
+  specificationId?: string;
+  specificationName?: string;
+}

@@ -1,0 +1,34 @@
+<h6 class="text-lg font-medium">{{ 'DOCUMENT_TIMELINE.TITLE' | translate }}</h6>
+<div
+  *ngIf="
+    this.documentStatusList && this.documentStatusList.length !== 0;
+    else noContent
+  "
+>
+  <p-timeline [value]="documentStatusList" styleClass="customized-timeline">
+    <ng-template pTemplate="content" let-entry>
+      <div
+        [ngClass]="
+          entry.value === this.documentStatus
+            ? 'current-status-timeline'
+            : 'customized-timeline'
+        "
+      >
+        <div class="card mb-2">
+          <div class="flex-column flex-wrap">
+            <div class="text-2xl font-bold mb-2">
+              {{ entry.value }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </p-timeline>
+</div>
+<ng-template #noContent>
+  <p-message
+    class="flex justify-content-center align-self-start mt-3"
+    severity="info"
+    text="{{ 'DOCUMENT_TIMELINE.MISSING_TIMELINE' | translate }}"
+  ></p-message>
+</ng-template>

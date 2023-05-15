@@ -1,0 +1,18 @@
+apiVersion: v2
+name: onecx-document-management-ui
+version: 999-SNAPSHOT
+appVersion: 999-SNAPSHOT
+description: onecx document management ui
+keywords:
+  - ${project.name}
+sources:
+  - https://github.com/onecx-apps/onecx-document-management-ui
+maintainers:
+  - name: Tkit Developer
+    email: tkit_dev@1000kit.org
+dependencies:
+  # https://gitlab.com/1000kit/infra/helm/angular.git
+  - name: angular
+    version: ^0
+    repository: alias:1000kit
+    alias: app

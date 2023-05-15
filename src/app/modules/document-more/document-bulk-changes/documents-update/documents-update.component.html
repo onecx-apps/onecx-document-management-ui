@@ -1,0 +1,508 @@
+<h4 class="mb-1">
+  {{ 'DOCUMENT_DETAIL.BULK_UPDATE.UPDATE_MODIFICATION_DETAILS' | translate }}
+</h4>
+<p class="mb-2">
+  <i class="pi pi-info-circle info-icon"></i>
+  {{ 'DOCUMENT_DETAIL.BULK_UPDATE.UPDATE_MODIFICATION_CAPTION' | translate }}
+</p>
+<form [formGroup]="documentBulkUpdateForm" class="pb-4" errorTailor>
+  <div class="grid p-fluid">
+    <div class="col-12 sm:col-6">
+      <div class="grid p-fluid">
+        <div class="col-12 sm:col-6">
+          <p-checkbox
+            [disabled]="isSubmitting ? true : null"
+            (onChange)="
+              onCheckField(
+                'typeId',
+                documentBulkUpdateForm?.controls['typeId']?.value
+              );
+              getCheckedStatus('typeId', $event)
+            "
+            [binary]="true"
+          ></p-checkbox>
+          {{ 'DOCUMENT_DETAIL.BULK_UPDATE.UPDATE_DOCUMENT_TYPE' | translate }}
+        </div>
+        <div class="col-12 sm:col-6">
+          <span class="p-float-label" controlErrorAnchor>
+            <p-dropdown
+              (onChange)="clearField($event, 'typeId', 2)"
+              id="type"
+              [options]="documentTypes"
+              appendTo="body"
+              [autoDisplayFirst]="false"
+              [showClear]="true"
+              formControlName="typeId"
+            ></p-dropdown>
+            <label for="type">{{
+              'DOCUMENT_DETAIL.BASIC_FIELDS.DOCUMENT_TYPE' | translate
+            }}</label>
+          </span>
+          <span class="alert alert-danger">{{ inputMessage['typeId'] }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 sm:col-6">
+      <div class="grid p-fluid">
+        <div class="col-12 sm:col-6">
+          <p-checkbox
+            [binary]="true"
+            [disabled]="isSubmitting ? true : null"
+            (onChange)="
+              onCheckField(
+                'documentVersion',
+                documentBulkUpdateForm?.controls['documentVersion']?.value
+              );
+              getCheckedStatus('documentVersion', $event)
+            "
+          ></p-checkbox>
+          {{
+            'DOCUMENT_DETAIL.BULK_UPDATE.UPDATE_DOCUMENT_VERSION' | translate
+          }}
+        </div>
+        <div class="col-12 sm:col-6">
+          <span class="p-float-label" controlErrorAnchor>
+            <input
+              (keyup)="clearField($event, 'documentVersion', 1)"
+              (click)="clearField($event, 'documentVersion', 1)"
+              id="version"
+              pInputText
+              maxlength="10"
+              min="0"
+              (keypress)="onKeyDocVersionPress($event)"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              (keyup)="onKeyDocVersionUp($event)"
+              type="number"
+              formControlName="documentVersion"
+            />
+            <label for="version">{{
+              'DOCUMENT_DETAIL.BASIC_FIELDS.DOCUMENT_VERSION' | translate
+            }}</label>
+          </span>
+          <span class="alert alert-danger">{{
+            inputMessage['documentVersion']
+          }}</span>
+          <span
+            *ngIf="
+              documentBulkUpdateForm?.controls['documentVersion']?.invalid &&
+              (documentBulkUpdateForm?.controls['documentVersion']?.dirty ||
+                documentBulkUpdateForm?.controls['documentVersion']?.touched)
+            "
+            class="alert alert-danger"
+          >
+            <span
+              *ngIf="documentBulkUpdateForm?.controls['documentVersion']?.errors?.['min']"
+            >
+              {{
+                'DOCUMENT_MENU.DOCUMENT_EDIT.INVALID_VALUE_ERROR' | translate
+              }}
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 sm:col-6">
+      <div class="grid p-fluid">
+        <div class="col-12 sm:col-6">
+          <p-checkbox
+            [disabled]="isSubmitting ? true : null"
+            (onChange)="
+              onCheckField(
+                'channelname',
+                documentBulkUpdateForm?.controls['channelname']?.value
+              );
+              getCheckedStatus('channelname', $event)
+            "
+            [binary]="true"
+          ></p-checkbox>
+          {{
+            'DOCUMENT_DETAIL.BULK_UPDATE.UPDATE_DOCUMENT_CHANNEL' | translate
+          }}
+        </div>
+        <div class="col-12 sm:col-6">
+          <span class="p-float-label" controlErrorAnchor>
+            <input
+              (keyup)="clearField($event, 'channelname', 1)"
+              id="channel"
+              pInputText
+              maxlength="60"
+              type="text"
+              formControlName="channelname"
+              (keypress)="preventSpace($event)"
+              (paste)="trimSpaceOnPaste($event, 'channelname', 60)"
+            />
+            <label for="channel">{{
+              'DOCUMENT_DETAIL.BASIC_FIELDS.DOCUMENT_CHANNEL' | translate
+            }}</label>
+          </span>
+          <span class="alert alert-danger">{{
+            inputMessage['channelname']
+          }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 sm:col-6">
+      <div class="grid p-fluid">
+        <div class="col-12 sm:col-6">
+          <p-checkbox
+            [binary]="true"
+            [disabled]="isSubmitting ? true : null"
+            (onChange)="
+              onCheckField(
+                'specificationName',
+                documentBulkUpdateForm?.controls['specificationName']?.value
+              );
+              getCheckedStatus('specificationName', $event)
+            "
+          ></p-checkbox>
+          {{
+            'DOCUMENT_DETAIL.BULK_UPDATE.UPDATE_DOCUMENT_SPECIFICATION'
+              | translate
+          }}
+        </div>
+        <div class="col-12 sm:col-6">
+          <span class="p-float-label" controlErrorAnchor>
+            <input
+              (keyup)="clearField($event, 'specificationName', 1)"
+              id="specification"
+              pInputText
+              maxlength="60"
+              type="text"
+              formControlName="specificationName"
+              (keypress)="preventSpace($event)"
+              (paste)="trimSpaceOnPaste($event, 'specificationName', 60)"
+            />
+            <label for="specification">{{
+              'DOCUMENT_DETAIL.BASIC_FIELDS.DOCUMENT_SPECIFICATION' | translate
+            }}</label>
+          </span>
+          <span class="alert alert-danger">{{
+            inputMessage['specificationName']
+          }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 sm:col-6">
+      <div class="grid p-fluid">
+        <div class="col-12 sm:col-6">
+          <p-checkbox
+            [binary]="true"
+            [disabled]="isSubmitting ? true : null"
+            (onChange)="
+              onCheckField(
+                'lifeCycleState',
+                documentBulkUpdateForm?.controls['lifeCycleState']?.value
+              );
+              getCheckedStatus('lifeCycleState', $event)
+            "
+          ></p-checkbox>
+          {{ 'DOCUMENT_DETAIL.BULK_UPDATE.UPDATE_DOCUMENT_STATUS' | translate }}
+        </div>
+        <div class="col-12 sm:col-6">
+          <span class="p-float-label" controlErrorAnchor>
+            <p-dropdown
+              (onChange)="clearField($event, 'lifeCycleState', 2)"
+              id="status"
+              [options]="documentStatus"
+              appendTo="body"
+              [autoDisplayFirst]="false"
+              [showClear]="true"
+              formControlName="lifeCycleState"
+            ></p-dropdown>
+            <label for="status">{{
+              'DOCUMENT_DETAIL.BASIC_FIELDS.DOCUMENT_STATUS' | translate
+            }}</label>
+          </span>
+          <span class="alert alert-danger">{{
+            inputMessage['lifeCycleState']
+          }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 sm:col-6">
+      <div class="grid p-fluid">
+        <div class="col-12 sm:col-6">
+          <p-checkbox
+            (onChange)="
+              onCheckField(
+                'involvement',
+                documentBulkUpdateForm?.controls['involvement']?.value
+              );
+              getCheckedStatus('involvement', $event)
+            "
+            [disabled]="isSubmitting ? true : null"
+            [binary]="true"
+          ></p-checkbox>
+          {{
+            'DOCUMENT_DETAIL.BULK_UPDATE.UPDATE_DOCUMENT_INVOLVEMENT'
+              | translate
+          }}
+        </div>
+        <div class="col-12 sm:col-6">
+          <span class="p-float-label" controlErrorAnchor>
+            <input
+              (keyup)="clearField($event, 'involvement', 1)"
+              id="involvement"
+              pInputText
+              maxlength="60"
+              type="text"
+              [disabled]="true"
+              formControlName="involvement"
+              (keypress)="preventSpace($event)"
+              (paste)="trimSpaceOnPaste($event, 'involvement', 60)"
+            />
+            <label for="involvement">{{
+              'DOCUMENT_DETAIL.RELATED_OBJECT.INVOLVEMENT' | translate
+            }}</label>
+          </span>
+          <span class="alert alert-danger">{{
+            inputMessage['involvement']
+          }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 sm:col-6">
+      <div class="grid p-fluid">
+        <div class="col-12 sm:col-6">
+          <p-checkbox
+            [disabled]="isSubmitting ? true : null"
+            (onChange)="
+              onCheckField(
+                'reference_type',
+                documentBulkUpdateForm?.controls['reference_type']?.value
+              );
+              getCheckedStatus('reference_type', $event)
+            "
+            [binary]="true"
+          ></p-checkbox>
+          {{
+            'DOCUMENT_DETAIL.BULK_UPDATE.UPDATE_OBJECT_REFERENCE_TYPE'
+              | translate
+          }}
+        </div>
+        <div class="col-12 sm:col-6">
+          <span class="p-float-label" controlErrorAnchor>
+            <input
+              (keyup)="clearField($event, 'reference_type', 1)"
+              id="reference_type"
+              pInputText
+              maxlength="60"
+              type="text"
+              [disabled]="true"
+              formControlName="reference_type"
+              (keypress)="preventSpace($event)"
+              (paste)="trimSpaceOnPaste($event, 'reference_type', 60)"
+            />
+            <label for="reference_type">{{
+              'DOCUMENT_DETAIL.RELATED_OBJECT.OBJECT_REFERENCE_TYPE' | translate
+            }}</label>
+          </span>
+          <span class="alert alert-danger">{{
+            inputMessage['reference_type']
+          }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 sm:col-6">
+      <div class="grid p-fluid">
+        <div class="col-12 sm:col-6">
+          <p-checkbox
+            [disabled]="isSubmitting ? true : null"
+            (onChange)="
+              onCheckField(
+                'reference_id',
+                documentBulkUpdateForm?.controls['reference_id']?.value
+              );
+              getCheckedStatus('reference_id', $event)
+            "
+            [binary]="true"
+          ></p-checkbox>
+          {{
+            'DOCUMENT_DETAIL.BULK_UPDATE.UPDATE_OBJECT_REFERENCE_ID' | translate
+          }}
+        </div>
+        <div class="col-12 sm:col-6">
+          <span class="p-float-label" controlErrorAnchor>
+            <input
+              (keyup)="clearField($event, 'reference_id', 1)"
+              id="reference_id"
+              pInputText
+              maxlength="60"
+              type="text"
+              [disabled]="true"
+              formControlName="reference_id"
+              (keypress)="preventSpace($event)"
+              (paste)="trimSpaceOnPaste($event, 'reference_id', 60)"
+            />
+            <label for="referenceid">{{
+              'DOCUMENT_DETAIL.RELATED_OBJECT.OBJECT_REFERENCE_ID' | translate
+            }}</label>
+          </span>
+          <span class="alert alert-danger">{{
+            inputMessage['reference_id']
+          }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 sm:col-6">
+      <div class="grid p-fluid">
+        <div class="col-12 sm:col-6">
+          <p-checkbox
+            [disabled]="isSubmitting ? true : null"
+            (onChange)="
+              onCheckField(
+                'validity',
+                documentBulkUpdateForm?.controls['validity']?.value
+              );
+              getCheckedStatus('validity', $event)
+            "
+            [binary]="true"
+          ></p-checkbox>
+          {{
+            'DOCUMENT_DETAIL.BULK_UPDATE.UPDATE_ATTACHMENT_VALIDITY' | translate
+          }}
+        </div>
+        <div class="col-12 sm:col-6">
+          <span class="p-float-label">
+            <p-calendar
+              (keyup)="clearField($event, 'validity', 1)"
+              [appendTo]="'body'"
+              name="validity"
+              inputid="validity"
+              dateFormat="mm.dd.yy"
+              formControlName="validity"
+              showClear="true"
+              [readonlyInput]="true"
+              (onClear)="fieldReset('validity')"
+              (onSelect)="clearField($event, 'validity', 3)"
+            ></p-calendar>
+
+            <label for="validity">{{
+              'DOCUMENT_DETAIL.ATTACHMENTS.VALIDITY' | translate
+            }}</label>
+          </span>
+          <span class="alert alert-danger">{{ inputMessage['validity'] }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 sm:col-6">
+      <div class="grid p-fluid">
+        <div class="col-12 sm:col-6">
+          <i
+            class="pi pi-info-circle info-icon"
+            [pTooltip]="'DOCUMENT_DETAIL.BULK_UPDATE.VALIDITY_INFO' | translate"
+          ></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 sm:col-12 mt-3">
+      <div class="grid p-fluid">
+        <div class="col-sm-12 sm:col-3">
+          <p-checkbox
+            [disabled]="isSubmitting ? true : null"
+            (onChange)="
+              onCheckField(
+                'documentDescription',
+                documentBulkUpdateForm?.controls['documentDescription']?.value
+              );
+              getCheckedStatus('documentDescription', $event)
+            "
+            [binary]="true"
+          ></p-checkbox>
+          {{
+            'DOCUMENT_DETAIL.BULK_UPDATE.UPDATE_DOCUMENT_DESCRIPTION'
+              | translate
+          }}
+        </div>
+        <div class="col-12 sm:col-8">
+          <span class="p-float-label">
+            <textarea
+              (keyup)="clearField($event, 'documentDescription', 1)"
+              id="documentDescription"
+              rows="5"
+              cols="12"
+              maxlength="1000"
+              pInputTextarea
+              formControlName="documentDescription"
+              #myInputDocumentDescription
+              (keypress)="preventSpace($event)"
+              (paste)="trimSpaceOnPaste($event, 'documentDescription', 1000)"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+            >
+            </textarea>
+            <span class="remaning"
+              >{{ myInputDocumentDescription.value.length }} /{{ 1000 }}</span
+            >
+            <label for="documentDescription">{{
+              'DOCUMENT_DETAIL.BASIC_FIELDS.DOCUMENT_DESCRIPTION' | translate
+            }}</label>
+          </span>
+          <span class="alert alert-danger">{{
+            inputMessage['documentDescription']
+          }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 sm:col-12 mt-3">
+      <div class="grid p-fluid">
+        <div class="col-sm-12 sm:col-3">
+          <p-checkbox
+            [disabled]="isSubmitting ? true : null"
+            (onChange)="
+              onCheckField(
+                'attachmentDescription',
+                documentBulkUpdateForm?.controls['attachmentDescription']?.value
+              );
+              getCheckedStatus('attachmentDescription', $event)
+            "
+            [binary]="true"
+          ></p-checkbox>
+          {{
+            'DOCUMENT_DETAIL.BULK_UPDATE.UPDATE_ATTACHMENT_DESCRIPTION'
+              | translate
+          }}
+        </div>
+        <div class="col-12 sm:col-8">
+          <span class="p-float-label">
+            <textarea
+              (keyup)="clearField($event, 'attachmentDescription', 1)"
+              id="attachmentDescription"
+              rows="5"
+              cols="12"
+              maxlength="500"
+              pInputTextarea
+              formControlName="attachmentDescription"
+              (keypress)="preventSpace($event)"
+              (paste)="trimSpaceOnPaste($event, 'attachmentDescription', 500)"
+              #myInputAttachmentDescription
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+            ></textarea>
+
+            <span class="remaning"
+              >{{ myInputAttachmentDescription.value.length }} /{{ 500 }}</span
+            >
+
+            <label for="attachmentDescription">{{
+              'DOCUMENT_DETAIL.ATTACHMENTS.DESCRIPTION' | translate
+            }}</label>
+          </span>
+          <span class="alert alert-danger">{{
+            inputMessage['attachmentDescription']
+          }}</span>
+        </div>
+
+        <div class="col-12 sm:col-1">
+          <i
+            class="pi pi-info-circle info-icon"
+            [pTooltip]="
+              'DOCUMENT_DETAIL.BULK_UPDATE.ATTACHMENT_DESCRIPTION_INFO'
+                | translate
+            "
+            tooltipPosition="bottom"
+          ></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

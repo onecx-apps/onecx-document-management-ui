@@ -1,0 +1,208 @@
+<ocx-portal-page>
+  <ocx-page-header
+    header="{{ 'DOCUMENT_SEARCH.QUICK_UPLOAD' | translate }}"
+    [disableDefaultActions]="true"
+    [manualBreadcrumbs]="true"
+    class="headerClass"
+  >
+    <div toolbarItems class="flex mt-2 gap-1">
+      <button
+        class="w-12 lg:w-8"
+        pButton
+        icon="pi pi-times"
+        (click)="onCancel($event)"
+        [label]="'GENERAL.CANCEL' | translate"
+        [pTooltip]="'GENERAL.CANCEL' | translate"
+        tooltipPosition="top"
+        iconPos="left"
+        [disabled]="isSubmitted"
+      ></button>
+      <button
+        class="w-12 lg:w-8 ml-2"
+        pButton
+        icon="pi pi-check"
+        [label]="
+          isSubmitted
+            ? ('GENERAL.PROCESSING' | translate)
+            : ('GENERAL.CREATE' | translate)
+        "
+        [pTooltip]="
+          isSubmitted
+            ? ('GENERAL.PROCESSING' | translate)
+            : ('GENERAL.CREATE' | translate)
+        "
+        tooltipPosition="top"
+        iconPos="left"
+        [disabled]="!enableCreateButton || !formValid"
+        (click)="onSave()"
+      >
+        <span
+          *ngIf="isSubmitted"
+          class="spinner-border spinner-border-sm"
+          style="float: right"
+          role="status"
+          aria-hidden="true"
+        ></span>
+      </button>
+    </div>
+    <app-document-quick-upload-form
+      (enableCreateButton)="createButtonEnable($event)"
+      (formValid)="setFormValid($event)"
+      (attchmentList)="setAttachmentArray($event)"
+      (selectedFileList)="refreshAttachmentList($event)"
+      [attachmentArray]="attachmentArray"
+      class="w-full"
+    ></app-document-quick-upload-form>
+  </ocx-page-header>
+  <div class="card mt-2 p-0">
+    <div class="p-3 border-bottom-1 surface-border">
+      <ocx-data-view-controls
+        [supportedViews]="['list', 'grid']"
+        [initialViewMode]="'grid'"
+        [enableFiltering]="false"
+        [enableSorting]="layout === 'list' || 'grid'"
+        [sortingOptions]="sortFields"
+        (sortDirectionChange)="onSortOrderChange($event)"
+        (sortChange)="onSortFieldChange($event)"
+        (dataViewChange)="updateAttachmentsLayout($event)"
+      ></ocx-data-view-controls>
+    </div>
+    <div>
+      <p-dataView
+        #dv
+        *ngIf="selectedFileList"
+        [layout]="layout"
+        [sortField]="sortField"
+        [sortOrder]="sortOrder"
+        [value]="attachmentArray"
+        emptyMessage="{{
+          'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.NO_DATA' | translate
+        }}"
+        [paginator]="true"
+        [rows]="rowsPerPage"
+        [rowsPerPageOptions]="rowsPerPageOptions"
+      >
+        <ng-template let-attachment pTemplate="gridItem">
+          <div class="col-12 lg:col-4 xl:col-3 flex">
+            <div
+              class="card flex flex-column justify-content-between w-12 lg:w-11 mb-2 mt-2 mr-2 ml-2 align-self-stretch highlight"
+            >
+              <div class="tile-remove-icon">
+                <button
+                  type="button"
+                  icon="pi pi-trash"
+                  class="p-button-rounded p-button-text"
+                  pButton
+                  title="{{ 'GENERAL.REMOVE' | translate }}"
+                  (click)="isSubmitted ? null : onDeleteUploadFile(attachment)"
+                ></button>
+              </div>
+              <div class="tile-item">
+                <img
+                  [src]="getAttachmentIcon(attachment)"
+                  (error)="imgError($event)"
+                  class="tile-icon"
+                />
+
+                <div class="tile-attachment-info-block col-11">
+                  <div class="label">
+                    <p
+                      class="tile-attachment-name"
+                      [pTooltip]="attachment.name"
+                      [tooltipPosition]="'right'"
+                    >
+                      {{ attachment.name }}
+                    </p>
+                    <p class="tile-attachment-size font-light">
+                      {{ formatBytes(attachment.fileData.size) }}
+                    </p>
+                  </div>
+
+                  <div
+                    class="tile-statusbar"
+                    [ngClass]="attachment.isValid ? 'green-bar' : 'red-bar'"
+                    [pTooltip]="
+                      attachment.isValid
+                        ? null
+                        : ('DOCUMENT_DETAIL.ATTACHMENTS.FILE_SIZE_LIMIT'
+                          | translate)
+                    "
+                    [tooltipPosition]="attachment.isValid ? null : 'bottom'"
+                  >
+                    {{
+                      attachment.isValid
+                        ? ('GENERAL.SUCCESS' | translate)
+                        : ('GENERAL.FAILED' | translate)
+                    }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template let-attachment pTemplate="listItem">
+          <div class="col-12 highlight">
+            <div class="align-items-center p-3 w-full">
+              <div class="flex-1">
+                <div class="attachment-name-row list-item">
+                  <div class="list-icon-size-container">
+                    <img
+                      [src]="getAttachmentIcon(attachment)"
+                      (error)="imgError($event)"
+                      class="tile-icon"
+                    />
+                    <div class="font-light" *ngIf="attachment.fileData.size">
+                      {{ formatBytes(attachment.fileData.size) }}
+                    </div>
+                  </div>
+
+                  <div class="attachment-name-div">
+                    <div
+                      class="attachment-name mr-3 font-smaller"
+                      [pTooltip]="attachment.name"
+                      [tooltipPosition]="'bottom'"
+                    >
+                      {{ attachment.name }}
+                    </div>
+                  </div>
+                  <div
+                    class="statusbar"
+                    [ngClass]="attachment.isValid ? 'green-bar' : 'red-bar'"
+                    [pTooltip]="
+                      attachment.isValid
+                        ? null
+                        : ('DOCUMENT_DETAIL.ATTACHMENTS.FILE_SIZE_LIMIT'
+                          | translate)
+                    "
+                    [tooltipPosition]="attachment.isValid ? null : 'bottom'"
+                  >
+                    {{
+                      attachment.isValid
+                        ? ('GENERAL.SUCCESS' | translate)
+                        : ('GENERAL.FAILED' | translate)
+                    }}
+                  </div>
+                  <div
+                    class="delete-div flex flex-column md:flex-row md:justify-content-between"
+                  >
+                    <button
+                      type="button"
+                      icon="pi pi-trash"
+                      class="p-button-rounded p-button-text mb-1 mr-2"
+                      pButton
+                      title="{{ 'GENERAL.REMOVE' | translate }}"
+                      (click)="
+                        isSubmitted ? null : onDeleteUploadFile(attachment)
+                      "
+                    ></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </p-dataView>
+    </div>
+  </div>
+</ocx-portal-page>
+<p-confirmPopup></p-confirmPopup>

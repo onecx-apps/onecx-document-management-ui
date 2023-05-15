@@ -1,0 +1,96 @@
+<ocx-portal-page>
+  <div class="p-4">
+    <p-steps
+      [model]="menuItems"
+      [(activeIndex)]="indexActive"
+      [readonly]="true"
+      id="stepper"
+    ></p-steps>
+  </div>
+  <div class="steps-container">
+    <app-document-description
+      class="document_description"
+      *ngIf="indexActive === 0"
+      (documentVersion)="onUpdateDocumentVersion($event)"
+      [documentDescriptionForm]="
+        documentCreateForm.get('documentDescriptionForm')
+      "
+    ></app-document-description>
+
+    <app-document-attachment
+      [attachmentArray]="attachmentArray"
+      *ngIf="indexActive === 1"
+    ></app-document-attachment>
+
+    <app-document-characteristics
+      [isSubmitting]="isSubmitting"
+      [charactersticsArray]="charactersticsArray"
+      *ngIf="indexActive === 2"
+    ></app-document-characteristics>
+  </div>
+  <div class="grid justify-content-between">
+    <div
+      class="col-12 sm:col-6 md:col-3 flex justify-content-center lg:justify-content-start"
+    >
+      <button
+        *ngIf="indexActive !== 0"
+        [disabled]="isSubmitting"
+        class="w-12 lg:w-8"
+        pButton
+        [label]="'GENERAL.BACK' | translate"
+        [pTooltip]="'GENERAL.BACK' | translate"
+        tooltipPosition="top"
+        (click)="navigateBack()"
+        icon="pi pi-chevron-left"
+        iconPos="left"
+      ></button>
+    </div>
+    <div
+      class="col-12 sm:col-6 md:col-4 flex justify-content-center lg:justify-content-end"
+    >
+      <button
+        [disabled]="isSubmitting"
+        class="w-12 lg:w-8"
+        pButton
+        icon="pi pi-times"
+        (click)="onCancel($event)"
+        [label]="'GENERAL.CANCEL' | translate"
+        [pTooltip]="'GENERAL.CANCEL' | translate"
+        tooltipPosition="top"
+        iconPos="left"
+      ></button>
+      <button
+        class="w-12 lg:w-8 ml-3"
+        [disabled]="!canActivateNext || isSubmitting"
+        pButton
+        [label]="
+          indexActive !== 2
+            ? ('GENERAL.NEXT' | translate)
+            : isSubmitting
+            ? ('GENERAL.PROCESSING' | translate)
+            : ('GENERAL.SUBMIT' | translate)
+        "
+        [pTooltip]="
+          indexActive !== 2
+            ? ('GENERAL.NEXT' | translate)
+            : isSubmitting
+            ? ('GENERAL.PROCESSING' | translate)
+            : ('GENERAL.SUBMIT' | translate)
+        "
+        tooltipPosition="top"
+        (click)="submitForm()"
+        icon="pi pi-chevron-right"
+        iconPos="right"
+      >
+        <span
+          *ngIf="isSubmitting"
+          class="spinner-border spinner-border-sm"
+          style="float: right"
+          role="status"
+          aria-hidden="true"
+        ></span>
+      </button>
+    </div>
+  </div>
+</ocx-portal-page>
+<p-confirmPopup></p-confirmPopup>

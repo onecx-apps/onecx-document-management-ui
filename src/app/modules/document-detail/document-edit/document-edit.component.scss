@@ -1,0 +1,48 @@
+#document-detail-block {
+  overflow: auto;
+  margin-top: 10px;
+}
+#document-detail-form {
+  float: left;
+  padding: 0.5em 0px 0.5em 0em;
+}
+#document-detail-lifecycle {
+  float: right;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5em 0px 0.5em 1em;
+}
+
+::ng-deep .p-tabview-title {
+  font-weight: bold;
+}
+
+::ng-deep .p-tabview-nav-container {
+  margin-bottom: 10px;
+}
+
+.p-tabview .p-tabview-nav li .p-tabview-nav-link {
+  margin-bottom: 5px;
+}
+
+::ng-deep {
+  .p-tabview .p-tabview-panels {
+    min-height: 20rem;
+  }
+}
+
+::ng-deep .justify-content-evenly {
+  justify-content: space-between !important;
+}
+.headerClass ::ng-deep .toolbar button{
+  margin-right: 0.75rem !important;
+}
+
+.headerClass ::ng-deep .toolbar{
+  margin-right: -0.75rem !important;
+}
+
+.headerClass ::ng-deep  .object-panel{
+  padding: 1rem 7rem !important;
+}

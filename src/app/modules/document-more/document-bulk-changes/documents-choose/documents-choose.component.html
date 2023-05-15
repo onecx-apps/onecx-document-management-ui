@@ -1,0 +1,62 @@
+<h4 class="mb-2">
+  {{ 'DOCUMENT_MENU.DOCUMENT_MORE.DOCUMENT_BULK.CHOOSE_DOCUMENT' | translate }}
+</h4>
+<div>
+  <p-table
+    dataKey="code"
+    [scrollable]="true"
+    scrollHeight="24rem"
+    [value]="results"
+    responsiveLayout="scroll"
+    styleClass="p-datatable-sm"
+  >
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th class="pb-3 pt-3 pl-3" style="max-width: 4rem">
+          <p-checkbox
+            [(ngModel)]="isHeaderChecked"
+            (click)="onHeaderClick()"
+            [binary]="true"
+            inputId="binary"
+          ></p-checkbox>
+        </th>
+        <th pSortableColumn="name">
+          {{ 'RESULTS.NAME' | translate }}
+          <p-sortIcon field="name"></p-sortIcon>
+        </th>
+        <th pSortableColumn="type.name">
+          {{ 'RESULTS.DOCUMENT_TYPE' | translate }}
+          <p-sortIcon field="type.name"></p-sortIcon>
+        </th>
+        <th pSortableColumn="lifeCycleState">
+          {{ 'RESULTS.STATUS' | translate }}
+          <p-sortIcon field="lifeCycleState"></p-sortIcon>
+        </th>
+        <th pSortableColumn="documentVersion">
+          {{ 'RESULTS.VERSION' | translate }}
+          <p-sortIcon field="documentVersion"></p-sortIcon>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-result>
+      <tr>
+        <td class="pl-3" style="max-width: 4rem">
+          <p-checkbox
+            (click)="onRowClick()"
+            [(ngModel)]="result.isChecked"
+            [binary]="true"
+            inputId="binary"
+          ></p-checkbox>
+        </td>
+        <td>
+          <span pTooltip="{{ result.name }}">
+            {{ result.name | trim: 25 }}
+          </span>
+        </td>
+        <td>{{ result.type.name }}</td>
+        <td>{{ result.lifeCycleState }}</td>
+        <td>{{ result.documentVersion }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

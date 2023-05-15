@@ -1,0 +1,127 @@
+<form [formGroup]="documentQuickUploadForm" errorTailor>
+  <div class="grid p-fluid pl-0">
+    <div class="col-7 grid p-fluid mt-2">
+      <div class="col-6">
+        <span class="p-float-label" controlErrorAnchor>
+          <input
+            id="documentName"
+            pInputText
+            maxlength="60"
+            type="text"
+            formControlName="documentName"
+            (blur)="trimSpace($event)"
+            (keypress)="preventSpace($event)"
+            pattern="^[a-zA-Z0-9-_][\sa-zA-Z0-9-_]*"
+          />
+          <label for="documentName" class="required">{{
+            'DOCUMENT_DETAIL.BASIC_FIELDS.DOCUMENT_NAME' | translate
+          }}</label>
+        </span>
+      </div>
+      <div class="col-6">
+        <span class="p-float-label" controlErrorAnchor>
+          <p-dropdown
+            id="typeId"
+            [options]="documentTypes"
+            appendTo="body"
+            [autoDisplayFirst]="false"
+            [showClear]="true"
+            formControlName="typeId"
+          ></p-dropdown>
+          <label for="typeId" class="required">{{
+            'DOCUMENT_DETAIL.BASIC_FIELDS.DOCUMENT_TYPE' | translate
+          }}</label>
+        </span>
+      </div>
+      <div class="col-6 mt-2">
+        <span class="p-float-label" controlErrorAnchor>
+          <input
+            id="channel"
+            pInputText
+            maxlength="60"
+            type="text"
+            formControlName="channelname"
+            (blur)="trimSpace($event)"
+            (keypress)="preventSpace($event)"
+            (paste)="trimSpaceOnPaste($event, 'channelname', 60)"
+          />
+          <label for="channel" class="required">{{
+            'DOCUMENT_DETAIL.BASIC_FIELDS.DOCUMENT_CHANNEL' | translate
+          }}</label>
+        </span>
+      </div>
+      <div class="col-6 mt-2">
+        <span class="p-float-label" controlErrorAnchor>
+          <p-dropdown
+            id="status"
+            [options]="documentStatus"
+            appendTo="body"
+            [autoDisplayFirst]="false"
+            [showClear]="true"
+            formControlName="lifeCycleState"
+          ></p-dropdown>
+          <label for="status">{{
+            'DOCUMENT_DETAIL.BASIC_FIELDS.DOCUMENT_STATUS' | translate
+          }}</label>
+        </span>
+      </div>
+    </div>
+    <div class="col-5 p-fluid mt-3 pr-3">
+      <div
+        class="p-field"
+        id="upload-attachment-block"
+        (dragover)="allowDrop($event)"
+        (drop)="dropFile($event)"
+      >
+        <div class="col-12" id="upload-button-block">
+          <div id="dragDropTitle">
+            {{ 'DOCUMENT_DETAIL.ATTACHMENTS.DRAG_DROP' | translate }}
+          </div>
+          <div id="dragDropTitle">
+            {{ 'DOCUMENT_DETAIL.ATTACHMENTS.OR' | translate }}
+          </div>
+          <div class="required" id="upload-button">
+            <div class="upload-btn-wrapper">
+              <button
+                class="w-12 attachment-btn"
+                pButton
+                [label]="
+                  'DOCUMENT_DETAIL.ATTACHMENTS.CHOOSE_BTN_TITLE' | translate
+                "
+                [pTooltip]="
+                  'DOCUMENT_DETAIL.ATTACHMENTS.CHOOSE_BTN_TITLE' | translate
+                "
+                tooltipPosition="top"
+                icon="pi pi-plus"
+                iconPos="left"
+                [disabled]="isSubmitted"
+              ></button>
+              <input
+                type="file"
+                name="myfile"
+                accept="audio/*,image/*,video/*,.xlsx,.xls,.doc, .docx,.ppt, .pptx,.pdf"
+                data-max-size="2048"
+                (click)="$event.target.value = ''"
+                (change)="addFile($event)"
+                [disabled]="isSubmitted"
+                multiple
+              />
+            </div>
+          </div>
+          <div id="upload-file-validation">
+            <p>
+              {{
+                'DOCUMENT_DETAIL.ATTACHMENTS.ALLOWED_FILETYPE_MESSAGE'
+                  | translate
+              }}
+              ({{
+                'DOCUMENT_DETAIL.ATTACHMENTS.ALLOWED_FILESIZE_MESSAGE'
+                  | translate
+              }})
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

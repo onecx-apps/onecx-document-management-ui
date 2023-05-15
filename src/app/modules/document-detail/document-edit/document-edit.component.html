@@ -1,0 +1,137 @@
+<ocx-portal-page>
+  <ocx-page-header
+    header="{{ 'DOCUMENT_MENU.DOCUMENT_EDIT.SUBHEADER' | translate }}"
+    subheader="{{ document?.name }}"
+    [objectDetails]="headerLabels"
+    [actions]="headerActions"
+    [disableDefaultActions]="true"
+    [manualBreadcrumbs]="true"
+    class="headerClass"
+  >
+  </ocx-page-header>
+
+  <div class="row" id="document-detail-block">
+    <!-- <p-card> -->
+    <div class="col-12 sm:col-12 md:col-9" id="document-detail-form">
+      <div class="card">
+        <p-tabView
+          [(activeIndex)]="activeCurrentTab"
+          (onChange)="handleTabChange($event)"
+        >
+          <p-tabPanel
+            [header]="
+              'DOCUMENT_MENU.DOCUMENT_EDIT.DOCUMENT_DETAILS' | translate
+            "
+          >
+            <app-document-edit-details
+              (documentVersion)="onUpdateDocumentVersion($event)"
+              [documentDescriptionForm]="
+                documentEditForm.get('documentDescriptionForm')
+              "
+              [isEditable]="isEditable"
+            ></app-document-edit-details>
+          </p-tabPanel>
+          <p-tabPanel
+            [header]="'DOCUMENT_MENU.DOCUMENT_EDIT.RELATED_OBJECT' | translate"
+            [documentDescriptionForm]="
+              documentEditForm.get('documentDescriptionForm')
+            "
+          >
+            <app-document-edit-related-objects
+              [documentDescriptionForm]="
+                documentEditForm.get('documentDescriptionForm')
+              "
+            ></app-document-edit-related-objects>
+          </p-tabPanel>
+          <p-tabPanel
+            [header]="'DOCUMENT_MENU.DOCUMENT_EDIT.ATTACHMENT' | translate"
+          >
+            <ng-template pTemplate="content">
+              <app-document-edit-attachment
+                [attachmentArray]="attachmentArray"
+                [isEditable]="isEditable"
+              ></app-document-edit-attachment>
+            </ng-template>
+          </p-tabPanel>
+          <p-tabPanel
+            [header]="'DOCUMENT_MENU.DOCUMENT_EDIT.CHARACTERISTICS' | translate"
+          >
+            <app-document-edit-characteristics
+              [isEditable]="isEditable"
+            ></app-document-edit-characteristics>
+          </p-tabPanel>
+        </p-tabView>
+      </div>
+    </div>
+    <!-- </p-card>
+    <p-card> -->
+    <div class="col-12 sm:col-12 md:col-3" id="document-detail-lifecycle">
+      <div
+        class="w-full card flex flex-column md:flex-row lg:flex-column justify-content-between gap-3"
+      >
+        <app-document-edit-lifecycle
+          [documentId]="documentId"
+        ></app-document-edit-lifecycle>
+      </div>
+    </div>
+    <!-- </p-card> -->
+  </div>
+</ocx-portal-page>
+
+<p-dialog
+  appendTo="body"
+  [modal]="true"
+  [closable]="false"
+  [style]="{ width: '30vw' }"
+  [draggable]="false"
+  [baseZIndex]="10000"
+  [responsive]="true"
+  [resizable]="false"
+  header="{{
+    'DOCUMENT_MENU.DOCUMENT_EDIT.EMPTY_REQUIRED_FIELD_ERROR' | translate
+  }}"
+  [(visible)]="mandateDialogFlag"
+>
+  <div>
+    <ul class="pl-3">
+      <li *ngFor="let list of mandateList">{{ list }}</li>
+    </ul>
+  </div>
+
+  <p-footer class="btn-text">
+    <button
+      type="button"
+      pButton
+      label="Close"
+      (click)="mandateDialogClose()"
+    ></button>
+  </p-footer>
+</p-dialog>
+<!-- delete dialog -->
+<p-dialog
+  header="{{ 'DOCUMENT_MENU.DOCUMENT_DELETE.DELETE_HEADER' | translate }}"
+  [(visible)]="deleteDialogVisible"
+  [baseZIndex]="10000"
+>
+  <p>{{ 'DELETE_DOCUMENT.DELETE_MESSAGE' | translate }}</p>
+  <div>
+    <b>{{ 'GENERAL.NAME' | translate }}</b
+    >: {{ document?.name }}
+  </div>
+  <p-footer class="btn-text">
+    <button
+      type="button"
+      pButton
+      icon="pi pi-times"
+      (click)="onCancelDelete()"
+      label="{{ 'GENERAL.NO' | translate }}"
+    ></button>
+    <button
+      type="button"
+      pButton
+      icon="pi pi-check"
+      (click)="onDelete()"
+      label="{{ 'GENERAL.YES' | translate }}"
+    ></button>
+  </p-footer>
+</p-dialog>

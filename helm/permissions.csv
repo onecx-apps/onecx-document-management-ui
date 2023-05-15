@@ -1,0 +1,11 @@
+PERMISSION NAME;PERMISSION_KEY;document-admin;document-responsible;document-user;
+View Document;DOCUMENT_MGMT#DOCUMENT_VIEW;x;x;x;
+Search Document;DOCUMENT_MGMT#DOCUMENT_SEARCH;x;x;x;
+Download Document;DOCUMENT_MGMT#DOCUMENT_DOWNLOAD;x;x;x;
+Create Document;DOCUMENT_MGMT#DOCUMENT_CREATE;x;x;;
+UploadAttachment Document;DOCUMENT_MGMT#DOCUMENT_UPLOAD;x;x;;
+Edit  Document;DOCUMENT_MGMT#DOCUMENT_EDIT;x;x;;
+Bulk  Document;DOCUMENT_MGMT#DOCUMENT_BULK;x;;;
+
+
+

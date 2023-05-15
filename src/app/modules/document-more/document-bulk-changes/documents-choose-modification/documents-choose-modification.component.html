@@ -1,0 +1,32 @@
+<h4 class="mb-4">
+  {{
+    'DOCUMENT_MENU.DOCUMENT_MORE.DOCUMENT_BULK.CHOOSE_MODIFICATION' | translate
+  }}
+</h4>
+<p-table
+  dataKey="code"
+  [scrollable]="true"
+  scrollHeight="600px"
+  [value]="chooseModification"
+  responsiveLayout="scroll"
+>
+  <ng-template pTemplate="body" let-category>
+    <tr>
+      <td style="max-width: 16rem">
+        <p-radioButton
+          [inputId]="category.key"
+          name="category"
+          [value]="category"
+          [(ngModel)]="selectedValue"
+          (ngModelChange)="onItemChange()"
+        ></p-radioButton>
+        <label [for]="category.key" class="ml-4">{{
+          category.name | translate
+        }}</label>
+      </td>
+      <td>
+        <label [for]="category.key">{{ category.desc | translate }}</label>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
