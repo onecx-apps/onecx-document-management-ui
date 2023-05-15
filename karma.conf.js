@@ -10,17 +10,18 @@ module.exports = function (config) {
       require('karma-chrome-launcher'),
       require('karma-jasmine-html-reporter'),
       require('karma-coverage'),
-      require('@angular-devkit/build-angular/plugins/karma')
+      require('@angular-devkit/build-angular/plugins/karma'),
+	  require("karma-sonarqube-reporter")
     ],
     client: {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/tkit-document-management-ui'),
-      reporters: ['html', 'lcovonly', 'text-summary'],
-      fixWebpackSourcePaths: true
+      dir: require("path").join(__dirname, "./coverage"),
+      subdir: ".",
+      reporters: [{ type: "lcov" }],
     },
-    reporters: ['progress', 'kjhtml'],
+    reporters: ['progress', 'kjhtml', "sonarqube"],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
@@ -33,6 +34,12 @@ module.exports = function (config) {
       },
     },
     singleRun: false,
-    restartOnFileChange: true
+    restartOnFileChange: true,
+    sonarqubeReporter: {
+      outputFolder: "coverage",
+      reportName: function (metadata) {
+        return "sonarqube_report.xml";
+      },
+    },	
   });
 };
