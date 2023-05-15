@@ -5,5 +5,5 @@ on:
       - '**'
 jobs:
   release:
-    uses: onecx/ci-angular/.github/workflows/build-release.yml@v1
+    uses: onecx-apps/ci-angular/.github/workflows/build-release.yml@v1
     secrets: inherit
