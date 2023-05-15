@@ -4,15 +4,15 @@ version: 999-SNAPSHOT
 appVersion: 999-SNAPSHOT
 description: onecx document management ui
 keywords:
-  - ${project.name}
+  - angular
+  - onecx
 sources:
   - https://github.com/onecx-apps/onecx-document-management-ui
 maintainers:
   - name: Tkit Developer
     email: tkit_dev@1000kit.org
 dependencies:
-  # https://gitlab.com/1000kit/infra/helm/angular.git
-  - name: angular
-    version: ^0
-    repository: alias:1000kit
+  - name: helm-angular-app
     alias: app
+    version: ^0
+    repository: oci://ghcr.io/onecx/charts  
