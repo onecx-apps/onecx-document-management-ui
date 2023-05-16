@@ -1,4 +1,4 @@
-# tkit-document-management-ui
+# onecx-document-management-ui
 
 
 npm start
