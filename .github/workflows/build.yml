@@ -14,8 +14,8 @@ on:
       - '*.adoc'
       - '*.txt'
       - '.all-contributorsrc'
-
 jobs:
   build:
     uses: onecx-apps/ci-angular/.github/workflows/build.yml@v1
     secrets: inherit
+  
