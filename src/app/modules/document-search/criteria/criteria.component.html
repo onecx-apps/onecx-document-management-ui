@@ -1,0 +1,51 @@
+<form [formGroup]="criteriaGroup">
+  <div class="grid mt-0 p-fluid">
+    <div class="col-12 md:col-4">
+      <span class="p-float-label">
+        <input
+          id="name"
+          pInputText
+          type="text"
+          formControlName="name"
+          pattern="^[a-zA-Z0-9-_][\sa-zA-Z0-9-_]*"
+        />
+        <label for="name">{{
+          'DOCUMENT_SEARCH.CRITERIA.NAME' | translate
+        }}</label>
+      </span>
+    </div>
+    <div class="col-12 md:col-4">
+      <span class="p-float-label">
+        <p-multiSelect
+          id="typeId"
+          [options]="documentTypes"
+          formControlName="typeId"
+          appendTo="body"
+          [autoDisplayFirst]="false"
+          [addOnBlur]="true"
+          display="chip"
+        ></p-multiSelect>
+        <label for="typeId">
+          {{ 'DOCUMENT_SEARCH.CRITERIA.DOCUMENT_TYPE' | translate }}
+        </label>
+      </span>
+    </div>
+    <div class="col-12 md:col-4">
+      <span class="p-float-label">
+        <p-dropdown
+          id="channelName"
+          [options]="channelItems"
+          formControlName="channelName"
+          appendTo="body"
+          [filter]="true"
+          [autoDisplayFirst]="false"
+          [showClear]="true"
+          display="chip"
+        ></p-dropdown>
+        <label for="channelName">
+          {{ 'DOCUMENT_SEARCH.CRITERIA.CHANNEL' | translate }}
+        </label>
+      </span>
+    </div>
+  </div>
+</form>

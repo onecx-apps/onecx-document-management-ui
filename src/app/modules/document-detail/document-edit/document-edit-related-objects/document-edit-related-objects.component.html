@@ -1,0 +1,54 @@
+<form [formGroup]="documentDescriptionForm" class="pb-4" errorTailor>
+  <div class="p-fluid grid align-items-center">
+    <div class="col-12 sm:col-6">
+      <span class="p-float-label mb-2">
+        <input
+          type="text"
+          name="involvement"
+          maxlength="60"
+          pInputText
+          formControlName="involvement"
+          (blur)="trimSpace($event)"
+          (keypress)="preventSpace($event)"
+        />
+        <label for="involvement">
+          {{ 'DOCUMENT_DETAIL.RELATED_OBJECT.INVOLVEMENT' | translate }}
+        </label>
+      </span>
+    </div>
+    <div class="col-12 sm:col-6">
+      <span class="p-float-label mb-2">
+        <input
+          type="text"
+          name="referenceType"
+          maxlength="60"
+          pInputText
+          formControlName="referenceType"
+          (blur)="trimSpace($event)"
+          (keypress)="preventSpace($event)"
+        />
+        <label for="referenceType">
+          {{
+            'DOCUMENT_DETAIL.RELATED_OBJECT.OBJECT_REFERENCE_TYPE' | translate
+          }}
+        </label>
+      </span>
+    </div>
+    <div class="col-12 sm:col-6">
+      <span class="p-float-label mb-2">
+        <input
+          type="text"
+          name="referenceId"
+          maxlength="60"
+          pInputText
+          formControlName="referenceId"
+          (blur)="trimSpace($event)"
+          (keypress)="preventSpace($event)"
+        />
+        <label for="referenceId">
+          {{ 'DOCUMENT_DETAIL.RELATED_OBJECT.OBJECT_REFERENCE_ID' | translate }}
+        </label>
+      </span>
+    </div>
+  </div>
+</form>

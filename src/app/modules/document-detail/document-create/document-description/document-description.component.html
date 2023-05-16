@@ -1,0 +1,194 @@
+<h4 class="mb-4">{{ 'DOCUMENT_DETAIL.HEADER' | translate }}</h4>
+
+<form [formGroup]="documentDescriptionForm" class="pb-4" errorTailor>
+  <div class="grid p-fluid">
+    <div class="col-12 sm:col-4">
+      <span class="p-float-label mb-2" controlErrorAnchor>
+        <input
+          id="name"
+          pInputText
+          maxlength="60"
+          type="text"
+          pattern="^[a-zA-Z0-9-_][\sa-zA-Z0-9-_]*"
+          formControlName="name"
+          (blur)="trimSpace($event)"
+          (keypress)="preventSpace($event)"
+        />
+        <label for="name" class="required">{{
+          'DOCUMENT_DETAIL.BASIC_FIELDS.DOCUMENT_NAME' | translate
+        }}</label>
+      </span>
+    </div>
+    <div class="col-12 sm:col-4">
+      <span class="p-float-label mb-2" controlErrorAnchor>
+        <p-dropdown
+          id="type"
+          [options]="documentTypes"
+          appendTo="body"
+          [autoDisplayFirst]="false"
+          [showClear]="true"
+          formControlName="typeId"
+        ></p-dropdown>
+        <label for="type" class="required">{{
+          'DOCUMENT_DETAIL.BASIC_FIELDS.DOCUMENT_TYPE' | translate
+        }}</label>
+      </span>
+    </div>
+    <div class="col-12 sm:col-4">
+      <span class="p-float-label mb-2" controlErrorAnchor>
+        <input
+          id="version"
+          pInputText
+          maxlength="10"
+          (keypress)="onKeyDocVersionPress($event)"
+          oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+          (keyup)="onKeyDocVersionUp($event)"
+          type="number"
+          formControlName="documentVersion"
+        />
+        <label for="version">{{
+          'DOCUMENT_DETAIL.BASIC_FIELDS.DOCUMENT_VERSION' | translate
+        }}</label>
+      </span>
+      <span
+        *ngIf="
+          documentDescriptionForm?.controls['documentVersion']?.invalid &&
+          (documentDescriptionForm?.controls['documentVersion']?.dirty ||
+            documentDescriptionForm?.controls['documentVersion']?.touched)
+        "
+        class="alert alert-danger"
+      >
+        <span
+          *ngIf="documentDescriptionForm?.controls['documentVersion']?.errors?.['min']"
+        >
+          {{ 'DOCUMENT_MENU.DOCUMENT_EDIT.NEGATIVE_VALUE_ERROR' | translate }}
+        </span>
+      </span>
+    </div>
+    <div class="col-12 sm:col-4">
+      <span class="p-float-label mb-2" controlErrorAnchor>
+        <input
+          id="channel"
+          pInputText
+          maxlength="60"
+          type="text"
+          formControlName="channelname"
+          (paste)="trimSpaceOnPaste($event, 'channelname', 60)"
+          (blur)="trimSpace($event)"
+          (keypress)="preventSpace($event)"
+        />
+        <label for="channel" class="required">{{
+          'DOCUMENT_DETAIL.BASIC_FIELDS.DOCUMENT_CHANNEL' | translate
+        }}</label>
+      </span>
+    </div>
+    <div class="col-12 sm:col-4">
+      <span class="p-float-label mb-2" controlErrorAnchor>
+        <input
+          id="specification"
+          pInputText
+          maxlength="60"
+          type="text"
+          formControlName="specificationName"
+          (blur)="trimSpace($event)"
+          (keypress)="preventSpace($event)"
+        />
+        <label for="specification">{{
+          'DOCUMENT_DETAIL.BASIC_FIELDS.DOCUMENT_SPECIFICATION' | translate
+        }}</label>
+      </span>
+    </div>
+    <div class="col-12 sm:col-4">
+      <span class="p-float-label mb-2" controlErrorAnchor>
+        <p-dropdown
+          id="status"
+          [options]="documentStatus"
+          appendTo="body"
+          [autoDisplayFirst]="false"
+          [showClear]="true"
+          formControlName="lifeCycleState"
+        ></p-dropdown>
+        <label for="status">{{
+          'DOCUMENT_DETAIL.BASIC_FIELDS.DOCUMENT_STATUS' | translate
+        }}</label>
+      </span>
+    </div>
+    <div class="p-field col-12">
+      <span class="p-float-label mb-2" controlErrorAnchor>
+        <textarea
+          id="description"
+          rows="5"
+          cols="2"
+          maxlength="1000"
+          pInputTextarea
+          formControlName="description"
+          #myInputDescription
+          (blur)="trimSpace($event)"
+          (keypress)="preventSpace($event)"
+          oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+        >
+        </textarea>
+        <span class="remaning"
+          >{{ myInputDescription.value.length }} /{{ 1000 }}</span
+        >
+        <label for="description">{{
+          'DOCUMENT_DETAIL.BASIC_FIELDS.DOCUMENT_DESCRIPTION' | translate
+        }}</label>
+      </span>
+    </div>
+  </div>
+  <h4 class="mb-4">{{ 'DOCUMENT_DETAIL.SUBHEADER' | translate }}</h4>
+  <div class="grid p-fluid">
+    <div class="col-12 sm:col-4">
+      <span class="p-float-label mb-2" controlErrorAnchor>
+        <input
+          id="involvement"
+          pInputText
+          maxlength="60"
+          type="text"
+          [disabled]="true"
+          formControlName="involvement"
+          (blur)="trimSpace($event)"
+          (keypress)="preventSpace($event)"
+        />
+        <label for="involvement">{{
+          'DOCUMENT_DETAIL.RELATED_OBJECT.INVOLVEMENT' | translate
+        }}</label>
+      </span>
+    </div>
+    <div class="col-12 sm:col-4">
+      <span class="p-float-label mb-2" controlErrorAnchor>
+        <input
+          id="reference_type"
+          pInputText
+          maxlength="60"
+          type="text"
+          [disabled]="true"
+          formControlName="reference_type"
+          (blur)="trimSpace($event)"
+          (keypress)="preventSpace($event)"
+        />
+        <label for="reference_type">{{
+          'DOCUMENT_DETAIL.RELATED_OBJECT.OBJECT_REFERENCE_TYPE' | translate
+        }}</label>
+      </span>
+    </div>
+    <div class="col-12 sm:col-4">
+      <span class="p-float-label mb-2" controlErrorAnchor>
+        <input
+          id="reference_id"
+          pInputText
+          maxlength="60"
+          type="text"
+          [disabled]="true"
+          formControlName="reference_id"
+          (blur)="trimSpace($event)"
+          (keypress)="preventSpace($event)"
+        />
+        <label for="reference_id">{{
+          'DOCUMENT_DETAIL.RELATED_OBJECT.OBJECT_REFERENCE_ID' | translate
+        }}</label>
+      </span>
+    </div>
+  </div>
+</form>

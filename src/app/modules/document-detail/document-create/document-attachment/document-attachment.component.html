@@ -1,0 +1,261 @@
+<h4 class="mb-4">
+  {{ 'DOCUMENT_DETAIL.ATTACHMENTS.HEADER' | translate }}
+  <button
+    pButton
+    class="p-button-rounded p-button-text -mb-2"
+    icon="pi pi-plus"
+    [pTooltip]="'GENERAL.ADD' | translate"
+    tooltipPosition="top"
+    (click)="showAttachmentForm()"
+    [disabled]="showAttachment"
+  ></button>
+</h4>
+
+<div
+  class="grid p-field"
+  *ngIf="showAttachment || isHavingAttachment"
+  id="myAttachment"
+>
+  <!-- left panel -->
+  <div #attachmentList class="col-12 md:col-5 list-view">
+    <div
+      class="attachmentListItem"
+      *ngFor="let attachment of attachmentArray; let i = index"
+    >
+      <div
+        class="result-name-row col-12"
+        [ngClass]="
+          attachmentArray.length - 1 - i === activeElement ? 'active' : 'none'
+        "
+        (click)="editAttachmentData(attachmentArray.length - 1 - i)"
+      >
+        <div
+          class="font-medium result-name"
+          [pTooltip]="attachmentArray[attachmentArray.length - 1 - i].name"
+        >
+          <!-- {{ result.type }} -->{{
+            attachmentArray[attachmentArray.length - 1 - i].name | trim: 30
+          }}
+        </div>
+        <div
+          class="font-light result-file-info"
+          *ngIf="
+            attachmentArray[attachmentArray.length - 1 - i].fileData &&
+            attachmentArray[attachmentArray.length - 1 - i].fileData.size >=
+              0 &&
+            formatBytes(
+              attachmentArray[attachmentArray.length - 1 - i].fileData.size
+            )
+          "
+        >
+          <span
+            class="result-file-name"
+            [pTooltip]="
+              attachmentArray[attachmentArray.length - 1 - i].fileData.name
+            "
+            >{{
+              attachmentArray[attachmentArray.length - 1 - i].fileData.name
+                | trim: 30
+            }}</span
+          >
+
+          <span class="result-file-size"
+            >&nbsp;|
+            {{
+              formatBytes(
+                attachmentArray[attachmentArray.length - 1 - i].fileData.size
+              )
+            }}</span
+          >
+        </div>
+        <div class="result-name-btn">
+          <button
+            type="button"
+            icon="pi pi-trash"
+            class="p-button-rounded p-button-text"
+            pButton
+            title="{{ 'GENERAL.DELETE' | translate }}"
+            (click)="deleteAttachment(attachmentArray.length - 1 - i)"
+          ></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="md:col-1" id="attachment-blank-border">
+    <p-divider layout="vertical" class="p-element"></p-divider>
+  </div>
+  <!-- right panel -->
+  <div class="col-12 md:col-6">
+    <form [formGroup]="attachmentFieldsForm" errorTailor>
+      <div
+        class="grid p-fluid col-12 flex align-items-center justify-content-center"
+      >
+        <div class="p-field col-12">
+          <span class="p-float-label">
+            <input
+              type="text"
+              name="name"
+              maxlength="60"
+              pInputText
+              formControlName="name"
+              (blur)="trimSpace($event)"
+              (keypress)="preventSpace($event)"
+              (keyup)="updateAttachmentData()"
+              pattern="^[a-zA-Z0-9-_][\sa-zA-Z0-9-_]*"
+            />
+            <label class="required" for="name">{{
+              'DOCUMENT_DETAIL.ATTACHMENTS.NAME' | translate
+            }}</label>
+          </span>
+        </div>
+        <div class="p-field col-6">
+          <span class="p-float-label">
+            <input
+              type="text"
+              name="mimeType"
+              pInputText
+              formControlName="mimeType"
+              pTooltip="{{ tooltipmimeType }}"
+              [value]="attachmentFieldsForm.get('mimeType').value | trim: 25"
+              readonly
+            />
+
+            <label class="required" for="mimeType">{{
+              'DOCUMENT_DETAIL.ATTACHMENTS.MIME_TYPE' | translate
+            }}</label>
+          </span>
+        </div>
+        <div class="p-field col-6">
+          <span class="p-float-label">
+            <p-calendar
+              name="validity"
+              inputid="validity"
+              dateFormat="mm.dd.yy"
+              formControlName="validity"
+              (onSelect)="updateAttachmentData()"
+              (onClickOutside)="updateAttachmentData()"
+              showClear="true"
+              [readonlyInput]="true"
+              (onClear)="resetDate()"
+            ></p-calendar>
+
+            <label for="validity">{{
+              'DOCUMENT_DETAIL.ATTACHMENTS.VALIDITY' | translate
+            }}</label>
+          </span>
+        </div>
+        <div class="p-field col-12">
+          <span class="p-float-label mb-2">
+            <textarea
+              id="description"
+              rows="5"
+              cols="12"
+              maxlength="500"
+              pInputTextarea
+              formControlName="description"
+              (blur)="trimSpace($event)"
+              (keypress)="preventSpace($event)"
+              (focusout)="updateAttachmentData()"
+              #myInputDescription
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+            ></textarea>
+            <span class="remaning"
+              >{{ myInputDescription.value.length }} /{{
+                maxlengthDescription
+              }}</span
+            >
+
+            <label for="description">{{
+              'DOCUMENT_DETAIL.ATTACHMENTS.DESCRIPTION' | translate
+            }}</label>
+          </span>
+        </div>
+        <div class="p-field col-12" id="upload-attachment-block">
+          <div class="col-12" id="upload-button-block">
+            <div
+              class="xl:col-3 lg:col-4 md:col-4 col-12 required"
+              id="upload-button"
+            >
+              <div class="upload-btn-wrapper">
+                <!-- <button pButton icon="pi pi-plus">Choose</button> -->
+                <button
+                  class="w-12 attachment-btn"
+                  pButton
+                  [label]="
+                    'DOCUMENT_DETAIL.ATTACHMENTS.CHOOSE_BTN_TITLE' | translate
+                  "
+                  [pTooltip]="
+                    'DOCUMENT_DETAIL.ATTACHMENTS.CHOOSE_BTN_TITLE' | translate
+                  "
+                  tooltipPosition="top"
+                  icon="pi pi-plus"
+                  iconPos="left"
+                  [disabled]="disableAttachmentBtn"
+                ></button>
+                <input
+                  type="file"
+                  name="myfile"
+                  accept="audio/*,image/*,video/*,.xlsx,.xls,.doc, .docx,.ppt, .pptx,.pdf"
+                  data-max-size="2048"
+                  (click)="$event.target.value = ''"
+                  (change)="addFile($event)"
+                  [disabled]="disableAttachmentBtn"
+                />
+              </div>
+            </div>
+            <div
+              class="xl:col-9 lg:col-8 md:col-8 col-12"
+              id="upload-file-validation"
+            >
+              <p>
+                {{
+                  'DOCUMENT_DETAIL.ATTACHMENTS.ALLOWED_FILETYPE_MESSAGE'
+                    | translate
+                }}
+              </p>
+              <p>
+                {{
+                  'DOCUMENT_DETAIL.ATTACHMENTS.ALLOWED_FILESIZE_MESSAGE'
+                    | translate
+                }}
+              </p>
+            </div>
+            <div
+              class="col-12"
+              *ngIf="attachmentErrorMessage"
+              id="attachmentErrorMessage"
+            >
+              {{ attachmentErrorMessage }}
+            </div>
+          </div>
+          <div
+            class="col-12"
+            id="upload-file-detail"
+            *ngIf="fileData && fileData.name && !attachmentErrorMessage"
+          >
+            <span
+              class="col-12"
+              *ngIf="
+                fileData && fileData.size >= 0 && formatBytes(fileData.size)
+              "
+              ><span class="result-file-name" id="file-size-upload-block">{{
+                fileData.name
+              }}</span>
+              <span class="result-file-size">
+                &nbsp;| {{ formatBytes(fileData.size) }}</span
+              ></span
+            >
+            <button
+              pButton
+              id="upload-file-delete"
+              icon="pi pi-times"
+              class="p-button-rounded p-button-text cursor-pointer"
+              (click)="onDeleteUploadFile()"
+            ></button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

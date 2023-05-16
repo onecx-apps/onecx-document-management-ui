@@ -1,0 +1,66 @@
+<h4 class="mb-4">
+  {{ 'DOCUMENT_DETAIL.CHARACTERISTICS.HEADER' | translate }}
+  <button
+    pButton
+    [disabled]="isSubmitting"
+    class="p-button-rounded p-button-text -mb-2"
+    icon="pi pi-plus"
+    [pTooltip]="'GENERAL.ADD' | translate"
+    tooltipPosition="top"
+    (click)="addEmptyForm()"
+  ></button>
+</h4>
+<form #categoryForm="ngForm" class="pt-1">
+  <div
+    class="p-fluid grid align-items-center"
+    *ngFor="let characteristic of genericFormArray.controls; index as i"
+  >
+    <ng-container [formGroup]="characteristic">
+      <div class="field col-12 md:col-3">
+        <span class="p-float-label">
+          <input
+            pInputText
+            type="text"
+            maxlength="40"
+            formControlName="name"
+            [attr.disabled]="isSubmitting ? '' : null"
+            (blur)="trimSpace()"
+            (keypress)="preventSpace($event)"
+          />
+          <label for="name">{{
+            'DOCUMENT_DETAIL.CHARACTERISTICS.NAME' | translate
+          }}</label>
+        </span>
+      </div>
+      <div class="field col-12 md:col-3">
+        <span class="p-float-label">
+          <input
+            pInputText
+            type="text"
+            maxlength="40"
+            formControlName="value"
+            [attr.disabled]="isSubmitting ? '' : null"
+            (blur)="trimSpace()"
+            (keypress)="preventSpace($event)"
+          />
+          <label for="value">{{
+            'DOCUMENT_DETAIL.CHARACTERISTICS.VALUE' | translate
+          }}</label>
+        </span>
+      </div>
+    </ng-container>
+    <div class="field col-12 md:col-2">
+      <button
+        pButton
+        [disabled]="isSubmitting"
+        class="delete-icon p-button-rounded p-button-text"
+        type="button"
+        icon="pi pi-trash"
+        title="{{ 'GENERAL.DELETE' | translate }}"
+        [pTooltip]="'GENERAL.DELETE' | translate"
+        tooltipPosition="top"
+        (click)="removeForm(i)"
+      ></button>
+    </div>
+  </div>
+</form>

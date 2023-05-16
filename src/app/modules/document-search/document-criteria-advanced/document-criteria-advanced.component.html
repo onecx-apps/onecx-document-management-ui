@@ -1,0 +1,160 @@
+<form [formGroup]="criteriaGroup">
+  <div class="grid mt-0 p-fluid">
+    <div class="col-12 md:col-3">
+      <span class="p-float-label">
+        <input
+          id="name"
+          pInputText
+          type="text"
+          formControlName="name"
+          pattern="^[a-zA-Z0-9-_][\sa-zA-Z0-9-_]*"
+          class="p-inputtext p-component"
+        />
+        <label for="name">{{
+          'DOCUMENT_SEARCH.CRITERIA.NAME' | translate
+        }}</label>
+      </span>
+    </div>
+
+    <div class="col-12 md:col-3">
+      <span class="p-float-label">
+        <p-multiSelect
+          id="typeId"
+          [options]="documentTypes"
+          formControlName="typeId"
+          appendTo="body"
+          [autoDisplayFirst]="false"
+          [addOnBlur]="true"
+          display="chip"
+        ></p-multiSelect>
+        <label for="typeId">
+          {{ 'DOCUMENT_SEARCH.CRITERIA.DOCUMENT_TYPE' | translate }}
+        </label>
+      </span>
+    </div>
+
+    <div class="col-12 md:col-3">
+      <span class="p-float-label">
+        <p-dropdown
+          id="channelName"
+          [options]="channelItems"
+          formControlName="channelName"
+          appendTo="body"
+          [filter]="true"
+          [autoDisplayFirst]="false"
+          [showClear]="true"
+        ></p-dropdown>
+        <label for="channelName">
+          {{ 'DOCUMENT_SEARCH.CRITERIA.CHANNEL' | translate }}
+        </label>
+      </span>
+    </div>
+
+    <div class="col-12 md:col-3">
+      <span class="p-float-label">
+        <p-multiSelect
+          id="status-input"
+          [options]="documentStatus"
+          formControlName="state"
+          appendTo="body"
+          [autoDisplayFirst]="false"
+          [addOnBlur]="true"
+          display="chip"
+        ></p-multiSelect>
+        <label for="status-input">{{
+          'DOCUMENT_SEARCH.CRITERIA.DOCUMENT_STATE' | translate
+        }}</label>
+      </span>
+    </div>
+    <!-- adding new fields -->
+    <div class="col-12 md:col-3">
+      <span class="p-float-label">
+        <p-calendar
+          [appendTo]="'body'"
+          pInputDate
+          id="startDate"
+          name="startDate"
+          inputid="startDate"
+          dateFormat="dd.mm.yy"
+          formControlName="startDate"
+          showClear="true"
+          [readonlyInput]="true"
+          (onClear)="fieldReset('startDate')"
+        ></p-calendar>
+
+        <label for="startDate">{{
+          'DOCUMENT_SEARCH.CRITERIA.DOCUMENT_START_DATE' | translate
+        }}</label>
+      </span>
+    </div>
+
+    <div class="col-12 md:col-3">
+      <span class="p-float-label">
+        <p-calendar
+          [appendTo]="'body'"
+          pInputDate
+          id="endDate"
+          name="endDate"
+          inputid="endDate"
+          dateFormat="dd.mm.yy"
+          formControlName="endDate"
+          showClear="true"
+          [readonlyInput]="true"
+          (onClear)="fieldReset('endDate')"
+        ></p-calendar>
+
+        <label for="endDate">{{
+          'DOCUMENT_SEARCH.CRITERIA.DOCUMENT_END_DATE' | translate
+        }}</label>
+      </span>
+    </div>
+
+    <div class="col-12 md:col-3">
+      <span class="p-float-label">
+        <input
+          id="createdBy"
+          pInputText
+          type="text"
+          formControlName="createdBy"
+          pattern="^[a-zA-Z0-9-_][\sa-zA-Z0-9-_]*"
+          class="p-inputtext p-component"
+        />
+        <label for="createdBy">{{
+          'DOCUMENT_SEARCH.CRITERIA.DOCUMENT_CREATEDBY' | translate
+        }}</label>
+      </span>
+    </div>
+
+    <div class="col-12 md:col-3">
+      <span class="p-float-label">
+        <input
+          id="objectReferenceId"
+          pInputText
+          type="text"
+          formControlName="objectReferenceId"
+          pattern="^[a-zA-Z0-9-_][\sa-zA-Z0-9-_]*"
+          class="p-inputtext p-component"
+        />
+        <label for="objectReferenceId">{{
+          'DOCUMENT_SEARCH.CRITERIA.DOCUMENT_OBJECTREFERENCEID' | translate
+        }}</label>
+      </span>
+    </div>
+
+    <div class="col-12 md:col-3">
+      <span class="p-float-label">
+        <input
+          id="objectReferenceType"
+          pInputText
+          type="text"
+          formControlName="objectReferenceType"
+          pattern="^[a-zA-Z0-9-_][\sa-zA-Z0-9-_]*"
+          class="p-inputtext p-component"
+        />
+        <label for="objectReferenceType">{{
+          'DOCUMENT_SEARCH.CRITERIA.DOCUMENT_OBJECTREFERENCETYPE' | translate
+        }}</label>
+      </span>
+    </div>
+  </div>
+</form>

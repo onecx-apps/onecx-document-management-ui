@@ -1,0 +1,25 @@
+.required:after {
+  color: #d00;
+  content: '*';
+  margin-left: 1px;
+}
+#description {
+  resize: none;
+  min-height: 7rem;
+}
+.alert-danger {
+  color: var(--error-color);
+}
+.remaning {
+  position: absolute;
+  bottom: 10px;
+  right: 2px;
+  top: 105px;
+}
+
+.disabled {
+  color: #ccc;
+}
+.grayout {
+  cursor: pointer;
+}

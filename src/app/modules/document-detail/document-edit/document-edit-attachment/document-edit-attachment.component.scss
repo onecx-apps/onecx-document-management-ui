@@ -1,0 +1,174 @@
+#myAttachment {
+  position: relative;
+}
+.upload-btn-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+.btn {
+  border: 2px solid gray;
+  color: gray;
+  background-color: white;
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.upload-btn-wrapper input[type='file'] {
+  font-size: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.upload-btn-wrapper input[type='file']:disabled {
+  cursor: default;
+}
+
+.list-view {
+  overflow-y: auto;
+  max-height: 23rem;
+  overflow-x: hidden;
+}
+#upload-button-block {
+  overflow: auto;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  padding: 0px;
+}
+#upload-button {
+  float: left;
+  position: relative;
+}
+#upload-file-validation {
+  float: right;
+}
+#upload-file-validation > p {
+  margin: 0px;
+  font-size: 10px;
+}
+#upload-file-detail {
+  position: relative;
+  border-left: 0.5px solid rgba(0, 0, 0, 0.12);
+  border-right: 0.5px solid rgba(0, 0, 0, 0.12);
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.12);
+  text-align: center;
+}
+#upload-file-name {
+  float: left;
+  text-align: right;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+}
+#upload-file-delete {
+  position: absolute;
+  right: 0px;
+  bottom: -1px;
+  font-weight: bold;
+}
+#attachmentErrorMessage {
+  overflow: auto;
+  text-align: center;
+  color: red;
+  font-size: 12px;
+}
+
+.attachmentListItem:first-child {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+.attachmentListItem {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+.result-name-row {
+  overflow: auto;
+  position: relative;
+  min-height: 45px;
+}
+.result-file-info {
+  margin-top: 4px;
+  font-size: 12px;
+}
+.result-name-btn {
+  position: absolute;
+  right: 2px;
+  top: 6px;
+}
+.result-name {
+  width: fit-content;
+  max-width: calc(100% - 90px);
+  min-height: 18px;
+  word-break: break-all;
+}
+.result-name:hover {
+  color: rgb(18, 171, 219);
+  cursor: pointer;
+}
+
+#attachment-blank-border {
+  height: calc(100% - 20px);
+  border-left: 1px solid rgba(0, 0, 0, 0.12);
+  position: absolute;
+  top: 0;
+  left: 50.5%;
+  overflow: auto;
+}
+#description {
+  resize: none;
+  min-height: 7rem;
+}
+@media only screen and (max-width: 767px) {
+  #attachment-blank-border {
+    display: none !important;
+  }
+}
+.result-file-name {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 160px);
+}
+.result-file-size {
+  display: inline-block;
+  overflow: hidden;
+}
+#file-size-upload-block {
+  max-width: calc(100% - 120px) !important;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+form {
+  margin-right: -1.5rem;
+}
+
+#upload-button.required::after {
+  font-weight: bold;
+  content: ' *';
+  color: #e62a10;
+  top: 5px;
+  position: absolute;
+}
+.active {
+  outline: none;
+  box-shadow: 0px 0px 5px 2px #8b8989 !important;
+}
+.remaning {
+  position: absolute;
+  bottom: 10px;
+  right: 2px;
+  top: 105px;
+}
+
+.disabled {
+  color: #ccc;
+}
+.grayout {
+  cursor: default;
+}
+
+::ng-deep .p-calendar-clear-icon {
+  right: 0.5rem;
+}

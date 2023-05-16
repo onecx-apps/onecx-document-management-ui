@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: 'tkit-document-mgmt-ui-mf-config'
+data:
+  microfrontend: |-
+{{ tpl (.Files.Get "microfrontend.json") . | indent 4 }}

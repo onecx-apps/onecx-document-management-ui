@@ -1,0 +1,52 @@
+<h4 class="mb-1">
+  {{
+    'DOCUMENT_MENU.DOCUMENT_MORE.DOCUMENT_BULK.MODIFICATION_CONFIRMATION'
+      | translate
+  }}
+</h4>
+<p class="mb-2">
+  <i class="pi pi-info-circle info-icon"></i>
+  {{
+    'DOCUMENT_MENU.DOCUMENT_MORE.DOCUMENT_BULK.DELETE_DOCUMENT_NOTIFICATION'
+      | translate
+  }}
+</p>
+<p-table
+  dataKey="code"
+  [scrollable]="true"
+  scrollHeight="22.5rem"
+  [value]="checkedResults"
+  responsiveLayout="scroll"
+  styleClass="p-datatable-sm"
+>
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th pSortableColumn="name" class="pt-3 pb-3 pl-3">
+        {{ 'RESULTS.NAME' | translate }}
+        <p-sortIcon field="name"></p-sortIcon>
+      </th>
+      <th pSortableColumn="type.name">
+        {{ 'RESULTS.DOCUMENT_TYPE' | translate }}
+        <p-sortIcon field="type.name"></p-sortIcon>
+      </th>
+      <th pSortableColumn="lifeCycleState">
+        {{ 'RESULTS.STATUS' | translate }}
+        <p-sortIcon field="lifeCycleState"></p-sortIcon>
+      </th>
+      <th pSortableColumn="documentVersion">
+        {{ 'RESULTS.VERSION' | translate }}
+        <p-sortIcon field="documentVersion"></p-sortIcon>
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-result>
+    <tr>
+      <td class="pl-3">
+        <span pTooltip="{{ result.name }}"> {{ result.name | trim: 25 }} </span>
+      </td>
+      <td>{{ result.type.name }}</td>
+      <td>{{ result.lifeCycleState }}</td>
+      <td>{{ result.documentVersion }}</td>
+    </tr>
+  </ng-template>
+</p-table>

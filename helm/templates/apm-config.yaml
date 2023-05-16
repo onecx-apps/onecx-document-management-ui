@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "tkit-document-mgmt-ui-apm-config"
+  annotations:
+    appId: tkit-document-mgmt-ui
+    filename: "permissions.csv"
+data:
+  permissions.csv: |-
+{{ $.Files.Get "permissions.csv" | indent 4 }}

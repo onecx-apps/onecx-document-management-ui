@@ -1,0 +1,17 @@
+variables:
+  # docker image for the npm build and test
+  NPM_BUILD_IMAGE: harbor.1000kit.org/1000kit/node-build:v16
+
+include:
+  - project: '1000kit/infra/ci/angular'
+    ref: 'v1'
+    file: 'ci.yml'
+
+npm:build:
+  before_script:
+    - npm ci --force --cache .npm --prefer-offline
+
+
+npm:test:
+  before_script:
+    - npm ci --force --cache .npm --prefer-offline

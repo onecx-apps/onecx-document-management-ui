@@ -1,0 +1,32 @@
+::ng-deep {
+  .customized-timeline {
+    .p-timeline-event-opposite {
+      flex: 0;
+    }
+    .p-timeline-event {
+      min-height: 75px;
+    }
+  }
+  .p-timeline.p-timeline-vertical {
+    .p-timeline-event-opposite {
+      padding: 0;
+    }
+  }
+  .p-timeline {
+    .p-timeline-event-marker {
+      border: 2px solid #3b82f6;
+      background-color: #ffffff;
+    }
+  }
+  .current-status-timeline {
+    .card {
+      background-color: #64dd5c;
+    }
+    .p-timeline {
+      .p-timeline-event-marker {
+        border: 2px solid #64dd5c;
+        background-color: #64dd5c;
+      }
+    }
+  }
+}

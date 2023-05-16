@@ -1,0 +1,104 @@
+<ocx-portal-page>
+  <div class="p-1">
+    <p-steps
+      [model]="menuItems"
+      [(activeIndex)]="indexActive"
+      [readonly]="true"
+      id="stepper"
+    ></p-steps>
+  </div>
+  <div class="steps-container min-height">
+    <app-documents-choose
+      class="documents_choose"
+      *ngIf="indexActive === 0 && isShow"
+      (isCheckEvent)="isCheck($event)"
+    ></app-documents-choose>
+    <app-documents-choose-modification
+      *ngIf="indexActive === 1"
+      (isCheckEvent)="isRadioCheck($event)"
+    >
+    </app-documents-choose-modification>
+    <div class="modification-type-result" *ngIf="indexActive === 2">
+      <ng-container [ngSwitch]="selectedOperation">
+        <ng-template [ngSwitchCase]="'A'">
+          <app-documents-update
+            [checkedResults]="checkedArrayResults"
+            [isSubmitting]="isSubmitting"
+            [documentBulkUpdateForm]="
+              documentBulkForm.get('documentBulkUpdateForm')
+            "
+            (formValue)="onChangeFormValue()"
+          ></app-documents-update>
+        </ng-template>
+        <ng-template [ngSwitchCase]="'B'">
+          <app-documents-delete
+            [checkedResults]="checkedArrayResults"
+          ></app-documents-delete>
+        </ng-template>
+      </ng-container>
+    </div>
+  </div>
+  <div class="grid justify-content-between mt-4">
+    <div
+      class="col-12 sm:col-6 md:col-2 flex justify-content-center lg:justify-content-start"
+    >
+      <button
+        *ngIf="indexActive !== 0"
+        [disabled]="isSubmitting"
+        (click)="OnBack()"
+        class="w-12 mr-6"
+        pButton
+        [label]="'GENERAL.BACK' | translate"
+        [pTooltip]="'GENERAL.BACK' | translate"
+        tooltipPosition="top"
+        icon="pi pi-chevron-left"
+        iconPos="left"
+      ></button>
+    </div>
+    <div
+      class="col-12 sm:col-6 md:col-3 flex justify-content-center lg:justify-content-end"
+    >
+      <button
+        class="w-12"
+        pButton
+        icon="pi pi-times"
+        (click)="onCancel()"
+        [style]="{ float: 'right' }"
+        [label]="'GENERAL.CANCEL' | translate"
+        [pTooltip]="'GENERAL.CANCEL' | translate"
+        tooltipPosition="top"
+        iconPos="left"
+        [disabled]="isSubmitting"
+      ></button>
+      <button
+        class="w-12 ml-3"
+        pButton
+        [disabled]="
+          indexActive !== 2
+            ? !canActivateNext || isSubmitting
+            : canActive || isSubmitting
+        "
+        pButton
+        [label]="
+          indexActive !== 2
+            ? ('GENERAL.NEXT' | translate)
+            : isSubmitting
+            ? ('GENERAL.PROCESSING' | translate)
+            : ('GENERAL.CONFIRM' | translate)
+        "
+        [pTooltip]="
+          indexActive !== 2
+            ? ('GENERAL.NEXT' | translate)
+            : isSubmitting
+            ? ('GENERAL.PROCESSING' | translate)
+            : ('GENERAL.CONFIRM' | translate)
+        "
+        [style]="{ float: 'right' }"
+        tooltipPosition="top"
+        icon="pi pi-chevron-right"
+        iconPos="right"
+        (click)="submitForm()"
+      ></button>
+    </div>
+  </div>
+</ocx-portal-page>

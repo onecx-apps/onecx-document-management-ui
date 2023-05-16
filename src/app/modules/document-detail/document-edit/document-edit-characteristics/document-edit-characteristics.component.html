@@ -1,0 +1,68 @@
+<h5 class="mb-4">
+  {{ 'DOCUMENT_DETAIL.CHARACTERISTICS.HEADER' | translate }}
+  <button
+    pButton
+    class="p-button-rounded p-button-text -mb-2"
+    icon="pi pi-plus"
+    [pTooltip]="'GENERAL.ADD' | translate"
+    tooltipPosition="top"
+    (click)="addEmptyForm()"
+    [disabled]="!isEditable"
+  ></button>
+</h5>
+<form #categoryForm="ngForm" class="pt-1">
+  <div
+    class="p-fluid grid align-items-center"
+    *ngFor="let characteristic of genericFormArray.controls; index as i"
+  >
+    <ng-container [formGroup]="characteristic">
+      <div class="field col-12 md:col-4">
+        <span class="p-float-label">
+          <input
+            pInputText
+            type="text"
+            formControlName="name"
+            maxlength="40"
+            [attr.disabled]="!isEditable ? '' : null"
+            (blur)="trimSpace()"
+            (keypress)="preventSpace($event)"
+            pattern="^[a-zA-Z0-9-_][\sa-zA-Z0-9-_]*"
+          />
+          <label for="name">{{
+            'DOCUMENT_DETAIL.CHARACTERISTICS.NAME' | translate
+          }}</label>
+        </span>
+      </div>
+      <div class="field col-12 md:col-4">
+        <span class="p-float-label">
+          <input
+            pInputText
+            type="text"
+            formControlName="value"
+            maxlength="40"
+            [attr.disabled]="!isEditable ? '' : null"
+            (blur)="trimSpace()"
+            (keypress)="preventSpace($event)"
+          />
+          <label for="value">{{
+            'DOCUMENT_DETAIL.CHARACTERISTICS.VALUE' | translate
+          }}</label>
+        </span>
+      </div>
+    </ng-container>
+    <div class="field col-12 md:col-2">
+      <button
+        pButton
+        class="delete-icon p-button-text p-button-rounded"
+        type="button"
+        iconPos="right"
+        icon="pi pi-trash"
+        title="{{ 'GENERAL.DELETE' | translate }}"
+        [pTooltip]="'GENERAL.DELETE' | translate"
+        tooltipPosition="top"
+        (click)="removeForm(i)"
+        [attr.disabled]="!isEditable ? '' : null"
+      ></button>
+    </div>
+  </div>
+</form>

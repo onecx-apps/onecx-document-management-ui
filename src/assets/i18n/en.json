@@ -1,0 +1,339 @@
+{
+  "GENERAL": {
+    "YES": "Yes",
+    "NO": "No",
+    "ACTION": "Action",
+    "CREATE": "Create",
+    "ADD": "Add",
+    "SAVE": "Save",
+    "EDIT": "Edit",
+    "CLOSE": "Close",
+    "DELETE": "Delete",
+    "SUBMIT": "Submit",
+    "NEXT": "Next",
+    "CANCEL": "Cancel",
+    "BACK": "Back",
+    "FORM_INVALID": "Error, form is invalid.",
+    "DOWNLOAD": "Download",
+    "DOWNLOAD_ZIP": "Download ZIP",
+    "SORT": "Sort",
+    "PROCESSING": "Processing...",
+    "NAME": "Name",
+    "CONFIRM": "Confirm",
+    "REMOVE": "Remove",
+    "SUCCESS": "Success",
+    "FAILED": "Failed",
+    "LOAD_MORE": "Load More"
+  },
+  "DOCUMENT_MORE": {
+    "DOCUMENT_BULK": "Bulk Changes"
+  },
+  "DOCUMENT_MENU": {
+    "DOCUMENT_CREATE": {
+      "HEADER": "Create document",
+      "CREATE_SUCCESS": "The document was sucessfully created.",
+      "CREATE_ERROR": "Error, the document could not be created."
+    },
+    "DOCUMENT_MORE": {
+      "DOCUMENT_BULK": {
+        "HEADER": "Bulk changes",
+        "CHOOSE_DOCUMENT": "Choose Documents",
+        "CHOOSE_MODIFICATION": "Choose Modification",
+        "MODIFICATION_CONFIRMATION": "Modification Details & Confirmation on updates",
+        "DELETE_DOCUMENT_NOTIFICATION": "The Following documents will be deleted",
+        "UPDATE_MODIFICATION_DETAILS": "Modification Details & Confirmation on updates",
+        "UPDATE_MODIFICATION_NOTIFICATION": "The modified data will be updated in selected documents"
+      },
+      "DOCUMENT_MODIFICATION": {
+        "EDIT_DOCUMENTS": "Edit Document details",
+        "DELETE_DOCUMENTS": "Delete Documents",
+        "ADD_ATTACHMENTS": "Add Attachments",
+        "DELETE_ATTACHMENTS": "Delete Attachments",
+        "DOWNLOAD_ATTACHMENTS": "Download Attachments",
+        "ADD_CHARACTERISTICS": "Add Characteristics",
+        "DELETE_CHARACTERISTICS": "Delete Characteristics",
+        "EDIT_DOCUMENTS_DESC": "Updates field values of selected documents",
+        "DELETE_DOCUMENTS_DESC": "Deletes the selected documents",
+        "ADD_ATTACHMENTS_DESC": "Add one or more attachments to the existing attachment list",
+        "DELETE_ATTACHMENTS_DESC": "Delete one or more attachments from the existing attachment list",
+        "DOWNLOAD_ATTACHMENTS_DESC": "Downloads all the existing attachments of selected documents in a zip file",
+        "ADD_CHARACTERISTICS_DESC": "Add one or more Characteristics to the existing Characteristics of documents",
+        "DELETE_CHARACTERISTICS_DESC": "Delete one or more Characteristics from the existing Characteristics of documents"
+      },
+      "SELECTED_DOCUMENTS": {
+        "UPDATE_SUCCESS": "Selected Document(s) successfully Updated",
+        "DELETE_SUCCESS": "Selected Document(s) successfully deleted",
+        "BULK_ERROR": "Bulk Changes failed"
+      }
+    },
+    "DOCUMENT_EXPORT": "Export all documents",
+    "DOCUMENT_EDIT": {
+      "HEADER": "Edit document",
+      "SUBHEADER": "Document",
+      "TYPE": "Document Type",
+      "CREATED_BY": "Created By",
+      "CREATED_ON": "Created On",
+      "STATUS": "Status",
+      "DOCUMENT_DETAILS": "Document Details",
+      "RELATED_OBJECT": "Related Object",
+      "ATTACHMENT": "Attachments",
+      "CHARACTERISTICS": "Characteristics",
+      "UPDATE_SUCCESS": "The document was sucessfully updated.",
+      "UPDATE_ERROR": "Error, the document could not be updated.",
+      "FETCH_ERROR": "The Document could not be fetched",
+      "EMPTY_REQUIRED_FIELD_ERROR": "Mandatory fields missing",
+      "NEGATIVE_VALUE_ERROR": "Negative values are not allowed.",
+      "INVALID_VALUE_ERROR": "Please enter valid value."
+    },
+    "DOCUMENT_DELETE": {
+      "DELETE_SUCCESS": "The document was successfully deleted.",
+      "DELETE_ERROR": "Error, document wasn't successfully deleted.",
+      "DELETE_MESSAGE": "Are you sure that you want to delete this document?",
+      "DELETE_HEADER": "Delete a document"
+    },
+    "BREADCRUMB": "Document Management"
+  },
+  "DOCUMENT_DETAIL": {
+    "HEADER": "Document Details",
+    "SUBHEADER": "Related Object",
+    "COLUMN_TEMPLATES": {
+      "PLACEHOLDER": "Table View",
+      "EXTENDED": "Extended",
+      "FULL": "Full"
+    },
+    "DOCUMENT_CANCEL_MODAL": {
+      "CANCEL_CONFIRM_MESSAGE": "Unsaved data will be lost and document will not be created, do you want to cancel?"
+    },
+    "ACCORDION_HEADERS": {
+      "TAGS": "Tags",
+      "CHANNEL": "Channel",
+      "ATTACHMENTS": "Attachments",
+      "CATEGORIES": "Categories",
+      "CHARACTERISTICS": "Characteristics",
+      "RELATED_OBJECT": "Related Object",
+      "RELATED_PARTIES": "Related Parties",
+      "DOCUMENT_RELATIONSHIP": "Document Relationship"
+    },
+    "BULK_UPDATE": {
+      "UPDATE_MODIFICATION_DETAILS": "Modification Details & Confirmation on updates",
+      "UPDATE_MODIFICATION_CAPTION": "The modified data will be updated in selected documents",
+      "UPDATE_DOCUMENT_TYPE": "Update Document Type",
+      "UPDATE_DOCUMENT_VERSION": "Update Version",
+      "UPDATE_DOCUMENT_CHANNEL": "Update Channel",
+      "UPDATE_DOCUMENT_SPECIFICATION": "Update Specification",
+      "UPDATE_DOCUMENT_STATUS": "Update Status",
+      "UPDATE_DOCUMENT_INVOLVEMENT": "Update Involvement",
+      "UPDATE_OBJECT_REFERENCE_TYPE": "Update Object Reference Type",
+      "UPDATE_OBJECT_REFERENCE_ID": "Update Object Reference Id",
+      "UPDATE_ATTACHMENT_VALIDITY": "Update Attachment Validity",
+      "UPDATE_DOCUMENT_DESCRIPTION": "Update Document Description",
+      "UPDATE_ATTACHMENT_DESCRIPTION": "Update Attachment Description",
+      "VALIDITY_INFO": "Validity will be updated only in those documents which has attachments",
+      "ATTACHMENT_DESCRIPTION_INFO": "Description will be updated only in those documents which has attachments"
+    },
+    "BASIC_FIELDS": {
+      "DOCUMENT_NAME": "Document Name",
+      "DOCUMENT_TYPE": "Document Type",
+      "DOCUMENT_VERSION": "Version",
+      "DOCUMENT_CHANNEL": "Channel",
+      "DOCUMENT_SPECIFICATION": "Specification",
+      "DOCUMENT_STATUS": "Status",
+      "DOCUMENT_DESCRIPTION": "Description"
+    },
+    "CHANNEL": {
+      "NAME": "Channel name"
+    },
+    "CATEGORY": {
+      "NAME": "Category name",
+      "VERSION": "Category version"
+    },
+    "RELATED_PARTY_REF": {
+      "ID": "Id",
+      "NAME": "Name",
+      "ROLE": "Role",
+      "VALID_FROM": "Valid from",
+      "VALID_TO": "Valid to"
+    },
+    "RELATED_OBJECT": {
+      "INVOLVEMENT": "Involvement",
+      "OBJECT_REFERENCE_TYPE": "Object Reference Type",
+      "OBJECT_REFERENCE_ID": "Object Reference Id"
+    },
+    "ATTACHMENTS": {
+      "HEADER": "Add Attachments",
+      "NAME": "Name",
+      "DESCRIPTION": "Description",
+      "UNIT": "Unit",
+      "TYPE": "Type",
+      "SIZE": "Size",
+      "VALIDITY": "Validity",
+      "TIME_PERIOD": "Time Period",
+      "STORAGE": "Storage",
+      "STORAGE_URL": "Storage URL",
+      "MIME_TYPE": "Mime Type",
+      "UPLOAD_SUCCESS": "File successfully uploaded",
+      "UPLOAD_ERROR": "Failed to upload file",
+      "DELETE_SUCCESS": "File successfully deleted",
+      "DELETE_ERROR": "Failed to delete file",
+      "CHOOSE_BTN_TITLE": "Choose",
+      "ALLOWED_FILETYPE_MESSAGE": "Allowed file types: Word, Excel, PPT, PDF, Image, Video, Audio",
+      "ALLOWED_FILESIZE_MESSAGE": "Size limit: upto 2 MB",
+      "FILESIZE_ERROR_MESSAGE": "{{filename}} file size exceeds maximum limit. Maximum allowed file size is 2 MB",
+      "DRAG_DROP": "Drag & Drop files here",
+      "OR": "or",
+      "FILE_SIZE_LIMIT": "Exceeds size limit of 2MB",
+      "UPLOAD_STATUS": "Upload Status"
+    },
+    "RELATIONSHIP": {
+      "NAME": "Name",
+      "TYPE": "Type",
+      "DOCUMENT_REF_ID": "Document Reference ID"
+    },
+    "CHARACTERISTICS": {
+      "HEADER": "Add Characteristics",
+      "NAME": "Name",
+      "VALUE": "Value"
+    },
+    "MULTIPLE_ATTACHMENTS": {
+      "UPLOAD_SUCCESS": "File(s) successfully uploaded",
+      "UPLOAD_ERROR": "File(s) failed to upload ",
+      "DELETE_SUCCESS": "File(s) successfully deleted",
+      "DELETE_ERROR": "File(s) failed to delete",
+      "NO_DATA": "No attachments found"
+    }
+  },
+  "DOCUMENT_TIMELINE": {
+    "TITLE": "Life Cycle State",
+    "MISSING_TIMELINE": "There is no timeline available"
+  },
+  "DOCUMENT_SEARCH": {
+    "HEADER": "Document Search",
+    "QUICK_UPLOAD": "Quick Upload",
+    "CREATE_DOCUMENT": "Create New Document",
+    "MSG_NO_RESULTS": "Search returned no results.",
+    "CRITERIA": {
+      "NAME": "Document Name",
+      "DOCUMENT_ID": "Document ID",
+      "DOCUMENT_TYPE": "Document Type",
+      "DOCUMENT_STATE": "Status",
+      "DOCUMENT_START_DATE": "Created From",
+      "DOCUMENT_END_DATE": "Created To",
+      "DOCUMENT_CREATEDBY": "Created By",
+      "DOCUMENT_OBJECTREFERENCEID": "Object Reference ID",
+      "DOCUMENT_OBJECTREFERENCETYPE": "Object Reference Type",
+      "CHANNEL": "Channel",
+      "SEARCH": "Search",
+      "SEARCH_TOOLTIP": "Search for documents with provided criteria",
+      "RESET": "Reset",
+      "RESET_TOOLTIP": "Clear criteria values"
+    },
+    "TABLE": {
+      "HEADER": {
+        "NAME": "Name",
+        "DESCRIPTION": "Description",
+        "DOCUMENT_TYPE": "Type",
+        "CHANNEL": "Channel",
+        "DOCUMENT_STATE": "State",
+        "DOCUMENT_SPECIFICATION": "Specification",
+        "DOCUMENT_VERSION": "Version",
+        "ACTIONS": "Actions",
+        "MODIFICATION_DATE": "Modification Date",
+        "EDITED": "Edited"
+      }
+    },
+    "DELETE_DOCUMENT": "Delete This Document"
+  },
+  "RESULTS": {
+    "NO_DATA": "No documents found",
+    "EDITED": "Edited",
+    "TITLE": "Title",
+    "DATE_CREATED": "Date created",
+    "LAST_MODIFIED": "Last modified",
+    "CREATED": "Created By",
+    "CREATED_ON": "Created On",
+    "NAME": "Document Name",
+    "DOCUMENT_TYPE": "Document Type",
+    "STATUS": "Status",
+    "MODIFICATION_DATE": "Modification Date",
+    "VERSION": "Version"
+  },
+  "DELETE_DOCUMENT": {
+    "DELETE_MESSAGE": "Are you sure you want to delete this document?",
+    "SUCCESS": "Document successfully deleted",
+    "ERROR": "Document not deleted"
+  },
+  "DOCUMENT_SPECIFICATION": {
+    "HEADERS": {
+      "CREATE": "Create document specification",
+      "EDIT": "Edit document specification",
+      "LIST": "Document Specification"
+    },
+    "FIELDS": {
+      "NAME": "Specification name",
+      "VERSION": "Specification version"
+    },
+    "CREATE": {
+      "CREATE_SUCCESS": "The document specification was sucessfully created.",
+      "CREATE_ERROR": "Error, the document specification could not be created."
+    },
+    "EDIT": {
+      "UPDATE_SUCCESS": "The document specification was sucessfully updated.",
+      "UPDATE_ERROR": "Error, the document specification could not be updated."
+    },
+    "DELETE": {
+      "DELETE_HEADER": "Delete a document specification",
+      "MESSAGE": "Are you sure that you want to delete this document specification?",
+      "DELETE_SUCCESS": "The document specification was sucessfully deleted.",
+      "DELETE_ERROR": "Error, the document specification could not be deleted."
+    }
+  },
+  "MIME_TYPE": {
+    "HEADERS": {
+      "CREATE": "Create attachment mime type",
+      "EDIT": "Edit attachment mime type",
+      "LIST": "Attachment Mime Type"
+    },
+    "FIELDS": {
+      "NAME": "Name",
+      "DESCRIPTION": "Description"
+    },
+    "CREATE": {
+      "CREATE_SUCCESS": "The mime type was successfully created.",
+      "CREATE_ERROR": "Error, mime type wasn't successfully created."
+    },
+    "EDIT": {
+      "UPDATE_SUCCESS": "The mime type was successfully updated.",
+      "UPDATE_ERROR": "Error, mime type wasn't successfully updated."
+    },
+    "DELETE": {
+      "DELETE_SUCCESS": "The mime type was successfully deleted.",
+      "DELETE_ERROR": "Error, mime type wasn't successfully deleted.",
+      "MESSAGE": "Are you sure that you want to delete this mime type?",
+      "DELETE_HEADER": "Delete a mime type"
+    }
+  },
+  "DOCUMENT_TYPE": {
+    "HEADERS": {
+      "CREATE": "Create document type",
+      "EDIT": "Edit document type",
+      "LIST": "Document Type"
+    },
+    "FIELDS": {
+      "NAME": "Name"
+    },
+    "CREATE": {
+      "CREATE_SUCCESS": "The document type was successfully created.",
+      "CREATE_ERROR": "Error, document type wasn't successfully created."
+    },
+    "EDIT": {
+      "UPDATE_SUCCESS": "The document type was successfully updated.",
+      "UPDATE_ERROR": "Error, document type wasn't successfully updated."
+    },
+    "DELETE": {
+      "DELETE_SUCCESS": "The document type was successfully deleted.",
+      "DELETE_ERROR": "Error, document type wasn't successfully deleted.",
+      "MESSAGE": "Are you sure that you want to delete this document type?",
+      "DELETE_HEADER": "Delete a document type"
+    }
+  }
+}

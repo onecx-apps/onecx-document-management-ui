@@ -1,0 +1,62 @@
+<ocx-portal-page>
+  <ocx-search-criteria
+    pageName="document-search"
+    header="{{ 'DOCUMENT_SEARCH.HEADER' | translate }}"
+    [actions]="headerActions"
+  >
+    <div toolbarItems class="flex gap-1">
+      <button
+        *ocxIfPermission="'DOCUMENT_MGMT#DOCUMENT_UPLOAD'"
+        pButton
+        icon="pi pi-upload"
+        label="{{ 'DOCUMENT_SEARCH.QUICK_UPLOAD' | translate }}"
+        pTooltip="{{ 'DOCUMENT_SEARCH.QUICK_UPLOAD' | translate }}"
+        tooltipPosition="top"
+        [routerLink]="['../detail/quickupload']"
+        class="mr-1"
+      ></button>
+    </div>
+    <div toolbarItems class="flex gap-1">
+      <button
+        *ocxIfPermission="'DOCUMENT_MGMT#DOCUMENT_CREATE'"
+        pButton
+        label="{{ 'DOCUMENT_SEARCH.CREATE_DOCUMENT' | translate }}"
+        pTooltip="{{ 'DOCUMENT_SEARCH.CREATE_DOCUMENT' | translate }}"
+        tooltipPosition="top"
+        icon="pi pi-plus"
+        [routerLink]="['../detail/create']"
+      ></button>
+    </div>
+    <app-criteria simpleCriteria></app-criteria>
+    <app-document-criteria-advanced
+      advancedCriteria
+    ></app-document-criteria-advanced>
+  </ocx-search-criteria>
+  <div class="card mt-2 p-0">
+    <app-results
+      [results]="results"
+      [totalElements]="totalElements"
+      [isShow]="isShow"
+      (deleteDocument)="deleteDocument($event)"
+      (isLoadMoreDisableEvent)="isLoadMoreDisableEvent($event)"
+      (updatedView)="updatedView($event)"
+      [isSearchClicked]="isSearchClicked"
+      results
+    ></app-results>
+    <button
+      *ngIf="isLoadMoreVisible"
+      pButton
+      class="p-button-link"
+      [ngClass]="
+        updatedDataView === 'list' || updatedDataView === 'grid'
+          ? 'next-button-view'
+          : 'next-button'
+      "
+      label="{{ 'GENERAL.LOAD_MORE' | translate }}"
+      (click)="loadMoreResults()"
+      [disabled]="isLoadMoreDisable"
+      icon="pi pi-angle-double-right"
+      iconPos="right"
+    ></button>
+  </div>
+</ocx-portal-page>

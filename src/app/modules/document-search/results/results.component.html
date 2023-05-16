@@ -1,0 +1,277 @@
+<div class="p-3 border-bottom-1 surface-border">
+  <ocx-data-view-controls
+    *ngIf="columnTemplate"
+    [supportedViews]="['list', 'grid', 'table']"
+    [initialViewMode]="'table'"
+    [enableFiltering]="false"
+    [enableSorting]="layout !== 'table'"
+    [sortingOptions]="sortFields"
+    (sortChange)="onSortFieldChange($event)"
+    (sortDirectionChange)="onSortOrderChange($event)"
+    [columnDefinitions]="columns"
+    [columnTemplates]="columnTemplate"
+    (columnsChange)="handleColumnChange($event)"
+    (dataViewChange)="updateResultsLayout($event)"
+    dropdownPlaceholderText="DOCUMENT_DETAIL.COLUMN_TEMPLATES.PLACEHOLDER"
+  ></ocx-data-view-controls>
+</div>
+
+<!-- list and grid view -->
+<div *ngIf="layout !== 'table'">
+  <p-dataView
+    #dv
+    *ngIf="isShow"
+    [sortField]="sortField"
+    [sortOrder]="sortOrder"
+    [value]="results"
+    [paginator]="showPaginator"
+    [rows]="rowsPerPage"
+    [layout]="layout"
+    [rowsPerPageOptions]="rowsPerPageOptions"
+    emptyMessage="{{ 'RESULTS.NO_DATA' | translate }}"
+    [totalRecords]="results"
+    [showFirstLastIcon]="false"
+    [showCurrentPageReport]="showPageReport"
+    currentPageReportTemplate="Showing {last} out of {{ totalElements }}"
+    (onPage)="onPageChange($event)"
+  >
+    <ng-template let-result pTemplate="gridItem">
+      <div class="col-12 lg:col-6 xl:col-3 flex">
+        <div
+          class="card flex flex-column justify-content-between w-12 lg:w-11 mb-4 mt-4 align-self-stretch"
+        >
+          <div class="mb-6">
+            <div class="result-name mr-3 text-2xl font-medium mb-3">
+              <a routerLink="../detail/edit/{{ result.id }}"
+                ><span pTooltip="{{ result.name }}">
+                  {{ result.name | trim: 15 }}
+                </span>
+              </a>
+            </div>
+            <div class="text-lg font-light">
+              <div *ngIf="result.type.name">
+                {{ result.type.name }}
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-row justify-content-between align-items-center">
+            <div class="flex-row">
+              <div class="text-base font-light my-1">
+                <div *ngIf="result.modificationDate && result.creationUser">
+                  {{ 'RESULTS.EDITED' | translate }}
+                  {{ result.modificationDate | relativeDate }} |
+                  {{ 'RESULTS.CREATED' | translate }} {{ result.creationUser }}
+                </div>
+                <div *ngIf="result.modificationDate && !result.creationUser">
+                  {{ 'RESULTS.EDITED' | translate }}
+                  {{ result.modificationDate | relativeDate }}
+                </div>
+                <div *ngIf="!result.modificationDate && result.creationUser">
+                  {{ 'RESULTS.EDITED' | translate }}
+                  {{ result.modificationDate | relativeDate }}
+                </div>
+              </div>
+            </div>
+            <div>
+              <p-menu
+                #menu
+                appendTo="body"
+                [popup]="true"
+                [model]="items"
+              ></p-menu>
+              <button
+                class="button"
+                pButton
+                label="&#8942;"
+                (click)="menu.toggle($event); setSelectedDocument(result)"
+                width="5%"
+                height="5%"
+              ></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template let-result pTemplate="listItem">
+      <div class="col-12">
+        <div class="flex flex-1 align-items-center p-3 w-full">
+          <div class="flex-1">
+            <div class="result-name-row flex flex-row justify-content-between">
+              <div class="result-name mr-3 text-2xl font-medium">
+                <a routerLink="../detail/edit/{{ result.id }}">{{
+                  result.name
+                }}</a>
+              </div>
+              <div
+                class="flex flex-column md:flex-row md:justify-content-between"
+              >
+                <button
+                  *ocxIfPermission="'DOCUMENT_MGMT#DOCUMENT_EDIT'"
+                  type="button"
+                  icon="pi pi-pencil"
+                  pButton
+                  class="p-button-rounded p-button-text mb-1 mr-2"
+                  title="{{ 'GENERAL.EDIT' | translate }}"
+                  routerLink="../detail/edit/{{ result.id }}"
+                ></button>
+                <button
+                  type="button"
+                  icon="pi pi-trash"
+                  class="p-button-rounded p-button-text mb-1 mr-2"
+                  pButton
+                  title="{{ 'GENERAL.DELETE' | translate }}"
+                  (click)="
+                    deleteDialogVisible = true; setSelectedDocument(result)
+                  "
+                ></button>
+              </div>
+            </div>
+            <div class="text-lg font-light">
+              <div *ngIf="result.type.name">
+                {{ result.type.name }}
+              </div>
+            </div>
+            <div class="text-base font-light my-1">
+              <div *ngIf="result.modificationDate && result.creationUser">
+                {{ 'RESULTS.EDITED' | translate }}
+                {{ result.modificationDate | relativeDate }} |
+                {{ 'RESULTS.CREATED' | translate }} {{ result.creationUser }}
+              </div>
+              <div *ngIf="result.modificationDate && !result.creationUser">
+                {{ 'RESULTS.EDITED' | translate }}
+                {{ result.modificationDate | relativeDate }}
+              </div>
+              <div *ngIf="!result.modificationDate && result.creationUser">
+                {{ 'RESULTS.EDITED' | translate }}
+                {{ result.modificationDate | relativeDate }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </p-dataView>
+</div>
+
+<!-- table view -->
+<div *ngIf="layout === 'table'">
+  <div class="p-3">
+    <p-table
+      [value]="results"
+      responsiveLayout="scroll"
+      [paginator]="showPaginator"
+      [rows]="rowsPerPage"
+      [columns]="filteredColumns"
+      [rowsPerPageOptions]="rowsPerPageOptions"
+      [(first)]="first"
+      [totalRecords]="results"
+      [showFirstLastIcon]="false"
+      [showCurrentPageReport]="showPageReport"
+      currentPageReportTemplate="Showing {last} out of {{ totalElements }}"
+      (onPage)="onPageChange($event)"
+    >
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+            {{ col.translationPrefix + '.' + col.header | translate }}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+          </th>
+          <th class="pl-5">
+            {{ 'DOCUMENT_SEARCH.TABLE.HEADER.ACTIONS' | translate }}
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-result>
+        <tr>
+          <ng-template ngFor let-col [ngForOf]="filteredColumns">
+            <td *ngIf="col.field === 'name'; else ifModificationDate">
+              <a
+                pTooltip="{{ result.name }}"
+                routerLink="../detail/edit/{{ result.id }}"
+                >{{ result.name | trim: 30 }}</a
+              >
+            </td>
+            <ng-template #ifModificationDate>
+              <td *ngIf="col.field === 'modificationDate'; else ifDocumentType">
+                <div class="text-base font-light my-1">
+                  <div *ngIf="result.modificationDate">
+                    {{ 'RESULTS.EDITED' | translate }}
+                    {{ result.modificationDate | relativeDate }}
+                  </div>
+                </div>
+              </td>
+            </ng-template>
+            <ng-template #ifDocumentType>
+              <td *ngIf="col.field === 'type.name'; else elseBlock">
+                {{ result.type.name }}
+              </td>
+            </ng-template>
+            <ng-template #elseBlock>
+              <td>
+                {{ result[col.field] }}
+              </td>
+            </ng-template>
+          </ng-template>
+          <td>
+            <div class="flex flex-initial flex-column md:flex-row">
+              <button
+                *ocxIfPermission="'DOCUMENT_MGMT#DOCUMENT_EDIT'"
+                type="button"
+                icon="pi pi-pencil"
+                pButton
+                class="p-button-rounded p-button-text mb-1 mr-2"
+                title="{{ 'GENERAL.EDIT' | translate }}"
+                routerLink="../detail/edit/{{ result.id }}"
+              ></button>
+              <button
+                type="button"
+                icon="pi pi-trash"
+                class="p-button-rounded p-button-text mb-1 mr-2"
+                pButton
+                title="{{ 'GENERAL.DELETE' | translate }}"
+                (click)="
+                  deleteDialogVisible = true; setSelectedDocument(result)
+                "
+              ></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8">{{ 'RESULTS.NO_DATA' | translate }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<!-- delete dialog -->
+<p-dialog
+  header="{{ 'DOCUMENT_SEARCH.DELETE_DOCUMENT' | translate }}"
+  [(visible)]="deleteDialogVisible"
+  [baseZIndex]="10000"
+  [modal]="true"
+>
+  <p>{{ 'DELETE_DOCUMENT.DELETE_MESSAGE' | translate }}</p>
+  <div>
+    <b>{{ 'GENERAL.NAME' | translate }}</b
+    >: {{ selectedDocument?.name }}
+  </div>
+  <p-footer class="btn-text">
+    <button
+      type="button"
+      pButton
+      icon="pi pi-times"
+      (click)="onCancelDelete()"
+      label="{{ 'GENERAL.NO' | translate }}"
+    ></button>
+    <button
+      type="button"
+      pButton
+      icon="pi pi-check"
+      (click)="onDelete()"
+      label="{{ 'GENERAL.YES' | translate }}"
+    ></button>
+  </p-footer>
+</p-dialog>

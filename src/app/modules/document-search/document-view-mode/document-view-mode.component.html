@@ -1,0 +1,26 @@
+<span class="p-buttonset">
+  <button
+    type="button"
+    pButton
+    class="p-button p-button-icon-only"
+    [ngClass]="{ 'p-highlight': layoutStyle === 'list' }"
+    icon="pi pi-bars"
+    (click)="layoutSwitched('list')"
+  ></button>
+  <button
+    type="button"
+    pButton
+    class="p-button p-button-icon-only"
+    [ngClass]="{ 'p-highlight': layoutStyle === 'grid' }"
+    icon="pi pi-th-large"
+    (click)="layoutSwitched('grid')"
+  ></button>
+  <button
+    type="button"
+    pButton
+    class="p-button p-button-icon-only"
+    [ngClass]="{ 'p-highlight': layoutStyle === 'table' }"
+    icon="pi pi-table"
+    (click)="layoutSwitched('table')"
+  ></button>
+</span>
