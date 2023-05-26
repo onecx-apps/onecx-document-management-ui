@@ -1,3 +1,4 @@
+// Core imports
 import { Component, OnInit } from '@angular/core';
 import {
   UntypedFormBuilder,
@@ -12,7 +13,7 @@ export class GenericFormGroupComponent<T> implements OnInit {
   public genericFormGroup: UntypedFormGroup;
   public emptyTemplateObject = {};
 
-  constructor(private readonly fb: UntypedFormBuilder) {}
+  constructor() {}
 
   public ngOnInit(): void {
     this.genericFormGroup = new UntypedFormGroup({});
@@ -26,7 +27,10 @@ export class GenericFormGroupComponent<T> implements OnInit {
       );
     });
   }
-
+  /**
+   * function to update genericFormGroup
+   * @param object
+   */
   public updateForm(object: T): void {
     this.genericFormGroup = new UntypedFormGroup({});
     Object.keys(this.emptyTemplateObject).forEach((attr) => {

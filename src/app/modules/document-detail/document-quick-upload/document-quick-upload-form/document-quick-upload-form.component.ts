@@ -1,3 +1,4 @@
+// Core imports
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 import {
   FormControl,
@@ -5,19 +6,21 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
+
+// Third party imports
+import { TranslateService } from '@ngx-translate/core';
 import { SelectItem } from 'primeng/api';
 import { Subscription } from 'rxjs';
+
+// Application imports
 import {
   DocumentTypeControllerV1APIService,
   DocumentTypeDTO,
   LifeCycleState,
   DocumentCreateUpdateDTO,
-} from 'src/app/generated';
-import {
   SupportedMimeTypeControllerV1APIService,
   SupportedMimeTypeDTO,
 } from 'src/app/generated';
-import { TranslateService } from '@ngx-translate/core';
 import { trimSpaces } from 'src/app/utils';
 
 @Component({
@@ -26,36 +29,39 @@ import { trimSpaces } from 'src/app/utils';
   styleUrls: ['./document-quick-upload-form.component.scss'],
 })
 export class DocumentQuickUploadFormComponent implements OnInit {
-  documentCreateUpdateDTO: DocumentCreateUpdateDTO;
-  showToaster = false;
-  attachmentsRespArray: any[];
-  subscriptions = new Subscription();
-  constructor(
-    private readonly documentTypeRestApi: DocumentTypeControllerV1APIService,
-    private readonly supportedMimeTypeAPI: SupportedMimeTypeControllerV1APIService,
-    private readonly translateService: TranslateService
-  ) {}
-  @Output()
-  public allDocumentTypes: DocumentTypeDTO[];
-  public documentTypes: SelectItem[];
-  public documentStatus: SelectItem[];
-  documentQuickUploadForm: UntypedFormGroup;
+  @Input() attachmentArray;
   @Output() enableCreateButton = new EventEmitter<boolean>();
   @Output() formValid = new EventEmitter<any>();
   @Output() attchmentList = new EventEmitter<any>();
   @Output() selectedFileList = new EventEmitter<any>();
-  translatedData: any;
-  attachmentFieldsForm: UntypedFormGroup;
-  fileData: any;
-  @Input() attachmentArray;
-  public supportedMimeType: SelectItem[];
-  public loadedSupportedMimeType: SupportedMimeTypeDTO[];
-  uploadFileMimetype: any;
-  fileType: any = {};
-  files: any = [];
+
+  showToaster = false;
   isSubmitted = false;
 
+  documentCreateUpdateDTO: DocumentCreateUpdateDTO;
+  documentQuickUploadForm: UntypedFormGroup;
+  attachmentFieldsForm: UntypedFormGroup;
+  allDocumentTypes: DocumentTypeDTO[];
+  loadedSupportedMimeType: SupportedMimeTypeDTO[];
+  documentTypes: SelectItem[];
+  documentStatus: SelectItem[];
+  supportedMimeType: SelectItem[];
+  attachmentsRespArray: any[];
+  files: any = [];
+  fileType: any = {};
+  translatedData: any;
+  fileData: any;
+  uploadFileMimetype: any;
+  subscriptions = new Subscription();
+
+  constructor(
+    private readonly documentTypeV1Service: DocumentTypeControllerV1APIService,
+    private readonly supportedMimeTypeV1Service: SupportedMimeTypeControllerV1APIService,
+    private readonly translateService: TranslateService
+  ) {}
+
   ngOnInit(): void {
+    this.getTranslatedData();
     this.documentQuickUploadForm = new FormGroup({
       documentName: new FormControl('', [Validators.required]),
       typeId: new FormControl('', [Validators.required]),
@@ -65,6 +71,14 @@ export class DocumentQuickUploadFormComponent implements OnInit {
     this.loadAllDocumentTypes();
     this.loadDocumentStatus();
     this.getMimetype();
+    this.documentQuickUploadForm.valueChanges.subscribe(() => {
+      this.formValid.emit(this.documentQuickUploadForm);
+    });
+  }
+  /**
+   * function to get translatedData from translateService
+   */
+  getTranslatedData(): void {
     this.translateService
       .get([
         'DOCUMENT_MENU.DOCUMENT_CREATE.CREATE_SUCCESS',
@@ -79,19 +93,18 @@ export class DocumentQuickUploadFormComponent implements OnInit {
       .subscribe((data) => {
         this.translatedData = data;
       });
-    this.documentQuickUploadForm.valueChanges.subscribe(() => {
-      this.formValid.emit(this.documentQuickUploadForm);
-    });
   }
   /**
-   * function to eliminate space from the beginning of the required fields
+   *function to trim empty space from the begining and end of the form field on blur event
    */
   trimSpace(event: any) {
     let controlName = event.target.getAttribute('formControlName');
     let value = event.target.value.trim();
     this.documentQuickUploadForm.controls[controlName].setValue(value);
   }
-
+  /**
+   * function to trim empty space from the begining and end of the form field on paste event
+   */
   trimSpaceOnPaste(
     event: ClipboardEvent,
     controlName: string,
@@ -104,7 +117,9 @@ export class DocumentQuickUploadFormComponent implements OnInit {
       maxlength
     );
   }
-
+  /**
+   * function to eliminate space from the beginning of the required fields on key press event
+   */
   preventSpace(event: any) {
     if (event.target.selectionStart === 0 && event.code === 'Space')
       event.preventDefault();
@@ -112,9 +127,8 @@ export class DocumentQuickUploadFormComponent implements OnInit {
   /**
    * function to reterive document type
    */
-
   private loadAllDocumentTypes(): void {
-    this.documentTypeRestApi.getAllTypesOfDocument().subscribe((results) => {
+    this.documentTypeV1Service.getAllTypesOfDocument().subscribe((results) => {
       this.allDocumentTypes = results;
       this.documentTypes = results.map((type) => ({
         label: type.name,
@@ -149,7 +163,7 @@ export class DocumentQuickUploadFormComponent implements OnInit {
   addFile(event) {
     this.selectedFileList.emit(false);
     let files = event.target.files;
-    if (files && files.length) {
+    if (files?.length) {
       for (let i = 0; i < files.length; i++) {
         this.enterDataToListView(files[i]);
       }
@@ -173,10 +187,9 @@ export class DocumentQuickUploadFormComponent implements OnInit {
       fileName: file.name,
     };
     let uploadFileMimetype = file.type;
-    this.supportedMimeType =
-      this.supportedMimeType && this.supportedMimeType.length
-        ? this.supportedMimeType
-        : [];
+    this.supportedMimeType = this.supportedMimeType?.length
+      ? this.supportedMimeType
+      : [];
     const arr = this.supportedMimeType.filter((results) => {
       return results.label === uploadFileMimetype;
     });
@@ -199,7 +212,7 @@ export class DocumentQuickUploadFormComponent implements OnInit {
    * function reterive allowed mimetype
    */
   getMimetype() {
-    this.supportedMimeTypeAPI
+    this.supportedMimeTypeV1Service
       .getAllSupportedMimeTypes()
       .subscribe((results) => {
         this.loadedSupportedMimeType = results;
@@ -230,7 +243,7 @@ export class DocumentQuickUploadFormComponent implements OnInit {
   dropFile(event) {
     event.preventDefault();
     let files = event.dataTransfer.files;
-    if (files && files.length) {
+    if (files?.length) {
       for (let i = 0; i < files.length; i++) {
         this.enterDataToListView(files[i]);
       }
@@ -257,9 +270,7 @@ export class DocumentQuickUploadFormComponent implements OnInit {
       if (invalidAttachment.length) {
         this.enableCreateButton.emit(false);
       } else {
-        if (this.documentQuickUploadForm.valid) {
-          this.enableCreateButton.emit(true);
-        }
+        this.enableCreateButton.emit(true);
       }
     } else {
       this.enableCreateButton.emit(false);
@@ -267,7 +278,7 @@ export class DocumentQuickUploadFormComponent implements OnInit {
   }
 
   /**
-   * P002271-3966 - Function to show failed documents at top of the list
+   * Function to show failed documents at top of the list
    */
   sortAttachmentArray() {
     let validAttachmentArray: any = [];

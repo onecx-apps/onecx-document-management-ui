@@ -1,5 +1,10 @@
+// Core imports
 import { Component, Input, OnInit } from '@angular/core';
+
+// Third party imports
 import { MessageService } from 'primeng/api';
+
+// Application imports
 import {
   DocumentControllerV1APIService,
   LifeCycleState,
@@ -11,24 +16,27 @@ import {
   styleUrls: ['./document-edit-lifecycle.component.scss'],
 })
 export class DocumentEditLifecycleComponent implements OnInit {
-  @Input() public documentId: string;
+  @Input() documentId: string;
+
+  documentStatusList: { label: any; value: string }[];
+  documentStatus: any;
   timeLineEntries;
   translatedData: Record<string, string>;
-  documentStatus: any;
-  documentStatusList: { label: any; value: string }[];
 
   constructor(
-    private readonly documentAPI: DocumentControllerV1APIService,
-    private messageService: MessageService
+    private readonly documentV1Service: DocumentControllerV1APIService,
+    private readonly messageService: MessageService
   ) {}
 
   ngOnInit(): void {
     this.refreshTimeline();
     this.loadDocumentStatus();
   }
-
+  /**
+   * function to refresh timeline to show dropdown values in document status
+   */
   public refreshTimeline(): void {
-    this.documentAPI.getDocumentById({ id: this.documentId }).subscribe({
+    this.documentV1Service.getDocumentById({ id: this.documentId }).subscribe({
       next: (data) => {
         this.timeLineEntries = data;
         this.documentStatus = data.lifeCycleState;

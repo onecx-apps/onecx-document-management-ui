@@ -1,38 +1,41 @@
-import { DocumentEditLifecycleComponent } from './document-edit-lifecycle/document-edit-lifecycle.component';
+// Core imports
+import { HttpResponse } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import * as JSZip from 'jszip';
-import { saveAs } from 'file-saver';
-import {
-  Action,
-  BreadcrumbService,
-  ObjectDetailItem,
-} from '@onecx/portal-integration-angular';
-import { MessageService } from 'primeng/api';
-import { throwError, forkJoin, of } from 'rxjs';
-import { catchError, tap, map, mergeMap, defaultIfEmpty } from 'rxjs/operators';
-import {
-  AttachmentCreateUpdateDTO,
-  AttachmentDTO,
-  DocumentControllerV1APIService,
-  DocumentCreateUpdateDTO,
-  DocumentDetailDTO,
-  TimePeriodDTO,
-  UpdateDocumentRequestParams,
-} from 'src/app/generated';
 import {
   UntypedFormBuilder,
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
-import { DocumentEditCharacteristicsComponent } from './document-edit-characteristics/document-edit-characteristics.component';
+import { ActivatedRoute, Router } from '@angular/router';
+
+// Third party imports
+import * as JSZip from 'jszip';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+  Action,
+  BreadcrumbService,
+  ObjectDetailItem,
+} from '@onecx/portal-integration-angular';
+import { saveAs } from 'file-saver';
+import { MessageService } from 'primeng/api';
+import { throwError, forkJoin, of } from 'rxjs';
+import { catchError, defaultIfEmpty, tap, map, mergeMap } from 'rxjs/operators';
+
+// Application imports
 import { AttachmentUploadService } from '../attachment-upload.service';
 import { DocumentEditAttachmentComponent } from './document-edit-attachment/document-edit-attachment.component';
-import { convertToCSV } from 'src/app/utils';
-import { HttpResponse } from '@angular/common/http';
+import { DocumentEditCharacteristicsComponent } from './document-edit-characteristics/document-edit-characteristics.component';
+import { DocumentEditLifecycleComponent } from './document-edit-lifecycle/document-edit-lifecycle.component';
+import {
+  AttachmentDTO,
+  DocumentDetailDTO,
+  DocumentControllerV1APIService,
+  DocumentCreateUpdateDTO,
+  UpdateDocumentRequestParams,
+} from 'src/app/generated';
 import { DocumentTabStateService } from 'src/app/shared/document-tab-state.service';
+import { convertToCSV } from 'src/app/utils';
 
 @Component({
   selector: 'app-document-edit',
@@ -41,46 +44,49 @@ import { DocumentTabStateService } from 'src/app/shared/document-tab-state.servi
 })
 export class DocumentEditComponent implements OnInit {
   @ViewChild(DocumentEditLifecycleComponent, { static: false })
-  public documentEditLifecycleComponent: DocumentEditLifecycleComponent;
+  documentEditLifecycleComponent: DocumentEditLifecycleComponent;
   @ViewChild(DocumentEditCharacteristicsComponent, { static: false })
-  public documentEditCharacteristicsComponent: DocumentEditCharacteristicsComponent;
+  documentEditCharacteristicsComponent: DocumentEditCharacteristicsComponent;
   @ViewChild(DocumentEditAttachmentComponent, { static: false })
-  public documentEditAttachmentComponent: DocumentEditAttachmentComponent;
+  documentEditAttachmentComponent: DocumentEditAttachmentComponent;
   @ViewChild(DocumentEditAttachmentComponent)
-  public attachmentList: DocumentEditAttachmentComponent;
-  public document: DocumentDetailDTO;
-  public copyDocument: DocumentDetailDTO;
-  public documentId: string;
-  public headerLabels: ObjectDetailItem[];
-  public headerActions: Action[] = [];
-  translatedData: any;
-  documentEditForm: UntypedFormGroup;
-  public documentDescriptionIsValid = false;
-  public activeCurrentTab: number;
-  public channelName: string;
-  mandateList: any[];
+  attachmentList: DocumentEditAttachmentComponent;
+
+  activeCurrentTab: number;
+  documentDescriptionIsValid = false;
+  isEditable = false;
+  deleteDialogVisible: boolean;
   mandateDialogFlag: boolean;
+
+  document: DocumentDetailDTO;
+  copyDocument: DocumentDetailDTO;
+  documentEditForm: UntypedFormGroup;
+  headerLabels: ObjectDetailItem[];
+  headerActions: Action[] = [];
   attachmentArray: any = [];
   initialAttachmentData: any = [];
   deletedAttachmentsIds: any = [];
+  mandateList: any[];
+  translatedData: any;
   documentVersion;
-  deleteDialogVisible: boolean;
-  isEditable = false;
+  documentId: string;
+  channelName: string;
 
   constructor(
-    private readonly route: ActivatedRoute,
-    private readonly documentAPI: DocumentControllerV1APIService,
+    private readonly activeRoute: ActivatedRoute,
+    private readonly documentV1Service: DocumentControllerV1APIService,
     private readonly messageService: MessageService,
     private readonly translateService: TranslateService,
-    private readonly breadCrumbService: BreadcrumbService,
-    private fb: UntypedFormBuilder,
+    private readonly breadcrumbService: BreadcrumbService,
+    private readonly formBuilder: UntypedFormBuilder,
     private readonly attachmentUploadService: AttachmentUploadService,
     private readonly router: Router,
     public documentTabStateService: DocumentTabStateService
   ) {}
 
   public ngOnInit(): void {
-    const tabQuery = +this.route.snapshot.queryParamMap.get('tab');
+    this.getTranslatedData();
+    const tabQuery = +this.activeRoute.snapshot.queryParamMap.get('tab');
 
     if (!isNaN(tabQuery) && tabQuery >= 0) {
       this.activeCurrentTab = tabQuery;
@@ -89,49 +95,15 @@ export class DocumentEditComponent implements OnInit {
     }
 
     this.handleTabChange({ index: this.activeCurrentTab });
-
-    this.translateService
-      .get([
-        'DOCUMENT_MENU.DOCUMENT_EDIT.UPDATE_SUCCESS',
-        'DOCUMENT_MENU.DOCUMENT_EDIT.UPDATE_ERROR',
-        'DOCUMENT_MENU.DOCUMENT_EDIT.HEADER',
-        'DOCUMENT_MENU.DOCUMENT_EDIT.TYPE',
-        'DOCUMENT_MENU.DOCUMENT_EDIT.CREATED_BY',
-        'DOCUMENT_MENU.DOCUMENT_EDIT.CREATED_ON',
-        'DOCUMENT_MENU.DOCUMENT_EDIT.STATUS',
-        'DOCUMENT_MENU.DOCUMENT_EDIT.FETCH_ERROR',
-        'DOCUMENT_DETAIL.ATTACHMENTS.UPLOAD_SUCCESS',
-        'DOCUMENT_DETAIL.ATTACHMENTS.UPLOAD_ERROR',
-        'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_SUCCESS',
-        'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_ERROR',
-        'DOCUMENT_DETAIL.ATTACHMENTS.DELETE_SUCCESS',
-        'DOCUMENT_DETAIL.ATTACHMENTS.DELETE_ERROR',
-        'GENERAL.EDIT',
-        'GENERAL.SAVE',
-        'GENERAL.CANCEL',
-        'GENERAL.DOWNLOAD_ZIP',
-        'GENERAL.CLOSE',
-        'GENERAL.DELETE',
-        'GENERAL.DOWNLOAD',
-        'DOCUMENT_MENU.DOCUMENT_EDIT.EMPTY_REQUIRED_FIELD_ERROR',
-        'DOCUMENT_MENU.DOCUMENT_DELETE.DELETE_ERROR',
-        'DOCUMENT_MENU.DOCUMENT_DELETE.DELETE_SUCCESS',
-      ])
-      .subscribe((data) => {
-        this.translatedData = data;
-        this.breadCrumbService.setItems([
-          { label: data['DOCUMENT_MENU.DOCUMENT_EDIT.HEADER'] as string },
-        ]);
-      });
-    this.documentId = String(this.route.snapshot.paramMap.get('id'));
+    this.documentId = String(this.activeRoute.snapshot.paramMap.get('id'));
     this.getDocumentDetail();
     this.setHeaderButtons(this.document);
 
     /* 
      form validations
      */
-    this.documentEditForm = this.fb.group({
-      documentDescriptionForm: this.fb.group({
+    this.documentEditForm = this.formBuilder.group({
+      documentDescriptionForm: this.formBuilder.group({
         name: ['', [Validators.required, Validators.maxLength(60)]],
         typeId: ['', Validators.required],
         documentVersion: ['', Validators.min(0)],
@@ -150,9 +122,51 @@ export class DocumentEditComponent implements OnInit {
         formControls.documentDescriptionForm.valid;
     });
   }
-
+  /**
+   * function to get translatedData from translateService
+   */
+  getTranslatedData(): void {
+    this.translateService
+      .get([
+        'DOCUMENT_MENU.DOCUMENT_EDIT.UPDATE_SUCCESS',
+        'DOCUMENT_MENU.DOCUMENT_EDIT.UPDATE_ERROR',
+        'DOCUMENT_MENU.DOCUMENT_EDIT.HEADER',
+        'DOCUMENT_MENU.DOCUMENT_EDIT.TYPE',
+        'DOCUMENT_MENU.DOCUMENT_EDIT.CREATED_BY',
+        'DOCUMENT_MENU.DOCUMENT_EDIT.CREATED_ON',
+        'DOCUMENT_MENU.DOCUMENT_EDIT.STATUS',
+        'DOCUMENT_MENU.DOCUMENT_EDIT.FETCH_ERROR',
+        'DOCUMENT_DETAIL.ATTACHMENTS.UPLOAD_SUCCESS',
+        'DOCUMENT_DETAIL.ATTACHMENTS.UPLOAD_ERROR',
+        'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_SUCCESS',
+        'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_ERROR',
+        'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.DELETE_SUCCESS',
+        'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.DELETE_ERROR',
+        'DOCUMENT_DETAIL.ATTACHMENTS.DELETE_SUCCESS',
+        'DOCUMENT_DETAIL.ATTACHMENTS.DELETE_ERROR',
+        'GENERAL.EDIT',
+        'GENERAL.SAVE',
+        'GENERAL.CANCEL',
+        'GENERAL.DOWNLOAD_ZIP',
+        'GENERAL.CLOSE',
+        'GENERAL.DELETE',
+        'GENERAL.DOWNLOAD',
+        'DOCUMENT_MENU.DOCUMENT_EDIT.EMPTY_REQUIRED_FIELD_ERROR',
+        'DOCUMENT_MENU.DOCUMENT_DELETE.DELETE_ERROR',
+        'DOCUMENT_MENU.DOCUMENT_DELETE.DELETE_SUCCESS',
+      ])
+      .subscribe((data) => {
+        this.translatedData = data;
+        this.breadcrumbService.setItems([
+          { label: data['DOCUMENT_MENU.DOCUMENT_EDIT.HEADER'] as string },
+        ]);
+      });
+  }
+  /**
+   * function to get document details
+   */
   getDocumentDetail() {
-    this.documentAPI.getDocumentById({ id: this.documentId }).subscribe({
+    this.documentV1Service.getDocumentById({ id: this.documentId }).subscribe({
       next: (data) => {
         this.document = data;
         this.copyDocument = JSON.parse(JSON.stringify(this.document));
@@ -173,7 +187,10 @@ export class DocumentEditComponent implements OnInit {
       },
     });
   }
-
+  /**
+   * function to set header fields with label
+   * @param document
+   */
   private setHeaderFields(document: DocumentDetailDTO) {
     this.headerLabels = [
       {
@@ -199,7 +216,10 @@ export class DocumentEditComponent implements OnInit {
       },
     ];
   }
-
+  /**
+   * function to set the header buttons
+   * @param document
+   */
   private setHeaderButtons(document: DocumentDetailDTO) {
     this.headerActions = [
       {
@@ -267,11 +287,17 @@ export class DocumentEditComponent implements OnInit {
       },
     ];
   }
-
+  /**
+   *
+   * @param array
+   * @returns new copied array
+   */
   private deepCopyArray(array: any[]): any[] {
     return Object.assign([], array);
   }
-
+  /**
+   * @returns set of attachment array that user has uploaded
+   */
   mapAttachments() {
     let setAttachments = [];
     let attachmentsArray = [];
@@ -304,7 +330,9 @@ export class DocumentEditComponent implements OnInit {
     }
     return setAttachments;
   }
-
+  /**
+   * @returns set of files array that user has uploaded
+   */
   private mapUploads() {
     let fileUploads = [];
     try {
@@ -320,14 +348,6 @@ export class DocumentEditComponent implements OnInit {
   formFieldValidate() {
     let formFieldArray = [];
     try {
-      const param1 =
-        this.documentEditForm.controls.documentDescriptionForm.get('name');
-      const param2 =
-        this.documentEditForm.controls.documentDescriptionForm.get(
-          'channelname'
-        );
-      const param3 =
-        this.documentEditForm.controls.documentDescriptionForm.get('typeId');
       if (
         this.documentEditForm.controls.documentDescriptionForm.get('name')
           .invalid
@@ -349,23 +369,34 @@ export class DocumentEditComponent implements OnInit {
       }
       if (
         this.documentEditAttachmentComponent &&
-        this.attachmentArray.length !== 0 &&
-        this.documentEditAttachmentComponent.attachmentFieldsForm.invalid
+        this.attachmentArray.length !== 0
       ) {
-        formFieldArray.push('Attachment name');
-      }
-      if (
-        this.documentEditAttachmentComponent &&
-        this.attachmentArray.length !== 0 &&
-        !this.documentEditAttachmentComponent.disableAttachmentBtn
-      ) {
-        formFieldArray.push('Attachment File');
+        this.attachmentArray.map((el) => {
+          Object.keys(el).map((data) => {
+            const pattern = /[\\/:*?<>|"]/;
+            if (el[data] == '' || pattern.test(el[data]))
+              switch (data) {
+                case 'name':
+                  if (!formFieldArray.includes('Attachment Name'))
+                    formFieldArray.push('Attachment Name');
+                  break;
+                case 'fileData':
+                  if (!formFieldArray.includes('Attachment File'))
+                    formFieldArray.push('Attachment File');
+                  break;
+              }
+          });
+        });
       }
       return formFieldArray;
     } catch (err) {
       console.error(err);
     }
   }
+  /**
+   * function to refresh attachment when user edit the attachments
+   * @param data
+   */
   refreshAttachmentComponent(data) {
     this.documentEditAttachmentComponent?.preFillLatestDocument(data);
     this.attachmentList?.scroll?.nativeElement.scrollTo(0, 0);
@@ -430,7 +461,10 @@ export class DocumentEditComponent implements OnInit {
       this.mandateDialogFlag = true;
     }
   }
-
+  /**
+   * function to send updated data to the API when user click on save
+   * @param data
+   */
   public edit(data: DocumentCreateUpdateDTO): void {
     const attachmentIdArray = [];
     const attachmentFileArray = [];
@@ -442,7 +476,7 @@ export class DocumentEditComponent implements OnInit {
       id: this.documentId,
       documentCreateUpdateDTO: data,
     };
-    this.documentAPI
+    this.documentV1Service
       .updateDocument(params)
       .pipe(
         catchError((err) => {
@@ -503,15 +537,9 @@ export class DocumentEditComponent implements OnInit {
         defaultIfEmpty(null)
       )
       .subscribe((resp) => {
-        let deletedAttachmentObsArray = [];
         this.refreshAttachmentComponent(this.attachmentArray);
         if (this.deletedAttachmentsIds.length) {
-          this.deletedAttachmentsIds.forEach((id) => {
-            deletedAttachmentObsArray.push(this.deletedAttachments(id));
-          });
-          forkJoin(deletedAttachmentObsArray).subscribe((responseList) => {
-            this.getDocumentDetail();
-          });
+          this.documentDeleteAttachments(this.deletedAttachmentsIds);
         } else {
           this.getDocumentDetail();
         }
@@ -521,6 +549,41 @@ export class DocumentEditComponent implements OnInit {
       };
   }
 
+  /**
+   * this function is called if any attachments are requied to be deleted from the edit attachment flow.
+   * @param attachmentsId accepts a string of array as a parameter
+   * stores the attachmentIds that is required to be deleted in an object.
+   * passes the object as a parameeter to the deleteFile function in the documentAPI component class which invokes a delete call
+   */
+  documentDeleteAttachments(attachmentsId: string[]) {
+    let params = {
+      deletedAttachmentsIds: attachmentsId,
+    };
+    this.documentV1Service.deleteFile(params).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: `${attachmentsId.length} ${this.translatedData['DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.DELETE_SUCCESS']}`,
+        });
+        this.getDocumentDetail();
+      },
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: `${attachmentsId.length} ${this.translatedData['DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.DELETE_ERROR']}`,
+        });
+        this.getDocumentDetail();
+      },
+    });
+  }
+
+  /**
+   * this function is called if any new attachments are being uploaded from the edit attachment flow
+   * @param documentId the Id of the document in which new files are being added.
+   * @param attachmentIdArray contains the attachmentIds of the attachment for which the new files are being uploaded.
+   * @param attachmentFileArray contains the binary files data of the newly added files.
+   * passes the three parameters to function uploadEditAttachment of attachmentUploadService component class.
+   */
   public callEditFileUploadsApi(
     documentId,
     attachmentIdArray,
@@ -566,7 +629,9 @@ export class DocumentEditComponent implements OnInit {
       );
   }
 
-  /* function to set values for form fields
+  /**
+   * function to set values for form fields
+   * @param DocumentDetailDTO
    */
   setDocumentFormFields(document: DocumentDetailDTO) {
     let documentDescriptionForm: any =
@@ -578,9 +643,7 @@ export class DocumentEditComponent implements OnInit {
       document?.type?.id ? document?.type?.id : ''
     );
     documentDescriptionForm.controls['documentVersion'].setValue(
-      document &&
-        document.documentVersion &&
-        document.documentVersion.toString()
+      document && document.documentVersion?.toString()
         ? document.documentVersion
         : ''
     );
@@ -597,7 +660,10 @@ export class DocumentEditComponent implements OnInit {
       document.description ? document.description : ''
     );
   }
-
+  /**
+   * function to set related object tab fields
+   * @param DocumentDetailDTO
+   */
   setRelatedFormFields(document: DocumentDetailDTO) {
     let documentDescriptionForm: any =
       this.documentEditForm.controls.documentDescriptionForm;
@@ -617,7 +683,10 @@ export class DocumentEditComponent implements OnInit {
         : null
     );
   }
-
+  /**
+   * function to set characteristics
+   * @param document
+   */
   setCharacteristics(document: DocumentDetailDTO): void {
     let sortCharacteristics = document.characteristics.sort(function (
       a: any,
@@ -635,18 +704,23 @@ export class DocumentEditComponent implements OnInit {
     });
     this.documentEditCharacteristicsComponent.updateForm(sortCharacteristics);
   }
-
+  /**
+   * function to show active tab on refresh
+   * @param event
+   */
   handleTabChange(event) {
     this.activeCurrentTab = event.index;
     this.documentTabStateService.saveactiveCurrentTab(event.index);
     this.router.navigate([], {
-      relativeTo: this.route,
+      relativeTo: this.activeRoute,
       queryParams: { tab: event.index },
       queryParamsHandling: 'merge',
       replaceUrl: true,
     });
   }
-
+  /**
+   * function to set old data on cancel
+   */
   onCancel() {
     this.setDocumentFormFields(this.copyDocument);
     this.setRelatedFormFields(this.copyDocument);
@@ -655,42 +729,51 @@ export class DocumentEditComponent implements OnInit {
     this.attachmentList?.scroll?.nativeElement.scrollTo(0, 0);
     this.onCancelEvent();
   }
-
+  /**
+   * function to close mandatory field missing dialog
+   */
   mandateDialogClose() {
     this.mandateDialogFlag = false;
   }
-
+  /**
+   * function to store attachment data in attachment array
+   * @param document which is selected for edit
+   */
   setAttachmentData(document: DocumentDetailDTO) {
     let attachments: any = [];
     this.attachmentArray = [];
     attachments = document.attachments ? document.attachments : [];
     if (attachments.length) {
       attachments.forEach((attachment) => {
-        let fileData: any = {};
-        fileData['name'] = attachment.fileName ?? '';
-        fileData['size'] = attachment.size ?? '';
-        fileData['type'] = attachment.type ?? '';
+        if (attachment?.storageUploadStatus) {
+          let fileData: any = {};
+          fileData['name'] = attachment.fileName ?? '';
+          fileData['size'] = attachment.size ?? '';
+          fileData['type'] = attachment.type ?? '';
 
-        let attachmntObj: object = {};
-        attachmntObj['name'] = attachment.name ?? '';
-        attachmntObj['description'] = attachment.description ?? '';
-        attachmntObj['mimeType'] = attachment.mimeType.name ?? '';
-        attachmntObj['mimeTypeId'] = attachment.mimeType.id ?? '';
-        attachmntObj['fileData'] = fileData;
-        attachmntObj['validity'] =
-          attachment.validFor && attachment.validFor.endDateTime
+          let attachmntObj: object = {};
+          attachmntObj['name'] = attachment.name ?? '';
+          attachmntObj['description'] = attachment.description ?? '';
+          attachmntObj['mimeType'] = attachment.mimeType.name ?? '';
+          attachmntObj['mimeTypeId'] = attachment.mimeType.id ?? '';
+          attachmntObj['fileData'] = fileData;
+          attachmntObj['validity'] = attachment.validFor?.endDateTime
             ? new Date(attachment.validFor.endDateTime)
             : '';
-        attachmntObj['id'] = attachment.id ?? '';
-        attachmntObj['isDownloadable'] = attachment.id ? true : false;
-        this.attachmentArray.push(attachmntObj);
+          attachmntObj['id'] = attachment.id ?? '';
+          attachmntObj['isDownloadable'] = attachment.id ? true : false;
+          this.attachmentArray.push(attachmntObj);
+        }
       });
       this.initialAttachmentData = JSON.parse(
         JSON.stringify(this.attachmentArray)
       );
     }
   }
-
+  /**
+   * function to get the characteristics data
+   * @returns characteristics set
+   */
   getCharacteristicsData() {
     let documentCharacteristicsData = this.deepCopyArray(
       this.documentEditCharacteristicsComponent.genericFormArray.value
@@ -707,6 +790,10 @@ export class DocumentEditComponent implements OnInit {
     );
     return characteristicsSet;
   }
+  /**
+   * function to get updated attachment data
+   * @returns updated data
+   */
   getUpdatedAttachment() {
     let originalObj = this.initialAttachmentData;
     let updatedObj = JSON.parse(JSON.stringify(this.attachmentArray));
@@ -724,7 +811,7 @@ export class DocumentEditComponent implements OnInit {
     });
     deletedObj = originalObj.filter((o1) => {
       return !updatedObj.some(function (o2) {
-        return o1.id === o2.id; // return the ones with equal id
+        return o1.id === o2.id;
       });
     });
     this.deletedAttachmentsIds = deletedObj.map((eachDeletedObj) => {
@@ -732,29 +819,6 @@ export class DocumentEditComponent implements OnInit {
     });
 
     return changedData;
-  }
-
-  deletedAttachments(attachmentId) {
-    let params = {
-      attachmentId: attachmentId,
-    };
-    return this.documentAPI.deleteFile(params).pipe(
-      catchError((err) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: `${this.translatedData['DOCUMENT_DETAIL.ATTACHMENTS.DELETE_ERROR']}: ${attachmentId}`,
-        });
-        return of(null);
-      }),
-      tap((resp) => {
-        if (resp) {
-          this.messageService.add({
-            severity: 'success',
-            summary: `${this.translatedData['DOCUMENT_DETAIL.ATTACHMENTS.DELETE_ERROR']}: ${attachmentId}`,
-          });
-        }
-      })
-    );
   }
 
   /**
@@ -770,7 +834,7 @@ export class DocumentEditComponent implements OnInit {
    * @param id to select the particular document id.
    */
   public deleteDocument(id: string): void {
-    this.documentAPI.deleteDocumentById({ id }).subscribe({
+    this.documentV1Service.deleteDocumentById({ id }).subscribe({
       next: () => {
         this.messageService.add({
           severity: 'success',
@@ -778,7 +842,7 @@ export class DocumentEditComponent implements OnInit {
             this.translatedData['DOCUMENT_MENU.DOCUMENT_DELETE.DELETE_SUCCESS'],
         });
         this.router.navigate(['../../../search'], {
-          relativeTo: this.route,
+          relativeTo: this.activeRoute,
         });
       },
       error: () => {
@@ -803,7 +867,9 @@ export class DocumentEditComponent implements OnInit {
     this.deleteDocument(this.documentId);
   }
 
-  /** Downloads all attachements and create csv file in zip folder **/
+  /** Downloads all attachements and create csv file in zip folder
+   *  @param documentId to pass to get all the attachment file from back end call
+   **/
   downloadZip(documentId: string) {
     const zip = new JSZip();
     let formData = {};
@@ -864,7 +930,7 @@ export class DocumentEditComponent implements OnInit {
    */
   onClose() {
     this.router.navigate(['../../../search'], {
-      relativeTo: this.route,
+      relativeTo: this.activeRoute,
     });
   }
 

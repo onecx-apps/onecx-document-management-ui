@@ -28,3 +28,4 @@ export * from './status';
 export * from './supportedMimeTypeCreateUpdateDTO';
 export * from './supportedMimeTypeDTO';
 export * from './timePeriodDTO';
+export * from './DocumentUpdate';

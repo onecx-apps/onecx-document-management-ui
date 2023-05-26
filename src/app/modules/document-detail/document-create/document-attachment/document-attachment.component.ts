@@ -1,3 +1,4 @@
+// Core imports
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import {
   FormControl,
@@ -5,46 +6,55 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
+
+// Third party imports
 import { TranslateService } from '@ngx-translate/core';
 import { SelectItem } from 'primeng/api';
+
+// Application imports
 import {
   SupportedMimeTypeControllerV1APIService,
   SupportedMimeTypeDTO,
 } from 'src/app/generated';
+import { noSpecialCharacters, trimSpaces } from 'src/app/utils';
+
 @Component({
   selector: 'app-document-attachment',
   templateUrl: './document-attachment.component.html',
   styleUrls: ['./document-attachment.component.scss'],
 })
 export class DocumentAttachmentComponent implements OnInit {
-  translatedData: any;
-  attachmentFieldsForm: UntypedFormGroup;
-  fileData: any;
-  disableAttachmentBtn = false;
-  attachmentErrorMessage = '';
-  isHavingAttachment = false;
-  editAttachmentIndex = -1;
-  isEditEnabled = false;
-  public showAttachment: boolean;
-  public activeElement = 0;
-  @Input() public attachmentArray;
   @ViewChild('attachmentList') private scroll: ElementRef;
-  public supportedMimeType: SelectItem[];
-  public loadedSupportedMimeType: SupportedMimeTypeDTO[];
-  uploadFileMimetype: any;
-  fileType: any = {};
+  @Input() attachmentArray;
+
+  editAttachmentIndex = -1;
+  activeElement = 0;
   maxlengthDescription = 500;
+  disableAttachmentBtn = false;
+  isHavingAttachment = false;
+  isEditEnabled = false;
+  showAttachment: boolean;
+
+  attachmentFieldsForm: UntypedFormGroup;
+  loadedSupportedMimeType: SupportedMimeTypeDTO[];
+  supportedMimeType: SelectItem[];
+  fileType: any = {};
+  translatedData: any;
+  fileData: any;
+  uploadFileMimetype: any;
   tooltipmimeType: string;
+  attachmentErrorMessage = '';
+  specialChar = ' / : * ? " < > |';
 
   constructor(
     private readonly translateService: TranslateService,
-    private readonly supportedMimeTypeAPI: SupportedMimeTypeControllerV1APIService
+    private readonly supportedMimeTypeV1Service: SupportedMimeTypeControllerV1APIService
   ) {}
 
   ngOnInit(): void {
     this.showAttachment = false;
     this.attachmentFieldsForm = new FormGroup({
-      name: new FormControl('', [Validators.required]),
+      name: new FormControl('', [Validators.required, noSpecialCharacters]),
       mimeType: new FormControl(''),
       validity: new FormControl(),
       description: new FormControl('', Validators.maxLength(500)),
@@ -53,26 +63,46 @@ export class DocumentAttachmentComponent implements OnInit {
     this.getMimetype();
   }
   /**
-   * function to eliminate space from the beginning of the required fields
+   *function to trim empty space from the begining and end of the form field on blur event
    */
   trimSpace(event: any) {
     let controlName = event.target.getAttribute('formControlName');
     let value = event.target.value.trim();
     this.attachmentFieldsForm.controls[controlName].setValue(value);
   }
+  /**
+   * function to eliminate space from the beginning of the required fields on key press event
+   */
   preventSpace(event: any) {
     if (event.target.selectionStart === 0 && event.code === 'Space')
       event.preventDefault();
   }
-
   /**
-   * function to reset the datefield
+   * function to trim empty space from the begining and end of the form field on paste event
+   */
+  trimSpaceOnPaste(
+    event: ClipboardEvent,
+    controlName: string,
+    maxlength: number
+  ) {
+    this.attachmentFieldsForm = trimSpaces(
+      event,
+      controlName,
+      this.attachmentFieldsForm,
+      maxlength
+    );
+  }
+  /**
+   * function to reset the date field
    */
   resetDate() {
     this.attachmentFieldsForm.controls['validity'].setValue(null);
   }
+  /**
+   * function to get the mime type
+   */
   getMimetype() {
-    this.supportedMimeTypeAPI
+    this.supportedMimeTypeV1Service
       .getAllSupportedMimeTypes()
       .subscribe((results) => {
         this.loadedSupportedMimeType = results;
@@ -82,11 +112,17 @@ export class DocumentAttachmentComponent implements OnInit {
         }));
       });
   }
+  /**
+   * function to get selected attachment id
+   */
   public selectedItem(id) {
     this.activeElement = id;
   }
+  /**
+   * function to populate the attachments data
+   */
   checkInitialData() {
-    if (this.attachmentArray && this.attachmentArray.length) {
+    if (this.attachmentArray?.length) {
       this.populateAttachmentFormData(
         this.attachmentArray[this.attachmentArray.length - 1],
         this.attachmentArray.length - 1
@@ -94,7 +130,10 @@ export class DocumentAttachmentComponent implements OnInit {
       this.validateAttachmentData();
     }
   }
-
+  /**
+   *
+   * function to add attachment file with file data
+   */
   addFile(event) {
     let file = event.target.files[0];
     if (file && file.size <= 2000000) {
@@ -119,7 +158,9 @@ export class DocumentAttachmentComponent implements OnInit {
       this.showAttachmentErrorMessage(file);
     }
   }
-
+  /**
+   * function to set the file data for respective form control
+   */
   setAttachmentFormData(file) {
     this.fileData = file;
     this.attachmentFieldsForm.controls['name'].setValue(this.fileData.name);
@@ -128,7 +169,9 @@ export class DocumentAttachmentComponent implements OnInit {
     this.enterDataToListView();
     this.validateAttachmentData();
   }
-
+  /**
+   * function to show error message when file size is greater than 2 MB
+   */
   showAttachmentErrorMessage(file) {
     this.translateService
       .get(['DOCUMENT_DETAIL.ATTACHMENTS.FILESIZE_ERROR_MESSAGE'], {
@@ -139,7 +182,9 @@ export class DocumentAttachmentComponent implements OnInit {
           data['DOCUMENT_DETAIL.ATTACHMENTS.FILESIZE_ERROR_MESSAGE'];
       });
   }
-
+  /**
+   * function to show attachment details in the form
+   */
   showAttachmentForm() {
     this.showAttachment = !this.showAttachment;
     this.isHavingAttachment = true;
@@ -160,7 +205,9 @@ export class DocumentAttachmentComponent implements OnInit {
     this.selectedItem(this.attachmentArray.length - 1);
     this.scroll.nativeElement.scrollTop = 0;
   }
-
+  /**
+   * function to convert file's byte size into size format
+   */
   formatBytes(bytes, decimals = 2) {
     try {
       bytes = +bytes;
@@ -182,20 +229,25 @@ export class DocumentAttachmentComponent implements OnInit {
       return false;
     }
   }
-
+  /**
+   * function to update the attachment data on user inputs to show in the list
+   */
   updateAttachmentData() {
     this.enterDataToListView();
     this.validateAttachmentData();
   }
-
+  /**
+   * function to set the file data from checkedArray to show in attachment list
+   */
   enterDataToListView() {
-    if (this.attachmentArray && this.attachmentArray.length) {
+    if (this.attachmentArray?.length) {
       let attachmentIndex =
         this.editAttachmentIndex > -1
           ? this.editAttachmentIndex
           : this.attachmentArray.length - 1;
       let attachmentData = this.attachmentArray[attachmentIndex];
-      attachmentData.name = this.attachmentFieldsForm.controls['name'].value;
+      attachmentData.name =
+        this.attachmentFieldsForm.controls['name'].value.trim();
       attachmentData.mimeType =
         this.attachmentFieldsForm.controls['mimeType'].value;
       attachmentData.validity =
@@ -207,10 +259,18 @@ export class DocumentAttachmentComponent implements OnInit {
       attachmentData.mimeTypeId = this.fileType.id;
     }
   }
-
+  /**
+   * function to validate attachment data when user edit the attachment form fields
+   */
   validateAttachmentData() {
     let incompleteAttachment = this.attachmentArray.filter((attachment) => {
-      return !attachment.name || !attachment.mimeType || !attachment.fileData;
+      const pattern = /[\\/:*?<>|"]/;
+      return (
+        !attachment.name ||
+        !attachment.mimeType ||
+        !attachment.fileData ||
+        pattern.test(attachment.name)
+      );
     });
 
     if (
@@ -232,7 +292,9 @@ export class DocumentAttachmentComponent implements OnInit {
     if (this.fileData) this.disableAttachmentBtn = true;
     else this.disableAttachmentBtn = false;
   }
-
+  /**
+   * function to delete uploaded file from attachment form field
+   */
   onDeleteUploadFile() {
     this.fileData = null;
     let attachmentIndex =
@@ -242,7 +304,10 @@ export class DocumentAttachmentComponent implements OnInit {
     this.attachmentArray[attachmentIndex]['fileData'] = '';
     this.validateAttachmentData();
   }
-
+  /**
+   * function to edit file data when user select attachment from the list
+   * @param index
+   */
   editAttachmentData(index) {
     this.editAttachmentIndex = index > -1 ? index : '';
     this.attachmentFieldsForm.reset();
@@ -251,7 +316,10 @@ export class DocumentAttachmentComponent implements OnInit {
     this.populateAttachmentFormData(attachmentData, index);
     this.validateAttachmentData();
   }
-
+  /**
+   * function to delete attachment from attachment list
+   * @param index
+   */
   deleteAttachment(index) {
     this.editAttachmentIndex = index > -1 ? index : '';
     this.attachmentFieldsForm.reset();
@@ -277,7 +345,11 @@ export class DocumentAttachmentComponent implements OnInit {
       }
     }
   }
-
+  /**
+   * function to populate attachment data in the respective form
+   * @param attachmentData
+   * @param index
+   */
   populateAttachmentFormData(attachmentData, index) {
     if (attachmentData) {
       this.attachmentFieldsForm.controls['name'].setValue(

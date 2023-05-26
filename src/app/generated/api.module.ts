@@ -7,11 +7,6 @@ import {
 import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
-import { DocumentControllerV1APIService } from './api/documentControllerV1.service';
-import { DocumentSpecificationControllerV1APIService } from './api/documentSpecificationControllerV1.service';
-import { DocumentTypeControllerV1APIService } from './api/documentTypeControllerV1.service';
-import { SupportedMimeTypeControllerV1APIService } from './api/supportedMimeTypeControllerV1.service';
-
 @NgModule({
   imports: [],
   declarations: [],
