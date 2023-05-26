@@ -372,7 +372,7 @@ export class DocumentEditComponent implements OnInit {
         this.attachmentArray.length !== 0
       ) {
         this.attachmentArray.map((el) => {
-          Object.keys(el).map((data) => {
+          Object.keys(el).forEach((data) => {
             const pattern = /[\\/:*?<>|"]/;
             if (el[data] == '' || pattern.test(el[data]))
               switch (data) {

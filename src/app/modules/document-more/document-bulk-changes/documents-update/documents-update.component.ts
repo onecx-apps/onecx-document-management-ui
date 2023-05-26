@@ -191,7 +191,7 @@ export class DocumentsUpdateComponent implements OnInit {
   initializeCheckedStatus() {
     let val = this.documentBulkUpdateForm?.controls;
     let checkedValues = this.dataSharingService.getUpdateModification();
-    Object.entries(this.documentBulkUpdateForm.value).map((el) => {
+    Object.entries(this.documentBulkUpdateForm.value).forEach((el) => {
       let controlName = el[0];
       if (
         (el[1] === '' || el[1] == null) &&
@@ -200,7 +200,7 @@ export class DocumentsUpdateComponent implements OnInit {
       )
         this.showInputErrorMessage(el[0]);
     });
-    Object.keys(val).map((el) => {
+    Object.keys(val).forEach((el) => {
       checkedValues?.map((data) => {
         let name = data.name;
         if (name == el) this.checkedStatus[name] = data.isChecked;
