@@ -1,10 +1,15 @@
+// Core imports
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+
+// Third party imports
 import { SelectItem } from 'primeng/api';
+
+// Application imports
 import {
-  DocumentTypeDTO,
-  DocumentTypeControllerV1APIService,
   DocumentControllerV1APIService,
+  DocumentTypeControllerV1APIService,
+  DocumentTypeDTO,
   GetDocumentByCriteriaRequestParams,
   LifeCycleState,
 } from 'src/app/generated';
@@ -16,21 +21,21 @@ import {
 })
 export class DocumentCriteriaAdvancedComponent implements OnInit {
   @Input()
-  public criteria: GetDocumentByCriteriaRequestParams;
+  criteria: GetDocumentByCriteriaRequestParams;
   @Output() criteriaSubmitted =
     new EventEmitter<GetDocumentByCriteriaRequestParams>();
-  @Output() public resetEmitter = new EventEmitter();
+  @Output() resetEmitter = new EventEmitter();
+
   criteriaGroup: UntypedFormGroup;
-  public documentTypes: SelectItem[];
-  public channelItems: SelectItem[];
-  public documentStatus: SelectItem[];
-  public allDocumentTypes: DocumentTypeDTO[];
+  allDocumentTypes: DocumentTypeDTO[];
+  channelItems: SelectItem[];
+  documentStatus: SelectItem[];
+  documentTypes: SelectItem[];
 
   constructor(
-    private fb: UntypedFormBuilder,
-
-    private readonly documentTypeRestApi: DocumentTypeControllerV1APIService,
-    private readonly documentRestApi: DocumentControllerV1APIService
+    private readonly formBuilder: UntypedFormBuilder,
+    private readonly documentTypeV1Service: DocumentTypeControllerV1APIService,
+    private readonly documentV1Service: DocumentControllerV1APIService
   ) {}
 
   ngOnInit(): void {
@@ -39,7 +44,10 @@ export class DocumentCriteriaAdvancedComponent implements OnInit {
     this.loadAllChannels();
     this.loadDocumentStatus();
   }
-
+  /**
+   *
+   * @returns criteria group value
+   */
   public submitCriteria(): void {
     if (this.criteriaGroup.invalid) {
       return;
@@ -53,13 +61,17 @@ export class DocumentCriteriaAdvancedComponent implements OnInit {
 
     this.criteriaSubmitted.emit(this.criteriaGroup.value);
   }
-
+  /**
+   * function to emit reset form group
+   */
   public resetFormGroup(): void {
     this.resetEmitter.emit();
   }
-
+  /**
+   * function to initiate form for advance search
+   */
   private initFormGroup(): void {
-    this.criteriaGroup = this.fb.group({
+    this.criteriaGroup = this.formBuilder.group({
       channelName: null,
       name: null,
       typeId: null,
@@ -72,9 +84,11 @@ export class DocumentCriteriaAdvancedComponent implements OnInit {
       objectReferenceType: null,
     });
   }
-
+  /**
+   * function to load all document types to show in the dropdown for document type in advance search
+   */
   private loadAllDocumentTypes(): void {
-    this.documentTypeRestApi.getAllTypesOfDocument().subscribe((results) => {
+    this.documentTypeV1Service.getAllTypesOfDocument().subscribe((results) => {
       this.allDocumentTypes = results;
       this.documentTypes = results.map((type) => ({
         label: type.name,
@@ -82,14 +96,19 @@ export class DocumentCriteriaAdvancedComponent implements OnInit {
       }));
     });
   }
-
+  /**
+   * function to get all the channels
+   */
   private loadAllChannels(): void {
-    this.documentRestApi.getAllChannels().subscribe((result) => {
+    this.documentV1Service.getAllChannels().subscribe((result) => {
       this.channelItems = result.map((el) => {
         return { label: el.name, value: el.name };
       });
     });
   }
+  /**
+   * function to load all document status
+   */
   private loadDocumentStatus(): void {
     this.documentStatus = Object.keys(LifeCycleState).map((key) => ({
       label: LifeCycleState[key],

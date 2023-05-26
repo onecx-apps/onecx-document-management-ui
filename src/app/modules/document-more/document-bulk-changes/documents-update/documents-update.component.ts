@@ -1,20 +1,20 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
-import { NgForm, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+// Core imports
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { UntypedFormGroup } from '@angular/forms';
+
+// Third party imports
 import { TranslateService } from '@ngx-translate/core';
 import { SelectItem } from 'primeng/api/selectitem';
+
+// Application imports
 import {
   DocumentDetailDTO,
   DocumentTypeControllerV1APIService,
   DocumentTypeDTO,
   LifeCycleState,
 } from 'src/app/generated';
+import { BulkUpdateInitFormField } from 'src/app/generated/model/DocumentUpdate';
+import { DataSharingService } from 'src/app/shared/data-sharing.service';
 import { trimSpaces } from 'src/app/utils';
 
 @Component({
@@ -23,29 +23,35 @@ import { trimSpaces } from 'src/app/utils';
   styleUrls: ['./documents-update.component.scss'],
 })
 export class DocumentsUpdateComponent implements OnInit {
-  constructor(
-    private readonly documentTypeRestApi: DocumentTypeControllerV1APIService,
-    private fb: UntypedFormBuilder,
-    private readonly translateService: TranslateService
-  ) {}
   @Input() checkedResults: DocumentDetailDTO[] = [];
-  @Input() public documentBulkUpdateForm: UntypedFormGroup;
-  public allDocumentTypes: DocumentTypeDTO[];
-  public documentTypes: SelectItem[];
-  public documentStatus: SelectItem[];
-  @Output() documentVersion = new EventEmitter<String>();
-  @Output() formValue = new EventEmitter<Boolean>();
+  @Input() documentBulkUpdateForm: UntypedFormGroup;
   @Input() isSubmitting: boolean;
+  @Output() documentVersion = new EventEmitter<string>();
+  @Output() formValue = new EventEmitter<boolean>();
+
+  checkedStatus = BulkUpdateInitFormField;
+  allDocumentTypes: DocumentTypeDTO[];
+  documentTypes: SelectItem[];
+  documentStatus: SelectItem[];
   checkedArray = [];
   inputMessage = [];
+
+  constructor(
+    private readonly documentTypeV1Service: DocumentTypeControllerV1APIService,
+    private readonly translateService: TranslateService,
+    private readonly dataSharingService: DataSharingService
+  ) {}
 
   ngOnInit(): void {
     this.loadAllDocumentTypes();
     this.loadDocumentStatus();
+    this.initializeCheckedStatus();
   }
-
+  /**
+   * function to load all document types to show in dropdown of document type form field
+   */
   private loadAllDocumentTypes(): void {
-    this.documentTypeRestApi.getAllTypesOfDocument().subscribe((results) => {
+    this.documentTypeV1Service.getAllTypesOfDocument().subscribe((results) => {
       this.allDocumentTypes = results;
       this.documentTypes = results.map((type) => ({
         label: type.name,
@@ -53,13 +59,19 @@ export class DocumentsUpdateComponent implements OnInit {
       }));
     });
   }
-
+  /**
+   * function to get all dropdown values for document status form field
+   */
   private loadDocumentStatus(): void {
     this.documentStatus = Object.keys(LifeCycleState).map((key) => ({
       label: LifeCycleState[key],
       value: key,
     }));
   }
+  /**
+   * function to show error message for invalid user inputs
+   * @param formControl
+   */
   showInputErrorMessage(formControl: string) {
     this.translateService
       .get(['DOCUMENT_MENU.DOCUMENT_EDIT.INVALID_VALUE_ERROR'])
@@ -68,9 +80,8 @@ export class DocumentsUpdateComponent implements OnInit {
           data['DOCUMENT_MENU.DOCUMENT_EDIT.INVALID_VALUE_ERROR'];
       });
   }
-
   /**
-   * function to eliminate space from the beginning of the required fields
+   * function to trim empty space from the begining and end of the form field on paste event
    */
   trimSpaceOnPaste(
     event: ClipboardEvent,
@@ -85,14 +96,15 @@ export class DocumentsUpdateComponent implements OnInit {
     );
     this.formValue.emit(true);
   }
-
+  /**
+   * function to eliminate space from the beginning of the required fields on key press event
+   */
   preventSpace(event: any) {
     if (event.target.selectionStart === 0 && event.code === 'Space')
       event.preventDefault();
   }
 
   /**
-   *
    * Reset form field if form input value is empty
    */
   clearField(event: any, controlName: string, inputType: number) {
@@ -116,8 +128,8 @@ export class DocumentsUpdateComponent implements OnInit {
    */
   fieldReset(controlName: string) {
     this.documentBulkUpdateForm?.controls[controlName].reset();
-    this.checkedArray.map((el) => {
-      if (el.name == controlName && el.isChecked == true)
+    this.checkedArray.forEach((el) => {
+      if (el.name == controlName && el.isChecked && el.checked != '0')
         this.showInputErrorMessage(el.name);
     });
     this.formValue.emit(true);
@@ -136,10 +148,10 @@ export class DocumentsUpdateComponent implements OnInit {
    */
   getCheckedStatus(formControl: string, event: any): void {
     let len = this.checkedArray.length;
-    if (event?.checked == false) this.inputMessage[formControl] = '';
+    if (!event?.checked) this.inputMessage[formControl] = '';
 
     this.checkedArray?.forEach((el) => {
-      if (event?.checked == false && el?.name == formControl)
+      if (!event?.checked && el?.name == formControl)
         this.checkedArray.splice(this.checkedArray.indexOf(el), 1);
       else if (this.checkedArray.indexOf(el) + 1 == len)
         this.checkedArray.push({ name: formControl, isChecked: event.checked });
@@ -151,7 +163,6 @@ export class DocumentsUpdateComponent implements OnInit {
   }
 
   /**
-   *
    * @param evt document event
    * @returns prevent character e and operators (+, -)
    */
@@ -168,11 +179,32 @@ export class DocumentsUpdateComponent implements OnInit {
   }
 
   /**
-   *
    * @param evt document event
    * emits newly updated documenr version value
    */
   onKeyDocVersionUp(evt) {
     this.documentVersion.emit(evt.target.value);
+  }
+  /**
+   * function to set checkbox state
+   */
+  initializeCheckedStatus() {
+    let val = this.documentBulkUpdateForm?.controls;
+    let checkedValues = this.dataSharingService.getUpdateModification();
+    Object.entries(this.documentBulkUpdateForm.value).map((el) => {
+      let controlName = el[0];
+      if (
+        (el[1] === '' || el[1] == null) &&
+        this.checkedStatus[controlName] &&
+        this.checkedStatus[controlName] != '0'
+      )
+        this.showInputErrorMessage(el[0]);
+    });
+    Object.keys(val).map((el) => {
+      checkedValues?.map((data) => {
+        let name = data.name;
+        if (name == el) this.checkedStatus[name] = data.isChecked;
+      });
+    });
   }
 }

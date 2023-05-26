@@ -21,19 +21,19 @@
 >
   <ng-template pTemplate="header" let-columns>
     <tr>
-      <th pSortableColumn="name" class="pt-3 pb-3 pl-3">
+      <th scope="col" pSortableColumn="name" class="pt-3 pb-3 pl-3">
         {{ 'RESULTS.NAME' | translate }}
         <p-sortIcon field="name"></p-sortIcon>
       </th>
-      <th pSortableColumn="type.name">
+      <th scope="col" pSortableColumn="type.name">
         {{ 'RESULTS.DOCUMENT_TYPE' | translate }}
         <p-sortIcon field="type.name"></p-sortIcon>
       </th>
-      <th pSortableColumn="lifeCycleState">
+      <th scope="col" pSortableColumn="lifeCycleState">
         {{ 'RESULTS.STATUS' | translate }}
         <p-sortIcon field="lifeCycleState"></p-sortIcon>
       </th>
-      <th pSortableColumn="documentVersion">
+      <th scope="col" pSortableColumn="documentVersion">
         {{ 'RESULTS.VERSION' | translate }}
         <p-sortIcon field="documentVersion"></p-sortIcon>
       </th>

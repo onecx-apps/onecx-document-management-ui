@@ -89,7 +89,8 @@
       "FETCH_ERROR": "Das Dokument konnte nicht abgerufen werden",
       "EMPTY_REQUIRED_FIELD_ERROR": "Pflichtfelder fehlen",
       "NEGATIVE_VALUE_ERROR": "Negative Werte sind nicht zulässig.",
-      "INVALID_VALUE_ERROR": "Bitte geben Sie einen gültigen Wert ein."
+      "INVALID_VALUE_ERROR":"Bitte geben Sie einen gültigen Wert ein.",
+      "SPECIAL_CHARACTER_ERROR":"Zeichen nicht erlaubt"
     },
     "DOCUMENT_DELETE": {
       "DELETE_HEADER": "Löschen ein Dokument",
@@ -108,7 +109,9 @@
       "FULL": "Full"
     },
     "DOCUMENT_CANCEL_MODAL": {
-      "CANCEL_CONFIRM_MESSAGE": "Nicht gespeicherte Daten gehen verloren und das Dokument wird nicht erstellt. Möchten Sie abbrechen?"
+      "HEADER":"Dokumenterstellung abbrechen",
+      "CANCEL_CONFIRM_MESSAGE": "Nicht gespeicherte Daten gehen verloren und das Dokument wird nicht erstellt",
+      "CONFIRM": "Möchten Sie stornieren?"
     },
     "ACCORDION_HEADERS": {
       "TAGS": "Tags",
@@ -205,7 +208,7 @@
       "UPLOAD_ERROR": "Datei(en) konnte nicht hochgeladen werden",
       "DELETE_SUCCESS": "Datei(en) erfolgreich gelöscht",
       "DELETE_ERROR": "Datei(en) konnte nicht gelöscht werden",
-      "NO_DATA": "Keine Anhänge gefunden"
+      "NO_DATA": "Keine Dateien hochgeladen"
     }
   },
   "DOCUMENT_TIMELINE": {
@@ -261,7 +264,8 @@
     "DOCUMENT_TYPE": "Dokumentenart",
     "STATUS": "Status",
     "MODIFICATION_DATE": "Änderungsdatum",
-    "VERSION": "Version"
+    "VERSION": "Version",
+    "ATTACHMENTS":"Anhänge"
   },
   "DELETE_DOCUMENT": {
     "DELETE_MESSAGE": "Möchten Sie dieses Dokument wirklich löschen?",

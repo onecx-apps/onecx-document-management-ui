@@ -1,28 +1,29 @@
-/* eslint-disable @typescript-eslint/member-ordering */
+// Core imports
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
-  OnInit,
-  Input,
-  Output,
-  AfterViewInit,
-  SimpleChanges,
-  ChangeDetectorRef,
-  OnChanges,
   Inject,
+  Input,
+  OnInit,
+  Output,
 } from '@angular/core';
-import { DocumentDetailDTO } from 'src/app/generated';
-import { MenuItem } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
+
+// Third party imports
 import { TranslateService } from '@ngx-translate/core';
-import { SelectItem } from 'primeng/api';
-import { DataView } from 'primeng/dataview';
 import {
   AUTH_SERVICE,
   Column,
   ColumnViewTemplate,
   IAuthService,
 } from '@onecx/portal-integration-angular';
+import { MenuItem, SelectItem } from 'primeng/api';
+import { DataView } from 'primeng/dataview';
+
+// Application imports
+import { AttachmentUploadService } from '../../document-detail/attachment-upload.service';
+import { DocumentDetailDTO } from 'src/app/generated';
 import { generateFilteredColumns, initFilteredColumns } from 'src/app/utils';
 
 enum SortOrder {
@@ -41,32 +42,32 @@ export class ResultsComponent implements OnInit {
     this.showPageReport = this.results?.length > 0;
     this.showPaginator = this.results?.length > 0;
   }
-  @Input() public isShow: boolean;
-  @Input() public totalElements: number;
-  @Input() public isSearchClicked: boolean;
-  results: DocumentDetailDTO[];
-  first: number;
-  rowsPerPage = 20;
-  rowsPerPageOptions = [20, 50, 100];
-  layout: 'table' | 'list' | 'grid' = 'table';
-  items: MenuItem[] = [];
-  routerUrl: string;
-  translatedData: object;
-  selectedDocument: DocumentDetailDTO;
-  deleteDialogVisible: boolean;
+  @Input() isShow: boolean;
+  @Input() isSearchClicked: boolean;
+  @Input() totalElements: number;
   @Output() deleteDocument: EventEmitter<any> = new EventEmitter();
   @Output() isLoadMoreDisableEvent: EventEmitter<boolean> = new EventEmitter();
   @Output() updatedView: EventEmitter<any> = new EventEmitter();
-  sortField: string = null;
-  sortFields: SelectItem[];
+
+  fileCount = 0;
+  first: number;
+  rowsPerPage = 20;
   sortOrder = -1;
-  sortOrderType: SortOrder = SortOrder.DESCENDING;
-  selectedSortField: SelectItem;
-  dataView: DataView;
+  deleteDialogVisible: boolean;
+  showCount = false;
   showPageReport = false;
   showPaginator = false;
 
-  public columns: Column[] = [
+  dataView: DataView;
+  selectedDocument: DocumentDetailDTO;
+  selectedSortField: SelectItem;
+  sortOrderType: SortOrder = SortOrder.DESCENDING;
+  rowsPerPageOptions = [20, 50, 100];
+  results: DocumentDetailDTO[];
+  items: MenuItem[] = [];
+  sortFields: SelectItem[];
+  filteredColumns: Column[] = [];
+  columns: Column[] = [
     {
       field: 'name',
       header: 'NAME',
@@ -111,9 +112,7 @@ export class ResultsComponent implements OnInit {
       active: false,
     },
   ];
-  public filteredColumns: Column[] = [];
-
-  public columnTemplate: ColumnViewTemplate[] = [
+  columnTemplate: ColumnViewTemplate[] = [
     {
       label: 'DOCUMENT_DETAIL.COLUMN_TEMPLATES.EXTENDED',
       template: [
@@ -140,16 +139,27 @@ export class ResultsComponent implements OnInit {
     },
   ];
 
+  layout: 'table' | 'list' | 'grid' = 'table';
+  routerUrl: string;
+  sortField: string = null;
+  translatedData: object;
+
   constructor(
-    @Inject(AUTH_SERVICE) private authService: IAuthService,
-    private router: Router,
-    private translateService: TranslateService,
-    private cdRef: ChangeDetectorRef,
-    private readonly route: ActivatedRoute
+    @Inject(AUTH_SERVICE) private readonly authService: IAuthService,
+    private readonly router: Router,
+    private readonly translateService: TranslateService,
+    private readonly activeRoute: ActivatedRoute,
+    private readonly attachmentUploadService: AttachmentUploadService
   ) {}
 
   ngOnInit() {
+    this.getTranslatedData();
     this.filteredColumns = initFilteredColumns(this.columns);
+  }
+  /**
+   * function to get translatedData from translateService
+   */
+  getTranslatedData(): void {
     this.translateService
       .get([
         'GENERAL.EDIT',
@@ -161,6 +171,7 @@ export class ResultsComponent implements OnInit {
         'RESULTS.NAME',
         'RESULTS.DOCUMENT_TYPE',
         'RESULTS.STATUS',
+        'RESULTS.ATTACHMENTS',
         'RESULTS.MODIFICATION_DATE',
         'DOCUMENT_DETAIL.COLUMN_TEMPLATES.EXTENDED',
         'DOCUMENT_DETAIL.COLUMN_TEMPLATES.FULL',
@@ -229,7 +240,7 @@ export class ResultsComponent implements OnInit {
             const id = this.selectedDocument.id;
             this.selectedDocument = undefined;
             this.router.navigate(['../detail/edit/', id], {
-              relativeTo: this.route,
+              relativeTo: this.activeRoute,
             });
           },
         },
@@ -299,13 +310,18 @@ export class ResultsComponent implements OnInit {
     this.columns = columns;
     this.filteredColumns = filteredColumns;
   }
-
+  /**
+   * function to set pagination index to zero
+   */
   ngOnChanges() {
     if (this.isSearchClicked) {
       this.first = 0;
     }
   }
-
+  /**
+   * function emits isLoadMoreDisableEvent depending on search result length
+   * @param event
+   */
   onPageChange(event) {
     if (this.totalElements == this.results.length) {
       this.isLoadMoreDisableEvent.emit(true);
@@ -316,5 +332,124 @@ export class ResultsComponent implements OnInit {
     } else {
       this.isLoadMoreDisableEvent.emit(true);
     }
+  }
+
+  /**
+   * function to get attachment Icon according to file type.
+   * And count of files if more than 1 file which are successfully stored in Minio
+   * @param attachment file data
+   */
+  getAttachmentIcon(result) {
+    let attachments = result && result.attachments ? result.attachments : [];
+    let validAttachmentArray = [];
+    attachments.forEach((attachment) => {
+      if (attachment['storageUploadStatus'] === true) {
+        validAttachmentArray.push(attachment);
+      }
+    });
+    if (validAttachmentArray.length) {
+      if (validAttachmentArray.length > 1) {
+        this.fileCount = validAttachmentArray.length;
+        this.showCount = true;
+        return (
+          this.attachmentUploadService.getAssetsUrl() +
+          'images/file-format-icons/folder.png'
+        );
+      } else {
+        this.showCount = false;
+        let attachment = validAttachmentArray[0];
+        let fileName = attachment.name ?? '';
+        let fileExtension = fileName.split('.').reverse();
+        let fileTypeData =
+          attachment && attachment.mimeType ? attachment.mimeType.name : '';
+        let attachmentIcon = '';
+        if (fileTypeData) {
+          let fileType = fileTypeData.split('/');
+          if (fileType.length) {
+            let type = fileType[0].toLowerCase();
+            if (type == 'audio' || type == 'video' || type == 'image') {
+              switch (type) {
+                case 'audio':
+                  attachmentIcon = 'audio.png';
+                  break;
+                case 'video':
+                  attachmentIcon = 'video.png';
+                  break;
+                case 'image':
+                  attachmentIcon = 'img.png';
+                  break;
+                default:
+                  attachmentIcon = 'file.png';
+              }
+            } else {
+              if (fileExtension.length && fileExtension.length > 1) {
+                let extension = fileExtension[0].toLowerCase();
+                switch (extension) {
+                  case 'xls':
+                  case 'xlsx':
+                    attachmentIcon = 'xls.png';
+                    break;
+                  case 'doc':
+                  case 'docx':
+                    attachmentIcon = 'doc.png';
+                    break;
+                  case 'ppt':
+                  case 'pptx':
+                    attachmentIcon = 'ppt.png';
+                    break;
+                  case 'pdf':
+                    attachmentIcon = 'pdf.png';
+                    break;
+                  case 'zip':
+                    attachmentIcon = 'zip.png';
+                    break;
+                  case 'txt':
+                    attachmentIcon = 'txt.png';
+                    break;
+                  default:
+                    attachmentIcon = 'file.png';
+                }
+              }
+            }
+            if (!attachmentIcon) {
+              attachmentIcon = 'file.png';
+            }
+          }
+        }
+        return (
+          this.attachmentUploadService.getAssetsUrl() +
+          'images/file-format-icons/' +
+          attachmentIcon
+        );
+      }
+    } else {
+      this.showCount = false;
+      return (
+        this.attachmentUploadService.getAssetsUrl() +
+        'images/file-format-icons/empty.png'
+      );
+    }
+  }
+
+  /**
+   * function to invoke if there is logo image error
+   */
+  imgError(event): void {
+    if (!event.target.getAttribute('fallback')) {
+      event.target.setAttribute('fallback', true);
+      event.target.src =
+        this.attachmentUploadService.getAssetsUrl() +
+        'images/file-format-icons/file.png';
+    }
+  }
+
+  /**
+   * function to get attachment header icon
+   */
+  getAttachmentHeaderIcon() {
+    return (
+      this.attachmentUploadService.getAssetsUrl() +
+      'images/file-format-icons/attachment.png'
+    );
   }
 }

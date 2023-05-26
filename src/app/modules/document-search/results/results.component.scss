@@ -2,6 +2,32 @@
   width: auto;
 }
 
-.result-name{
-  white-space: nowrap;
+.file-count {
+  background-color: transparent;
+  font-size: 0.5rem;
+  margin-top: -1.4rem;
+  padding: 0.25rem;
+  text-align: right;
 }
+
+.file-count-list{
+  background-color: transparent;
+  font-size: 1.1rem;
+  margin-top: -2.4rem;
+  padding: 0.25rem;
+  text-align: right;
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr > td{
+  padding-top: 0.05rem;
+  padding-bottom: 0.05rem;
+}
+
+::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  padding-top: 0.05rem;
+  padding-bottom: 0.05rem;
+}
+
+
+  
+

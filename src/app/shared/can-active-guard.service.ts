@@ -1,3 +1,4 @@
+// Core imports
 import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
@@ -5,6 +6,8 @@ import {
   RouterStateSnapshot,
   UrlTree,
 } from '@angular/router';
+
+// Third party imports
 import { TranslateService } from '@ngx-translate/core';
 import { ConfigurationService } from '@onecx/portal-integration-angular';
 import { filter, Observable, of, switchMap, tap } from 'rxjs';
@@ -14,10 +17,15 @@ export class CanActivateGuard implements CanActivate {
   private SUPPORTED_LANGS = ['en', 'de'];
   private DEFAULT_LANG = 'en';
   constructor(
-    private txService: TranslateService,
-    private config: ConfigurationService
+    private readonly translateService: TranslateService,
+    private readonly configService: ConfigurationService
   ) {}
-
+  /**
+   *
+   * @param route
+   * @param state
+   * @returns translated result
+   */
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
@@ -28,11 +36,17 @@ export class CanActivateGuard implements CanActivate {
     | UrlTree {
     return this.loadTranslations(route).pipe(
       tap((res) =>
-        console.log(`Translation guard done ${this.txService.currentLang}`)
+        console.log(
+          `Translation guard done ${this.translateService.currentLang}`
+        )
       )
     );
   }
-
+  /**
+   *
+   * @param lang
+   * @returns default language
+   */
   getBestMatchLanguage(lang: string) {
     if (this.SUPPORTED_LANGS.includes(lang)) {
       return lang;
@@ -43,13 +57,19 @@ export class CanActivateGuard implements CanActivate {
     }
     return this.DEFAULT_LANG;
   }
-
+  /**
+   *
+   * @param route
+   * @returns translated data
+   */
   loadTranslations(route: ActivatedRouteSnapshot): Observable<boolean> {
     console.log(`Start Translation guard`);
 
-    return this.config.lang$.pipe(
+    return this.configService.lang$.pipe(
       filter((v) => v !== undefined),
-      switchMap((lang) => this.txService.use(this.getBestMatchLanguage(lang))),
+      switchMap((lang) =>
+        this.translateService.use(this.getBestMatchLanguage(lang))
+      ),
       switchMap(() => of(true))
     );
   }

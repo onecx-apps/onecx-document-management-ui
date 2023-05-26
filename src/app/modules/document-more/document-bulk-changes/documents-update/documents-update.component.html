@@ -20,6 +20,8 @@
               getCheckedStatus('typeId', $event)
             "
             [binary]="true"
+            [(ngModel)]="checkedStatus.typeId"
+            [ngModelOptions]="{ standalone: true }"
           ></p-checkbox>
           {{ 'DOCUMENT_DETAIL.BULK_UPDATE.UPDATE_DOCUMENT_TYPE' | translate }}
         </div>
@@ -55,6 +57,8 @@
               );
               getCheckedStatus('documentVersion', $event)
             "
+            [(ngModel)]="checkedStatus.documentVersion"
+            [ngModelOptions]="{ standalone: true }"
           ></p-checkbox>
           {{
             'DOCUMENT_DETAIL.BULK_UPDATE.UPDATE_DOCUMENT_VERSION' | translate
@@ -115,6 +119,8 @@
               getCheckedStatus('channelname', $event)
             "
             [binary]="true"
+            [(ngModel)]="checkedStatus.channelname"
+            [ngModelOptions]="{ standalone: true }"
           ></p-checkbox>
           {{
             'DOCUMENT_DETAIL.BULK_UPDATE.UPDATE_DOCUMENT_CHANNEL' | translate
@@ -155,6 +161,8 @@
               );
               getCheckedStatus('specificationName', $event)
             "
+            [(ngModel)]="checkedStatus.specificationName"
+            [ngModelOptions]="{ standalone: true }"
           ></p-checkbox>
           {{
             'DOCUMENT_DETAIL.BULK_UPDATE.UPDATE_DOCUMENT_SPECIFICATION'
@@ -196,6 +204,8 @@
               );
               getCheckedStatus('lifeCycleState', $event)
             "
+            [(ngModel)]="checkedStatus.lifeCycleState"
+            [ngModelOptions]="{ standalone: true }"
           ></p-checkbox>
           {{ 'DOCUMENT_DETAIL.BULK_UPDATE.UPDATE_DOCUMENT_STATUS' | translate }}
         </div>
@@ -233,6 +243,8 @@
             "
             [disabled]="isSubmitting ? true : null"
             [binary]="true"
+            [(ngModel)]="checkedStatus.involvement"
+            [ngModelOptions]="{ standalone: true }"
           ></p-checkbox>
           {{
             'DOCUMENT_DETAIL.BULK_UPDATE.UPDATE_DOCUMENT_INVOLVEMENT'
@@ -275,6 +287,8 @@
               getCheckedStatus('reference_type', $event)
             "
             [binary]="true"
+            [(ngModel)]="checkedStatus.reference_type"
+            [ngModelOptions]="{ standalone: true }"
           ></p-checkbox>
           {{
             'DOCUMENT_DETAIL.BULK_UPDATE.UPDATE_OBJECT_REFERENCE_TYPE'
@@ -317,6 +331,8 @@
               getCheckedStatus('reference_id', $event)
             "
             [binary]="true"
+            [(ngModel)]="checkedStatus.reference_id"
+            [ngModelOptions]="{ standalone: true }"
           ></p-checkbox>
           {{
             'DOCUMENT_DETAIL.BULK_UPDATE.UPDATE_OBJECT_REFERENCE_ID' | translate
@@ -358,6 +374,8 @@
               getCheckedStatus('validity', $event)
             "
             [binary]="true"
+            [(ngModel)]="checkedStatus.validity"
+            [ngModelOptions]="{ standalone: true }"
           ></p-checkbox>
           {{
             'DOCUMENT_DETAIL.BULK_UPDATE.UPDATE_ATTACHMENT_VALIDITY' | translate
@@ -409,6 +427,8 @@
               getCheckedStatus('documentDescription', $event)
             "
             [binary]="true"
+            [(ngModel)]="checkedStatus.documentDescription"
+            [ngModelOptions]="{ standalone: true }"
           ></p-checkbox>
           {{
             'DOCUMENT_DETAIL.BULK_UPDATE.UPDATE_DOCUMENT_DESCRIPTION'
@@ -457,6 +477,8 @@
               getCheckedStatus('attachmentDescription', $event)
             "
             [binary]="true"
+            [(ngModel)]="checkedStatus.attachmentDescription"
+            [ngModelOptions]="{ standalone: true }"
           ></p-checkbox>
           {{
             'DOCUMENT_DETAIL.BULK_UPDATE.UPDATE_ATTACHMENT_DESCRIPTION'

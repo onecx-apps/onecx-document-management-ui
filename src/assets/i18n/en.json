@@ -83,7 +83,9 @@
       "FETCH_ERROR": "The Document could not be fetched",
       "EMPTY_REQUIRED_FIELD_ERROR": "Mandatory fields missing",
       "NEGATIVE_VALUE_ERROR": "Negative values are not allowed.",
-      "INVALID_VALUE_ERROR": "Please enter valid value."
+      "INVALID_VALUE_ERROR": "Please enter valid value.",
+      "SPECIAL_CHARACTER_ERROR":"Characters not allowed"
+
     },
     "DOCUMENT_DELETE": {
       "DELETE_SUCCESS": "The document was successfully deleted.",
@@ -102,7 +104,9 @@
       "FULL": "Full"
     },
     "DOCUMENT_CANCEL_MODAL": {
-      "CANCEL_CONFIRM_MESSAGE": "Unsaved data will be lost and document will not be created, do you want to cancel?"
+      "HEADER":"Cancel Document Creation",
+      "CANCEL_CONFIRM_MESSAGE": "Unsaved data will be lost and document will not be created",
+      "CONFIRM": "do you want to cancel?"
     },
     "ACCORDION_HEADERS": {
       "TAGS": "Tags",
@@ -199,7 +203,7 @@
       "UPLOAD_ERROR": "File(s) failed to upload ",
       "DELETE_SUCCESS": "File(s) successfully deleted",
       "DELETE_ERROR": "File(s) failed to delete",
-      "NO_DATA": "No attachments found"
+      "NO_DATA": "No files uploaded"
     }
   },
   "DOCUMENT_TIMELINE": {
@@ -255,7 +259,8 @@
     "DOCUMENT_TYPE": "Document Type",
     "STATUS": "Status",
     "MODIFICATION_DATE": "Modification Date",
-    "VERSION": "Version"
+    "VERSION": "Version",
+    "ATTACHMENTS":"Attachments"
   },
   "DELETE_DOCUMENT": {
     "DELETE_MESSAGE": "Are you sure you want to delete this document?",

@@ -1,30 +1,19 @@
+// Core imports
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import {
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators,
-} from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+
+// Third party imports
 import { BreadcrumbService } from '@onecx/portal-integration-angular';
+import { TranslateService } from '@ngx-translate/core';
 import { MenuItem, MessageService } from 'primeng/api';
+
+// Application imports
 import {
-  catchError,
-  defaultIfEmpty,
-  forkJoin,
-  map,
-  mergeMap,
-  tap,
-  throwError,
-} from 'rxjs';
-import {
-  AttachmentDTO,
   BulkUpdateDocumentRequestParams,
   DocumentControllerV1APIService,
   DocumentCreateUpdateDTO,
-  DocumentDetailDTO,
-  UpdateDocumentRequestParams,
 } from 'src/app/generated';
-import { ActivatedRoute, Router } from '@angular/router';
 import { DocumentsChooseComponent } from './documents-choose/documents-choose.component';
 import { DocumentsUpdateComponent } from './documents-update/documents-update.component';
 import { DocumentsChooseModificationComponent } from './documents-choose-modification/documents-choose-modification.component';
@@ -37,40 +26,51 @@ import { DataSharingService } from 'src/app/shared/data-sharing.service';
 })
 export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
   @ViewChild(DocumentsChooseComponent, { static: false })
-  public documentChooseComponent: DocumentsChooseComponent;
+  documentChooseComponent: DocumentsChooseComponent;
   @ViewChild(DocumentsChooseModificationComponent, { static: false })
-  public documentChooseModificationComponent: DocumentsChooseModificationComponent;
+  documentChooseModificationComponent: DocumentsChooseModificationComponent;
   @ViewChild(DocumentsUpdateComponent, { static: false })
-  public documentsUpdateComponent: DocumentsUpdateComponent;
+  documentsUpdateComponent: DocumentsUpdateComponent;
 
-  translatedData: any;
-  menuItems: MenuItem[];
   indexActive: number;
-  documentBulkForm: UntypedFormGroup;
-
+  isShow: boolean;
   isSubmitting = false;
   isChecked = false;
   radioCheck = false;
-  checkedArrayResults = [];
-  updateFormArray: DocumentCreateUpdateDTO[] = [];
+  documentBulkUpdateFormValid = false;
+
   updateFormobject: DocumentCreateUpdateDTO;
   documentCreateUpdateDTO: DocumentCreateUpdateDTO;
-  selectedOperation = null;
-  documentBulkUpdateFormValid = false;
+  documentBulkForm: UntypedFormGroup;
+  checkedArrayResults = [];
   validCheckedValues = [];
-  isShow: boolean;
+  menuItems: MenuItem[];
+  updateFormArray: DocumentCreateUpdateDTO[] = [];
+  selectedOperation = null;
+  translatedData: any;
+
   constructor(
-    private readonly documentRESTAPIService: DocumentControllerV1APIService,
+    private readonly documentV1Service: DocumentControllerV1APIService,
     private readonly translateService: TranslateService,
-    private readonly breadCrumbService: BreadcrumbService,
-    private fb: UntypedFormBuilder,
+    private readonly breadcrumbService: BreadcrumbService,
+    private readonly formBuilder: UntypedFormBuilder,
     private readonly router: Router,
     private readonly activeRoute: ActivatedRoute,
     private readonly messageService: MessageService,
-    private service: DataSharingService
+    private readonly dataSharingService: DataSharingService
   ) {}
 
   ngOnInit(): void {
+    this.getTranslatedData();
+    this.getSearchResult();
+    this.documentBulkFormInitialize();
+    this.documentBulkFormValueChange();
+  }
+
+  /**
+   * Get the translated data from the language files.
+   */
+  getTranslatedData(): void {
     this.translateService
       .get([
         'DOCUMENT_MENU.DOCUMENT_MORE.DOCUMENT_BULK.HEADER',
@@ -98,7 +98,7 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
       ])
       .subscribe((data) => {
         this.translatedData = data;
-        this.breadCrumbService.setItems([
+        this.breadcrumbService.setItems([
           {
             label: data[
               'DOCUMENT_MENU.DOCUMENT_MORE.DOCUMENT_BULK.HEADER'
@@ -106,10 +106,15 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
           },
         ]);
         this.initSteps();
-        this.getSearchResult();
       });
-    this.documentBulkForm = this.fb.group({
-      documentBulkUpdateForm: this.fb.group({
+  }
+
+  /**
+   * Initialize the documentBulkUpdateForm controls
+   */
+  documentBulkFormInitialize() {
+    this.documentBulkForm = this.formBuilder.group({
+      documentBulkUpdateForm: this.formBuilder.group({
         typeId: [''],
         documentVersion: [''],
         channelname: [''],
@@ -123,10 +128,16 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
         attachmentDescription: [''],
       }),
     });
+  }
+
+  /**
+   * Subscribe the values when the documentBulkUpdateForm values are modified
+   */
+  documentBulkFormValueChange(): void {
     this.documentBulkForm.valueChanges.subscribe(() => {
       const formControls =
-        this.documentsUpdateComponent.documentBulkUpdateForm.controls;
-      if (formControls.valid) {
+        this.documentsUpdateComponent?.documentBulkUpdateForm?.controls;
+      if (formControls?.valid) {
         this.documentsUpdateComponent.documentBulkUpdateForm.controls[
           'typeId'
         ].setValue(formControls['typeId']);
@@ -160,13 +171,26 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  /**
+   * Holds the event If any check box is selected from the documentChooseComponent
+   * @param event takes true or false value
+   */
   isCheck(event: boolean) {
     this.isChecked = event;
   }
+
+  /**
+   * Holds the event If any radio button is selected from the documentChooseModificationComponent
+   * @param event takes true or false value
+   */
   isRadioCheck(event: boolean) {
     this.radioCheck = event;
   }
 
+  /**
+   * Returns true or false based on stpes
+   */
   get canActivateNext(): boolean {
     switch (this.indexActive) {
       case 0: {
@@ -181,8 +205,14 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
         }
         return false;
       }
+      default:
+        return;
     }
   }
+
+  /**
+   * Returns true or false based on selected opration
+   */
   get canActive(): boolean {
     switch (this.selectedOperation) {
       case 'A':
@@ -191,17 +221,23 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
         } else return false;
       case 'B':
         return false;
+      default:
+        return;
     }
   }
-  getSearchResult() {
+
+  /**
+   * Get all documents based on search criteria
+   */
+  getSearchResult(): void {
     let criteria = localStorage.getItem('searchCriteria');
     this.isShow = false;
-    this.documentRESTAPIService
+    this.documentV1Service
       .getDocumentByCriteria(JSON.parse(criteria))
       .subscribe({
         next: (data: any) => {
           this.isShow = true;
-          this.service.setSearchResults([...data.stream]);
+          this.dataSharingService.setSearchResults([...data.stream]);
           if (data.stream.length === 0) {
             this.messageService.add({
               severity: 'success',
@@ -217,6 +253,10 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
         },
       });
   }
+
+  /**
+   * Next button functionality on active steps
+   */
   submitForm(): void {
     switch (this.indexActive) {
       case 0:
@@ -234,9 +274,15 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
         break;
       case 2:
         this.onCheckBulkOperation();
+        break;
+      default:
+        return;
     }
   }
 
+  /**
+   * Performs the suitable action based on the selected operation where 'A' denotes bulk document update operation and 'B' denotes bulk document delete operation
+   */
   onCheckBulkOperation(): void {
     switch (this.selectedOperation) {
       case 'A':
@@ -245,10 +291,15 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
       case 'B':
         this.onBulkDelete();
         break;
+      default:
+        return;
     }
   }
 
-  public initSteps(): void {
+  /**
+   * Initialize the steps activity
+   */
+  initSteps(): void {
     this.indexActive = this.indexActive || 0;
     this.menuItems = [
       {
@@ -269,6 +320,9 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
     ];
   }
 
+  /**
+   * Activate or deactivate the confirm button based on valid documentBulkUpdateForm values
+   */
   onChangeFormValue(): void {
     this.validCheckedValues = [];
     let val = this.documentBulkForm.controls.documentBulkUpdateForm.value;
@@ -283,7 +337,7 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
         i < this.documentsUpdateComponent.checkedArray.length;
         i++
       ) {
-        values.map((el) => {
+        values.forEach((el) => {
           if (this.documentsUpdateComponent.checkedArray[i].name == el[0])
             this.documentsUpdateComponent.checkedArray[i].value = el[1];
         });
@@ -309,13 +363,18 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
         else this.documentBulkUpdateFormValid = true;
       }
     } else this.documentBulkUpdateFormValid = false;
+    this.dataSharingService.setUpdateModification(this.validCheckedValues);
+    this.documentsUpdateComponent.initializeCheckedStatus();
   }
 
-  public onConfirm(): void {
+  /**
+   * Generates a custom document array of objects with user selected documents and then calls bulk update API
+   */
+  onConfirm(): void {
     let updateForm = this.documentsUpdateComponent.documentBulkUpdateForm;
     if (updateForm.value && updateForm.valid) {
       this.isSubmitting = true;
-      this.checkedArrayResults.map((data) => {
+      this.checkedArrayResults.forEach((data) => {
         this.updateFormobject = {
           id: data.id,
           name: data?.name,
@@ -396,7 +455,6 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
             fileName: el?.fileName,
           })),
         };
-
         this.updateFormArray.push(this.updateFormobject);
       });
       this.documentBulkForm.disable();
@@ -404,12 +462,16 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
     }
   }
 
-  public onBulkUpdate(data: DocumentCreateUpdateDTO[]): void {
+  /**
+   * Performs document bulk update operation
+   * @param data takes DocumentCreateUpdateDTO Array
+   */
+  onBulkUpdate(data: DocumentCreateUpdateDTO[]): void {
     const params: BulkUpdateDocumentRequestParams = {
       bulkDocumentCreateUpdateDTO: data,
     };
 
-    this.documentRESTAPIService.bulkUpdateDocument(params).subscribe({
+    this.documentV1Service.bulkUpdateDocument(params).subscribe({
       next: () => {
         this.messageService.add({
           severity: 'success',
@@ -432,23 +494,32 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
     });
   }
 
-  onCancel() {
+  /**
+   * Navigates to the search page on cancel button click
+   */
+  onCancel(): void {
     this.router.navigate(['../../search'], {
       relativeTo: this.activeRoute,
     });
   }
 
-  OnBack(): void {
+  /**
+   * Decreses the active index number
+   */
+  OnBack() {
     if (this.indexActive > 0) this.indexActive--;
   }
 
-  onBulkDelete(): any {
+  /**
+   * Performs document bulk delete operation
+   */
+  onBulkDelete() {
     this.isSubmitting = true;
     let checkedDocumentIds = [];
     this.checkedArrayResults.forEach((docs) => {
       checkedDocumentIds.push(docs.id);
     });
-    this.documentRESTAPIService
+    this.documentV1Service
       .deleteBulkDocumentByIds(checkedDocumentIds)
       .subscribe({
         next: () => {
@@ -470,8 +541,11 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Invoved when the component is destroyed
+   */
   ngOnDestroy(): void {
-    this.service.setModification('');
+    this.dataSharingService.setModification('');
     localStorage.removeItem('searchCriteria');
   }
 }

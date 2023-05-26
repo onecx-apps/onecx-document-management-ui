@@ -1,3 +1,4 @@
+// Core imports
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -7,7 +8,6 @@ export class DocumentTabStateService {
   private activeCurrentTab: number;
   private editMode: boolean;
 
-  constructor() {}
   public saveactiveCurrentTab(activeCurrentTab: number): void {
     this.activeCurrentTab = activeCurrentTab;
   }

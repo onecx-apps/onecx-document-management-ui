@@ -1,6 +1,10 @@
+// Core imports
 import { Component, Input, OnInit } from '@angular/core';
+
+// Third party imports
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+
+// Application imports
 import { DocumentDetailDTO } from 'src/app/generated';
 
 @Component({
@@ -11,9 +15,15 @@ import { DocumentDetailDTO } from 'src/app/generated';
 export class DocumentsDeleteComponent implements OnInit {
   @Input() checkedResults: DocumentDetailDTO[] = [];
 
-  constructor(private translateService: TranslateService) {}
+  constructor(private readonly translateService: TranslateService) {}
 
   ngOnInit(): void {
+    this.getTranslatedData();
+  }
+  /**
+   * function to get translatedData from translateService
+   */
+  getTranslatedData(): void {
     this.translateService
       .get([
         'DOCUMENT_MENU.DOCUMENT_MORE.DOCUMENT_BULK.MODIFICATION_CONFIRMATION',

@@ -6,6 +6,7 @@ import { ResultsComponent } from './results.component';
 import { IAuthMockService } from 'src/app/test/mocks/IAuthMockService';
 import { AUTH_SERVICE } from '@onecx/portal-integration-angular';
 import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ResultsComponent', () => {
   let component: ResultsComponent;
@@ -20,7 +21,7 @@ describe('ResultsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
+      imports: [RouterTestingModule, HttpClientTestingModule],
       declarations: [ResultsComponent, TranslatePipeMock],
       providers: [
         { provide: TranslateService, useClass: TranslateServiceMock },

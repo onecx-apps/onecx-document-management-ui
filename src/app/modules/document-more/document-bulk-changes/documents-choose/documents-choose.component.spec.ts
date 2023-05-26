@@ -42,8 +42,6 @@ describe('DocumentsChooseComponent', () => {
         MessageService,
       ],
     }).compileComponents();
-    service = TestBed.inject(BreadcrumbService);
-
     fixture = TestBed.createComponent(DocumentsChooseComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

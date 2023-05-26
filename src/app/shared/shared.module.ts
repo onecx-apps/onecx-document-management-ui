@@ -1,7 +1,10 @@
+// Core imports
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+
+// Third party imports
+import { TranslateModule } from '@ngx-translate/core';
 import { CalendarModule } from 'primeng/calendar';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DropdownModule } from 'primeng/dropdown';
@@ -11,8 +14,6 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { AccordionModule } from 'primeng/accordion';
 import { FileUploadModule } from 'primeng/fileupload';
-
-// Prime NG
 import { StepsModule } from 'primeng/steps';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { GalleriaModule } from 'primeng/galleria';
@@ -33,12 +34,13 @@ import { ChipsModule } from 'primeng/chips';
 import { ColorPickerModule } from 'primeng/colorpicker';
 import { TimelineModule } from 'primeng/timeline';
 import { ToggleButtonModule } from 'primeng/togglebutton';
-import { RelativeDatePipe } from './relative-date.pipe';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
-import { TrimPipe } from './trim.pipe';
 import { RadioButtonModule } from 'primeng/radiobutton';
-import { CanActivateGuard } from './can-active-guard.service';
 
+// Application imports
+import { CanActivateGuard } from './can-active-guard.service';
+import { RelativeDatePipe } from './relative-date.pipe';
+import { TrimPipe } from './trim.pipe';
 @NgModule({
   declarations: [RelativeDatePipe, TrimPipe],
   imports: [

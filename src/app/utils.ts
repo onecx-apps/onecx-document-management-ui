@@ -1,12 +1,23 @@
+// Core imports
 import { HttpClient } from '@angular/common/http';
+import { AbstractControl, ValidationErrors } from '@angular/forms';
+
+// Third party imports
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { Column, MfeInfo } from '@onecx/portal-integration-angular';
-import { Table } from 'primeng/table';
 
+/**
+ * @param url
+ * @returns standard format of url
+ */
 export function toSafeUrl(url: string) {
   return url.replace(/(?<!:)\/\/+/g, '/');
 }
-
+/**
+ * @param http
+ * @param mfeInfo
+ * @returns translated json
+ */
 export function createTranslateLoader(http: HttpClient, mfeInfo: MfeInfo) {
   console.log(
     `******************** cofiguring translate loader ${mfeInfo?.remoteBaseUrl}`
@@ -29,11 +40,17 @@ export const basePathProvider = (mfeInfo: MfeInfo) => {
     ? mfeInfo.remoteBaseUrl + 'tkit-document-management-api'
     : '.tkit-document-management-api';
 };
+/**
+ * filter columns for table view
+ */
 export interface FilteredColumns {
   columns: Column[];
   filteredColumns: Column[];
 }
-
+/**
+ * @param columns
+ * @returns initialize temp column on toggle functionality for table view
+ */
 export function initFilteredColumns(columns: Column[]): Column[] {
   const temp = [];
   columns.forEach((column) => {
@@ -43,7 +60,11 @@ export function initFilteredColumns(columns: Column[]): Column[] {
   });
   return temp;
 }
-
+/**
+ * @param activeColumnIds
+ * @param columns
+ * @returns filtered columns for table view for toogle functionality
+ */
 export function generateFilteredColumns(
   activeColumnIds: string[],
   columns: Column[]
@@ -63,7 +84,6 @@ export function generateFilteredColumns(
       filteredColumns.push(matchingCol);
     }
   }
-
   // Iterate over columns
   for (const column of columns) {
     // Deactivate every column that is not marked active in activeColumnIds
@@ -78,7 +98,11 @@ export function generateFilteredColumns(
     filteredColumns,
   };
 }
-
+/**
+ * @param obj
+ * @param headerList
+ * @returns csv format object to store data in csv file
+ */
 export function convertToCSV(obj, headerList) {
   let array = [];
   let str = '';
@@ -92,7 +116,7 @@ export function convertToCSV(obj, headerList) {
   row = row.slice(0, -1);
   str += row + '\r\n';
 
-  if (obj.length > 1) {
+  if (obj.length >= 1) {
     for (let i = 0; i < obj.length; i++) {
       let line = '';
       for (let index in headerList) {
@@ -130,7 +154,13 @@ export function convertToCSV(obj, headerList) {
     return str;
   }
 }
-
+/**
+ * @param event
+ * @param controlName
+ * @param form
+ * @param maxlength
+ * @returns trim value which removes empty space from starting position
+ */
 export function trimSpaces(
   event: ClipboardEvent,
   controlName: string,
@@ -149,4 +179,14 @@ export function trimSpaces(
     form.controls[controlName].setValue(value);
   }
   return form;
+}
+/**
+ * @param control
+ * validate special characters : / \ : * ? < > | "  in the form filed
+ */
+export function noSpecialCharacters(
+  control: AbstractControl
+): ValidationErrors | null {
+  const pattern = /[\\/:*?<>|"]/;
+  if (pattern.test(control.value)) return { hasSpecialChars: true };
 }

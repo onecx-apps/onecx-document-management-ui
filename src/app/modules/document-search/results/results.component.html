@@ -16,7 +16,7 @@
   ></ocx-data-view-controls>
 </div>
 
-<!-- list and grid view -->
+<!-- Grid view -->
 <div *ngIf="layout !== 'table'">
   <p-dataView
     #dv
@@ -38,65 +38,84 @@
     <ng-template let-result pTemplate="gridItem">
       <div class="col-12 lg:col-6 xl:col-3 flex">
         <div
-          class="card flex flex-column justify-content-between w-12 lg:w-11 mb-4 mt-4 align-self-stretch"
+          class="hover:shadow-4 card flex flex-column justify-content-between w-12 lg:w-11 mb-4 mt-4 align-self-stretch"
+          title="{{ 'RESULTS.NAME' | translate }}&nbsp;:&nbsp;{{
+            result.name
+          }} &#010;{{ 'RESULTS.DOCUMENT_TYPE' | translate }}&nbsp;:&nbsp;{{
+            result.type.name
+          }} &#010;{{ 'RESULTS.ATTACHMENTS' | translate }}&nbsp;:&nbsp;{{
+            result.attachments.length
+          }}&#010;{{ 'RESULTS.MODIFICATION_DATE' | translate }}&nbsp;:&nbsp;{{
+            'RESULTS.EDITED' | translate
+          }} {{ result.modificationDate | relativeDate }}"
         >
-          <div class="mb-6">
-            <div class="result-name mr-3 text-2xl font-medium mb-3">
-              <a routerLink="../detail/edit/{{ result.id }}"
-                ><span pTooltip="{{ result.name }}">
-                  {{ result.name | trim: 15 }}
-                </span>
-              </a>
-            </div>
-            <div class="text-lg font-light">
-              <div *ngIf="result.type.name">
-                {{ result.type.name }}
+          <div class="mb-5">
+            <div class="flex justify-content-center">
+              <div class="relative inline-block">
+                <img
+                  alt="Attachment Icon"
+                  [src]="getAttachmentIcon(result)"
+                  (error)="imgError($event)"
+                  class="max-w-7rem min-h-7rem cursor-pointer"
+                  routerLink="../detail/edit/{{ result.id }}"
+                />
+
+                <ng-container *ngIf="showCount">
+                  <div class="text-xl -mt-6 text-right p-2">
+                    {{ fileCount }}
+                  </div>
+                </ng-container>
               </div>
             </div>
           </div>
           <div class="flex flex-row justify-content-between align-items-center">
-            <div class="flex-row">
-              <div class="text-base font-light my-1">
-                <div *ngIf="result.modificationDate && result.creationUser">
-                  {{ 'RESULTS.EDITED' | translate }}
-                  {{ result.modificationDate | relativeDate }} |
-                  {{ 'RESULTS.CREATED' | translate }} {{ result.creationUser }}
-                </div>
-                <div *ngIf="result.modificationDate && !result.creationUser">
-                  {{ 'RESULTS.EDITED' | translate }}
-                  {{ result.modificationDate | relativeDate }}
-                </div>
-                <div *ngIf="!result.modificationDate && result.creationUser">
-                  {{ 'RESULTS.EDITED' | translate }}
-                  {{ result.modificationDate | relativeDate }}
-                </div>
+            <div class="white-space-nowrap">
+              <span class="text-2xl font-medium">
+                {{ result.name | trim: 10 }}
+              </span>
+
+              <div *ngIf="result.type.name" class="text-lg font-light">
+                {{ result.type.name }}
               </div>
             </div>
-            <div>
-              <p-menu
-                #menu
-                appendTo="body"
-                [popup]="true"
-                [model]="items"
-              ></p-menu>
-              <button
-                class="button"
-                pButton
-                label="&#8942;"
-                (click)="menu.toggle($event); setSelectedDocument(result)"
-                width="5%"
-                height="5%"
-              ></button>
-            </div>
+            <p-menu
+              #menu
+              appendTo="body"
+              [popup]="true"
+              [model]="items"
+            ></p-menu>
+            <button
+              data-inline="true"
+              class="min-w-min max-h-2rem mt-3"
+              pButton
+              label="&#8942;"
+              (click)="menu.toggle($event); setSelectedDocument(result)"
+            ></button>
           </div>
         </div>
       </div>
     </ng-template>
+    <!-- List View -->
     <ng-template let-result pTemplate="listItem">
       <div class="col-12">
-        <div class="flex flex-1 align-items-center p-3 w-full">
+        <div class="flex flex-1 align-items-center p-3 pt-1 w-full gap-8">
+          <div class="relative inline-block max-w-full mb-2">
+            <img
+              alt="Attachment Icon"
+              class="w-5rem h-5rem"
+              [src]="getAttachmentIcon(result)"
+              (error)="imgError($event)"
+            />
+            <div class="file-count-list">
+              <ng-container *ngIf="showCount">
+                {{ fileCount }}
+              </ng-container>
+            </div>
+          </div>
           <div class="flex-1">
-            <div class="result-name-row flex flex-row justify-content-between">
+            <div
+              class="result-name-row mt-1 flex flex-row justify-content-between"
+            >
               <div class="result-name mr-3 text-2xl font-medium">
                 <a routerLink="../detail/edit/{{ result.id }}">{{
                   result.name
@@ -126,7 +145,7 @@
                 ></button>
               </div>
             </div>
-            <div class="text-lg font-light">
+            <div class="text-lg -mt-2 font-light">
               <div *ngIf="result.type.name">
                 {{ result.type.name }}
               </div>
@@ -172,17 +191,43 @@
     >
       <ng-template pTemplate="header" let-columns>
         <tr>
-          <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+          <th scope="col">
+            <img
+              alt="Attachment Header Icon"
+              class="w-2rem"
+              [src]="getAttachmentHeaderIcon()"
+            />
+          </th>
+          <th
+            scope="col"
+            *ngFor="let col of columns"
+            [pSortableColumn]="col.field"
+          >
             {{ col.translationPrefix + '.' + col.header | translate }}
             <p-sortIcon [field]="col.field"></p-sortIcon>
           </th>
-          <th class="pl-5">
+          <th scope="col" class="pl-5">
             {{ 'DOCUMENT_SEARCH.TABLE.HEADER.ACTIONS' | translate }}
           </th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-result>
         <tr>
+          <td>
+            <div class="relative inline-block max-w-full">
+              <img
+                alt="Attachment Icon"
+                class="w-2rem h-2rem"
+                [src]="getAttachmentIcon(result)"
+                (error)="imgError($event)"
+              />
+              <div class="file-count">
+                <ng-container *ngIf="showCount">
+                  {{ fileCount }}
+                </ng-container>
+              </div>
+            </div>
+          </td>
           <ng-template ngFor let-col [ngForOf]="filteredColumns">
             <td *ngIf="col.field === 'name'; else ifModificationDate">
               <a
