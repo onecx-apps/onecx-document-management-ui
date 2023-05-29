@@ -2,7 +2,6 @@
 import { Component } from '@angular/core';
 import {
   UntypedFormArray,
-  UntypedFormBuilder,
   UntypedFormControl,
   UntypedFormGroup,
 } from '@angular/forms';
@@ -14,8 +13,6 @@ export class GenericFormArrayComponent<T> {
   public genericFormArray = new UntypedFormArray([]);
   public emptyTemplateObject = {};
   public objects: T[];
-
-  constructor() {}
 
   public updateForm(objectArray: T[]): void {
     this.objects = JSON.parse(JSON.stringify(objectArray));

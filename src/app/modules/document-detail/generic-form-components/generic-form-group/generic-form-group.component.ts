@@ -1,10 +1,6 @@
 // Core imports
 import { Component, OnInit } from '@angular/core';
-import {
-  UntypedFormBuilder,
-  UntypedFormControl,
-  UntypedFormGroup,
-} from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
 @Component({
   template: '',
@@ -12,8 +8,6 @@ import {
 export class GenericFormGroupComponent<T> implements OnInit {
   public genericFormGroup: UntypedFormGroup;
   public emptyTemplateObject = {};
-
-  constructor() {}
 
   public ngOnInit(): void {
     this.genericFormGroup = new UntypedFormGroup({});

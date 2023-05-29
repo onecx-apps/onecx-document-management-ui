@@ -19,7 +19,7 @@ import {
 } from '@onecx/portal-integration-angular';
 import { saveAs } from 'file-saver';
 import { MessageService } from 'primeng/api';
-import { throwError, forkJoin, of } from 'rxjs';
+import { throwError, forkJoin } from 'rxjs';
 import { catchError, defaultIfEmpty, tap, map, mergeMap } from 'rxjs/operators';
 
 // Application imports
@@ -643,9 +643,7 @@ export class DocumentEditComponent implements OnInit {
       document?.type?.id ? document?.type?.id : ''
     );
     documentDescriptionForm.controls['documentVersion'].setValue(
-      document && document.documentVersion?.toString()
-        ? document.documentVersion
-        : ''
+      document?.documentVersion?.toString() ? document.documentVersion : ''
     );
     documentDescriptionForm.controls['channelname'].setValue(
       document?.channel?.name ? document?.channel?.name : null

@@ -22,7 +22,6 @@ import {
   DocumentDetailDTO,
   GetDocumentByCriteriaRequestParams,
 } from 'src/app/generated';
-import { DataSharingService } from 'src/app/shared/data-sharing.service';
 import { convertToCSV } from 'src/app/utils';
 
 @Component({

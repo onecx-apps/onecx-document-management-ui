@@ -1,6 +1,5 @@
 // Core imports
 import {
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   Inject,
@@ -340,7 +339,7 @@ export class ResultsComponent implements OnInit {
    * @param attachment file data
    */
   getAttachmentIcon(result) {
-    let attachments = result && result.attachments ? result.attachments : [];
+    let attachments = result?.attachments ? result.attachments : [];
     let validAttachmentArray = [];
     attachments.forEach((attachment) => {
       if (attachment['storageUploadStatus'] === true) {
@@ -360,8 +359,7 @@ export class ResultsComponent implements OnInit {
         let attachment = validAttachmentArray[0];
         let fileName = attachment.name ?? '';
         let fileExtension = fileName.split('.').reverse();
-        let fileTypeData =
-          attachment && attachment.mimeType ? attachment.mimeType.name : '';
+        let fileTypeData = attachment?.mimeType ? attachment.mimeType.name : '';
         let attachmentIcon = '';
         if (fileTypeData) {
           let fileType = fileTypeData.split('/');
