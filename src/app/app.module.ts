@@ -1,12 +1,14 @@
+// Core imports
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
+
+// Third party imports
 import {
   PortalCoreModule,
   APP_CONFIG,
-  MockAuthModule,
   PortalMessageService,
 } from '@onecx/portal-integration-angular';
 import {
@@ -14,44 +16,34 @@ import {
   TranslateLoader,
   TranslateService,
 } from '@ngx-translate/core';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { MessageService } from 'primeng/api';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { environment } from 'src/environments/environment';
-import { BASE_PATH } from './generated';
-//TODO verify why this does not work
-
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { KeycloakAuthModule } from '@onecx/keycloak-auth';
 import { Observable } from 'rxjs';
 import { TooltipModule } from 'primeng/tooltip';
+import { MessageService } from 'primeng/api';
+
+// Application imports
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { environment } from 'src/environments/environment';
+import { BASE_PATH } from './generated';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
 }
 
-// function initializer(translate: TranslateService): () => Observable<any> {
-//   return () => {
-//     translate.addLangs(['en', 'de']);
-//     const browserLang = translate.getBrowserLang();
-
-//     // const lang = document.createAttribute('lang');
-//     // lang.value = translate.currentLang;
-//     // document.documentElement.attributes.setNamedItem(lang);
-//     return translate.use(browserLang.match(/en|de/) ? browserLang : 'en');
-//   };
-// }
-
-// const authModule = KeycloakAuthModule;
-
-function initializer(translate: TranslateService): () => Observable<any> {
+function initializer(
+  translateService: TranslateService
+): () => Observable<any> {
   return () => {
-    translate.addLangs(['en', 'de']);
-    const browserLang = translate.getBrowserLang();
+    translateService.addLangs(['en', 'de']);
+    const browserLang = translateService.getBrowserLang();
     if (browserLang) {
-      return translate.use(browserLang.match(/en|de/) ? browserLang : 'en');
+      return translateService.use(
+        browserLang.match(/en|de/) ? browserLang : 'en'
+      );
     } else {
-      return translate.use('en');
+      return translateService.use('en');
     }
   };
 }

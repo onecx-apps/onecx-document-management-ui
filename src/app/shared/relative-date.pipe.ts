@@ -1,4 +1,7 @@
+// Core imports
 import { Pipe, PipeTransform } from '@angular/core';
+
+// Third party imports
 import { TranslateService } from '@ngx-translate/core';
 
 const DIVISIONS: { amount: number; name: Intl.RelativeTimeFormatUnit }[] = [
@@ -17,12 +20,12 @@ const DIVISIONS: { amount: number; name: Intl.RelativeTimeFormatUnit }[] = [
 export class RelativeDatePipe implements PipeTransform {
   rtf: Intl.RelativeTimeFormat;
 
-  constructor(private translateService: TranslateService) {
+  constructor(private readonly translateService: TranslateService) {
     this.rtf = new Intl.RelativeTimeFormat(this.translateService.currentLang, {
       style: 'long',
     });
   }
-
+  /** convert string format into relative date format  */
   transform(value: any, args?: any): any {
     let date: Date;
     switch (typeof value) {

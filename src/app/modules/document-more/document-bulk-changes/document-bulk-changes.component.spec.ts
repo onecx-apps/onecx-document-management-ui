@@ -6,10 +6,6 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BreadcrumbService } from '@onecx/portal-integration-angular';
 import { MessageService } from 'primeng/api';
-import {
-  GetDocumentByCriteriaRequestParams,
-  LifeCycleState,
-} from 'src/app/generated';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 
 import { DocumentBulkChangesComponent } from './document-bulk-changes.component';
@@ -46,8 +42,6 @@ describe('DocumentBulkChangesComponent', () => {
         MessageService,
       ],
     }).compileComponents();
-    service = TestBed.inject(BreadcrumbService);
-
     fixture = TestBed.createComponent(DocumentBulkChangesComponent);
     component = fixture.componentInstance;
   });

@@ -172,3 +172,13 @@ form {
 ::ng-deep .p-calendar-clear-icon {
   right: 0.5rem;
 }
+
+.alert-danger {
+  color: var(--error-color);
+}
+
+.required::after {
+  font-weight: bold;
+  content: ' *';
+  color: #e62a10;
+}

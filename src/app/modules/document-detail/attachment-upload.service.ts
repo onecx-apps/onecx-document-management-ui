@@ -1,15 +1,21 @@
+// Core imports
 import {
   HttpClient,
   HttpHeaders,
   HttpParameterCodec,
 } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
+
+// Third party imports
 import { Observable } from 'rxjs';
+
+// Application imports
 import { Configuration } from 'src/app/generated/configuration';
 import { CustomHttpParameterCodec } from 'src/app/generated/encoder';
 import { storageUploadAuditDTO } from 'src/app/generated/model/storageUploadAuditDTO';
 import { BASE_PATH } from 'src/app/generated/variables';
 import { convertToCSV } from 'src/app/utils';
+
 @Injectable({
   providedIn: 'any',
 })
@@ -73,7 +79,10 @@ export class AttachmentUploadService {
       formData
     );
   }
-
+  /*
+    @param -> documentId
+    @Description -> making a http get request to get failed file list
+  */
   public getFailedAttachmentRecords(
     documentId: string
   ): Observable<storageUploadAuditDTO[]> {
@@ -81,18 +90,10 @@ export class AttachmentUploadService {
       `${this.configuration.basePath}/v1/document/files/upload/failed/${documentId}`
     );
   }
-
-  /**
-   * Delete File
-   * @param attachmentId takes attachment Id.
-   */
-
-  public deleteAttachmentFile(attachmentId: string): Observable<any> {
-    return this.http.delete(
-      `${this.configuration.basePath}/v1/document/file/${attachmentId}`
-    );
-  }
-
+  /*
+    @param -> documentId
+    @Description -> making a http get request to get all attachments 
+  */
   public downloadDocAttachmentsAsZip(documentId: string) {
     const headers = new HttpHeaders({
       'client-timezone': Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -102,14 +103,20 @@ export class AttachmentUploadService {
       { observe: 'response', responseType: 'blob' as 'json', headers: headers }
     );
   }
-
+  /*
+    @param -> attachmentId
+    @Description -> making a http get request to download required file 
+  */
   public downloadFile(attachmentId: string) {
     return this.http.get<Blob>(
       `${this.configuration.basePath}/v1/document/file/${attachmentId}`,
       { observe: 'response', responseType: 'blob' as 'json' }
     );
   }
-
+  /**
+   * @description export all failed document in csv format
+   * @param documentId
+   */
   exportAllFailedAttachments(documentId: string) {
     let csvData = [];
     let result = [];

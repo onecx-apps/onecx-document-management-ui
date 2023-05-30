@@ -110,15 +110,30 @@
               maxlength="60"
               pInputText
               formControlName="name"
-              pattern="^[a-zA-Z0-9-_][\sa-zA-Z0-9-_]*"
               (blur)="trimSpace($event)"
               (keypress)="preventSpace($event)"
               (keyup)="updateAttachmentData()"
+              (paste)="trimSpaceOnPaste($event, 'name', 60)"
               [attr.disabled]="!isEditable ? '' : null"
             />
             <label class="required" for="name">{{
               'DOCUMENT_DETAIL.ATTACHMENTS.NAME' | translate
             }}</label>
+          </span>
+          <span
+            *ngIf="attachmentFieldsForm?.controls['name']?.invalid"
+            class="alert alert-danger"
+          >
+            <span
+              *ngIf="
+                attachmentFieldsForm?.controls['name']?.errors.hasSpecialChars
+              "
+            >
+              {{
+                'DOCUMENT_MENU.DOCUMENT_EDIT.SPECIAL_CHARACTER_ERROR'
+                  | translate
+              }}{{ specialChar }}
+            </span>
           </span>
         </div>
         <div class="p-field col-6">
@@ -213,6 +228,7 @@
                   (click)="$event.target.value = ''"
                   (change)="addFile($event)"
                   [disabled]="disableAttachmentBtn"
+                  title
                 />
               </div>
             </div>

@@ -1,23 +1,27 @@
+// Core imports
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+
+// Third party imports
 import { TranslateService } from '@ngx-translate/core';
-import { MessageService } from 'primeng/api';
-import {
-  DocumentControllerV1APIService,
-  DocumentDetailDTO,
-  GetDocumentByCriteriaRequestParams,
-} from 'src/app/generated';
 import {
   Action,
   PortalSearchPage,
   provideParent,
 } from '@onecx/portal-integration-angular';
-import { ActivatedRoute, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { Observable, timer } from 'rxjs';
-import { tap, finalize, map, catchError } from 'rxjs/operators';
+import { finalize, map, tap } from 'rxjs/operators';
+
+// Application imports
 import { CriteriaComponent } from './criteria/criteria.component';
 import { DocumentCriteriaAdvancedComponent } from './document-criteria-advanced/document-criteria-advanced.component';
-import { DataSharingService } from 'src/app/shared/data-sharing.service';
-import { DatePipe } from '@angular/common';
+import {
+  DocumentControllerV1APIService,
+  DocumentDetailDTO,
+  GetDocumentByCriteriaRequestParams,
+} from 'src/app/generated';
 import { convertToCSV } from 'src/app/utils';
 
 @Component({
@@ -30,40 +34,48 @@ export class DocumentSearchComponent
   extends PortalSearchPage<DocumentDetailDTO>
   implements OnInit
 {
-  public criteria: GetDocumentByCriteriaRequestParams = {};
-  public helpArticleId = 'PAGE_DOCUMENT_MGMT_SEARCH';
-  public headerActions: Action[] = [];
-  translatedData: any;
-  isLoading = false;
-  isShow = true;
-  public isBulkEnable: boolean;
-  public isExportDocEnable: boolean;
-  isLoadMoreVisible = false;
-  isLoadMoreDisable = true;
   @ViewChild(CriteriaComponent, { static: false })
   criteriaComponent: CriteriaComponent;
   @ViewChild(DocumentCriteriaAdvancedComponent, { static: false })
   criteriaAdvancedComponent: DocumentCriteriaAdvancedComponent;
-  mode: string;
-  totalElements: number;
+
   page = 0;
   size = 200;
+  totalElements: number;
+  isBulkEnable: boolean;
+  isExportDocEnable: boolean;
+  isLoading = false;
+  isLoadMoreDisable = true;
+  isLoadMoreVisible = false;
+  isShow = true;
   isSearchClicked = false;
+
+  headerActions: Action[] = [];
+  helpArticleId = 'PAGE_DOCUMENT_MGMT_SEARCH';
+  mode: string;
+  criteria: GetDocumentByCriteriaRequestParams = {};
+  translatedData: any;
   updatedDataView: any;
 
   constructor(
     private readonly translateService: TranslateService,
-    private readonly documentRestApi: DocumentControllerV1APIService,
+    private readonly documentV1Service: DocumentControllerV1APIService,
     private readonly messageService: MessageService,
-    private router: Router,
-    private readonly route: ActivatedRoute,
-    private dataSharing: DataSharingService,
-    private datepipe: DatePipe
+    private readonly router: Router,
+    private readonly activeRoute: ActivatedRoute,
+    private readonly datepipe: DatePipe
   ) {
     super();
   }
 
   public ngOnInit(): void {
+    this.getTranslatedData();
+    this.setHeaderActions();
+  }
+  /**
+   * function to get translatedData from translateService
+   */
+  getTranslatedData(): void {
     this.translateService
       .get([
         'DOCUMENT_SEARCH.MSG_NO_RESULTS',
@@ -76,14 +88,17 @@ export class DocumentSearchComponent
       .subscribe((data) => {
         this.translatedData = data;
       });
-    this.setHeaderActions();
   }
-
+  /**
+   * function to reset search
+   * @param mode
+   */
   reset(mode: 'basic' | 'advanced'): void {
     this.criteriaComponent.criteriaGroup.reset();
     this.criteriaAdvancedComponent.criteriaGroup.reset();
     this.isBulkEnable = false;
     this.isExportDocEnable = false;
+    this.isLoadMoreVisible = false;
   }
 
   /**
@@ -120,7 +135,7 @@ export class DocumentSearchComponent
 
     this.isLoading = true;
 
-    return this.documentRestApi.getDocumentByCriteria(this.criteria).pipe(
+    return this.documentV1Service.getDocumentByCriteria(this.criteria).pipe(
       finalize(() => (this.isLoading = false)),
       map((data: any) => {
         if (!usePreviousCriteria) {
@@ -149,6 +164,7 @@ export class DocumentSearchComponent
               severity: 'success',
               summary: this.translatedData['DOCUMENT_SEARCH.MSG_NO_RESULTS'],
             });
+            this.isLoadMoreVisible = false;
           }
         },
         error: (error) => {
@@ -166,7 +182,7 @@ export class DocumentSearchComponent
    * @param id to select the particular document id.
    */
   public deleteDocument(id: string): void {
-    this.documentRestApi.deleteDocumentById({ id }).subscribe({
+    this.documentV1Service.deleteDocumentById({ id }).subscribe({
       next: () => {
         this.messageService.add({
           severity: 'success',
@@ -188,6 +204,7 @@ export class DocumentSearchComponent
       },
     });
   }
+  /** function to set header actions */
   setHeaderActions() {
     this.headerActions = [
       {
@@ -223,14 +240,14 @@ export class DocumentSearchComponent
               JSON.stringify(this.criteria)
             );
             this.router.navigate(['../more/bulkchanges'], {
-              relativeTo: this.route,
+              relativeTo: this.activeRoute,
             });
           }
         },
       },
     ];
   }
-
+  /** function to export the documents which is found in search result */
   exportAllDocuments() {
     let csvData = [];
     let res = [];
@@ -265,7 +282,7 @@ export class DocumentSearchComponent
     dwldLink.setAttribute('download', 'DocumentDetails' + '.csv');
     dwldLink.click();
   }
-
+  /** function loads more documents if search result has large count */
   loadMoreResults() {
     this.page = this.page + 1;
     this.search(this.mode || 'basic', true, this.page, this.size).subscribe({
@@ -276,11 +293,17 @@ export class DocumentSearchComponent
     this.isLoadMoreDisable = true;
     this.isSearchClicked = false;
   }
-
+  /**
+   * function to set load more butthon disable depending on event
+   * @param event
+   */
   isLoadMoreDisableEvent(event) {
     this.isLoadMoreDisable = event;
   }
-
+  /**
+   * function to update data view
+   * @param event
+   */
   updatedView(event) {
     this.updatedDataView = event;
   }

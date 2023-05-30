@@ -1,8 +1,4 @@
 const bypassFn = function (req, res, proxyOptions) {
-  // req.headers['X-Custom-Header'] = 'yes'
-  // req.headers['Access-Control-Allow-Origin'] = '*'
-  // req.headers['Allow'] = 'GET, POST, HEAD, PUT, DELETE, OPTIONS'
-  // console.log(`bypassing ${req.method} ${req.url} `);
   if (req.method === 'OPTIONS') {
     res.setHeader('Allow', 'GET, POST, HEAD, PUT, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Origin', '*');

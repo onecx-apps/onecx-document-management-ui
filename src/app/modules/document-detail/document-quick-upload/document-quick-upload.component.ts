@@ -1,43 +1,29 @@
-import { Component, OnInit, Output } from '@angular/core';
+// Core imports
+import { Component, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
-import { ConfirmationService, SelectItem } from 'primeng/api';
-import {
-  AsyncSubject,
-  catchError,
-  forkJoin,
-  map,
-  mergeMap,
-  Observable,
-  of,
-  ReplaySubject,
-  Subscription,
-  tap,
-  throwError,
-  timer,
-} from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+
+// Third party imports
+import { TranslateService } from '@ngx-translate/core';
+import { ConfirmationService, SelectItem, MessageService } from 'primeng/api';
+import { catchError, Subscription, throwError, timer } from 'rxjs';
+
+// Application imports
+import { AttachmentUploadService } from '../attachment-upload.service';
+import { DocumentQuickUploadFormComponent } from './document-quick-upload-form/document-quick-upload-form.component';
 import {
   AttachmentCreateUpdateDTO,
-  AttachmentDTO,
-  DocumentTypeControllerV1APIService,
-  DocumentTypeDTO,
-  LifeCycleState,
   DocumentControllerV1APIService,
   DocumentCreateUpdateDTO,
-} from 'src/app/generated';
-import {
-  SupportedMimeTypeControllerV1APIService,
+  DocumentTypeDTO,
   SupportedMimeTypeDTO,
 } from 'src/app/generated';
-import { AttachmentUploadService } from '../attachment-upload.service';
-import { MessageService } from 'primeng/api';
-import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { DocumentQuickUploadFormComponent } from './document-quick-upload-form/document-quick-upload-form.component';
+
 enum SortOrder {
   ASCENDING,
   DESCENDING,
@@ -49,56 +35,67 @@ enum SortOrder {
   providers: [ConfirmationService],
 })
 export class DocumentQuickUploadComponent implements OnInit {
-  documentCreateUpdateDTO: DocumentCreateUpdateDTO;
-  showToaster = false;
-  attachmentsRespArray: any[];
-  subscriptions = new Subscription();
-  constructor(
-    private readonly documentTypeRestApi: DocumentTypeControllerV1APIService,
-    private readonly supportedMimeTypeAPI: SupportedMimeTypeControllerV1APIService,
-    private messageService: MessageService,
-    private attachmentUploadService: AttachmentUploadService,
-    private documentRESTAPIService: DocumentControllerV1APIService,
-    private router: Router,
-    private readonly activeRoute: ActivatedRoute,
-    private readonly translateService: TranslateService,
-    private confirmationService: ConfirmationService
-  ) {}
-  @Output()
-  public allDocumentTypes: DocumentTypeDTO[];
-  public documentTypes: SelectItem[];
-  public documentStatus: SelectItem[];
-  documentQuickUploadForm: UntypedFormGroup;
-  quickUploadForm: DocumentQuickUploadFormComponent;
-  layout: 'list' | 'grid' = 'grid';
+  editAttachmentIndex = -1;
+  sortOrder = -1;
+  activeElement = 0;
   rowsPerPage = 10;
   rowsPerPageOptions = [10, 20, 50];
-  translatedData: any;
-  attachmentFieldsForm: UntypedFormGroup;
-  fileData: any;
+  showToaster = false;
   disableAttachmentBtn = false;
-  attachmentErrorMessage = '';
   isHavingAttachment = false;
-  editAttachmentIndex = -1;
   isEditEnabled = false;
-  public showAttachment: boolean;
-  public activeElement = 0;
-  attachmentArray: any = [];
-  selectedFileList = false;
-  public supportedMimeType: SelectItem[];
-  public loadedSupportedMimeType: SupportedMimeTypeDTO[];
-  uploadFileMimetype: any;
-  fileType: any = {};
   enableCreateButton = false;
   formValid = false;
-  files: any = [];
   isSubmitted = false;
-  sortField = '';
-  sortFields: SelectItem[];
-  sortOrder = -1;
+  selectedFileList = false;
+  showAttachment: boolean;
+  cancelDialogVisible: boolean;
+
+  documentCreateUpdateDTO: DocumentCreateUpdateDTO;
+  documentQuickUploadForm: UntypedFormGroup;
+  quickUploadForm: DocumentQuickUploadFormComponent;
+  attachmentFieldsForm: UntypedFormGroup;
   sortOrderType: SortOrder = SortOrder.DESCENDING;
+  allDocumentTypes: DocumentTypeDTO[];
+  loadedSupportedMimeType: SupportedMimeTypeDTO[];
+  documentTypes: SelectItem[];
+  documentStatus: SelectItem[];
+  supportedMimeType: SelectItem[];
+  sortFields: SelectItem[];
+  attachmentArray: any = [];
+  attachmentsRespArray: any[];
+  files: any = [];
+  fileType: any = {};
+  translatedData: any;
+  fileData: any;
+  uploadFileMimetype: any;
+  attachmentErrorMessage = '';
+  sortField = '';
+  layout: 'list' | 'grid' = 'grid';
+  subscriptions = new Subscription();
+
+  constructor(
+    private readonly messageService: MessageService,
+    private readonly attachmentUploadService: AttachmentUploadService,
+    private readonly documentV1Service: DocumentControllerV1APIService,
+    private readonly router: Router,
+    private readonly activeRoute: ActivatedRoute,
+    private readonly translateService: TranslateService
+  ) {}
 
   ngOnInit(): void {
+    this.getTranslatedData();
+    this.documentQuickUploadForm = new FormGroup({
+      documentName: new FormControl('', [Validators.required]),
+      typeId: new FormControl('', [Validators.required]),
+      channelname: new FormControl('', [Validators.required]),
+      lifeCycleState: new FormControl(),
+    });
+  }
+  /**
+   * function to get translatedData from translateService
+   */
+  getTranslatedData(): void {
     this.translateService
       .get([
         'DOCUMENT_MENU.DOCUMENT_CREATE.CREATE_SUCCESS',
@@ -137,31 +134,32 @@ export class DocumentQuickUploadComponent implements OnInit {
           },
         ];
       });
-    this.documentQuickUploadForm = new FormGroup({
-      documentName: new FormControl('', [Validators.required]),
-      typeId: new FormControl('', [Validators.required]),
-      channelname: new FormControl('', [Validators.required]),
-      lifeCycleState: new FormControl(),
-    });
-    this.attachmentArray;
   }
-
   /**
    * Tracks the updated value of view layout
    */
   updateAttachmentsLayout(event: any) {
     this.layout = event;
   }
-
+  /**
+   * function to enable create button to create new document
+   * @param event which has boolean value
+   */
   createButtonEnable(e): void {
     this.enableCreateButton = e;
   }
-
+  /**
+   * function to check form is valid or not to create document
+   * @param e
+   */
   setFormValid(e): void {
     this.formValid = e.valid;
     this.documentQuickUploadForm = e;
   }
-
+  /**
+   * function to save attachment list in attachment array
+   * @param e
+   */
   setAttachmentArray(e): void {
     this.attachmentArray = e;
   }
@@ -292,13 +290,13 @@ export class DocumentQuickUploadComponent implements OnInit {
     this.callCreateDocumentApi(this.documentCreateUpdateDTO);
   }
 
-  /*
-    @param -> documentCreateUpdateDTO object
-    @Description -> calls the service class to send the object to the backend and sends the documentId (received from response object) to the callUploadAttachmentApi
-  */
+  /**
+   * @param  documentCreateUpdateDTO object
+   * @Description calls the service class to send the object to the backend and sends the documentId (received from response object) to the callUploadAttachmentApi
+   */
 
   callCreateDocumentApi(documentCreateUpdateDTO) {
-    this.subscriptions = this.documentRESTAPIService
+    this.subscriptions = this.documentV1Service
       .createDocument({ documentCreateUpdateDTO: documentCreateUpdateDTO })
       .pipe(
         catchError((err) => {
@@ -328,9 +326,9 @@ export class DocumentQuickUploadComponent implements OnInit {
       });
   }
 
-  /*
-    @param -> documentId
-    @Description -> creates a list of the files that has to be uploaded and passes the documentId and the Files list to the uploadAttachment function of the service class.
+  /**
+    @param documentId
+    @Description creates a list of the files that has to be uploaded and passes the documentId and the Files list to the uploadAttachment function of the service class.
   */
 
   callUploadAttachmentsApi(documentId) {
@@ -372,32 +370,11 @@ export class DocumentQuickUploadComponent implements OnInit {
   }
 
   /**
-   * openConfirmationModal to open a confirmation modal
-   * @param event
-   */
-
-  openConfirmationModal(event) {
-    this.confirmationService.confirm({
-      target: event.target,
-      message:
-        this.translatedData[
-          'DOCUMENT_DETAIL.DOCUMENT_CANCEL_MODAL.CANCEL_CONFIRM_MESSAGE'
-        ],
-      accept: () => {
-        this.router.navigate(['../../search'], {
-          relativeTo: this.activeRoute,
-        });
-      },
-      reject: () => {},
-    });
-  }
-
-  /**
    * onCancel to cancel the quick upload dialog
    * @param event
    */
 
-  onCancel(event) {
+  onCancel() {
     let documentQuickUploadform = this.documentQuickUploadForm.value;
     let flagIsValid = false;
     for (let detail in documentQuickUploadform) {
@@ -410,7 +387,7 @@ export class DocumentQuickUploadComponent implements OnInit {
       documentQuickUploadform.dirty ||
       this.attachmentArray.length
     ) {
-      this.openConfirmationModal(event);
+      this.cancelDialogVisible = true;
     } else {
       this.router.navigate(['../../search'], {
         relativeTo: this.activeRoute,
@@ -418,6 +395,17 @@ export class DocumentQuickUploadComponent implements OnInit {
     }
   }
 
+  /***function for no option on cancel dialogue */
+  onCancelNo() {
+    this.cancelDialogVisible = false;
+  }
+
+  /***function for Yes option on cancel dialogue */
+  onCancelYes() {
+    this.router.navigate(['../../search'], {
+      relativeTo: this.activeRoute,
+    });
+  }
   /**
    * function to convert bytes to KB or MB according to bytes value
    * @param bytes file size value
@@ -451,9 +439,8 @@ export class DocumentQuickUploadComponent implements OnInit {
    */
   getAttachmentIcon(attachment) {
     let fileName = attachment.name ?? '';
-    let fileExtension = fileName.split('.');
-    let fileTypeData =
-      attachment && attachment.fileData ? attachment.fileData.type : '';
+    let fileExtension = fileName.split('.').reverse();
+    let fileTypeData = attachment?.fileData ? attachment.fileData.type : '';
     let attachmentIcon = '';
     if (fileTypeData) {
       let fileType = fileTypeData.split('/');
@@ -475,7 +462,7 @@ export class DocumentQuickUploadComponent implements OnInit {
           }
         } else {
           if (fileExtension.length && fileExtension.length > 1) {
-            let extension = fileExtension[1].toLowerCase();
+            let extension = fileExtension[0].toLowerCase();
             switch (extension) {
               case 'xls':
               case 'xlsx':
@@ -567,5 +554,15 @@ export class DocumentQuickUploadComponent implements OnInit {
     } else {
       this.enableCreateButton = false;
     }
+  }
+
+  /**
+   * function to enable or disable Pagination according to the attachmentArray length
+   */
+  get isPaginatorVisible(): boolean {
+    if (this.attachmentArray.length == 0) {
+      return false;
+    }
+    return true;
   }
 }

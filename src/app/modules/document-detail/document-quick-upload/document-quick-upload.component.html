@@ -10,7 +10,7 @@
         class="w-12 lg:w-8"
         pButton
         icon="pi pi-times"
-        (click)="onCancel($event)"
+        (click)="onCancel()"
         [label]="'GENERAL.CANCEL' | translate"
         [pTooltip]="'GENERAL.CANCEL' | translate"
         tooltipPosition="top"
@@ -78,7 +78,7 @@
         emptyMessage="{{
           'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.NO_DATA' | translate
         }}"
-        [paginator]="true"
+        [paginator]="isPaginatorVisible"
         [rows]="rowsPerPage"
         [rowsPerPageOptions]="rowsPerPageOptions"
       >
@@ -99,6 +99,7 @@
               </div>
               <div class="tile-item">
                 <img
+                  alt="Attachment Icon"
                   [src]="getAttachmentIcon(attachment)"
                   (error)="imgError($event)"
                   class="tile-icon"
@@ -147,13 +148,11 @@
                 <div class="attachment-name-row list-item">
                   <div class="list-icon-size-container">
                     <img
+                      alt="Attachment Icon"
                       [src]="getAttachmentIcon(attachment)"
                       (error)="imgError($event)"
                       class="tile-icon"
                     />
-                    <div class="font-light" *ngIf="attachment.fileData.size">
-                      {{ formatBytes(attachment.fileData.size) }}
-                    </div>
                   </div>
 
                   <div class="attachment-name-div">
@@ -163,6 +162,9 @@
                       [tooltipPosition]="'bottom'"
                     >
                       {{ attachment.name }}
+                    </div>
+                    <div class="font-light" *ngIf="attachment.fileData.size">
+                      {{ formatBytes(attachment.fileData.size) }}
                     </div>
                   </div>
                   <div
@@ -205,4 +207,34 @@
     </div>
   </div>
 </ocx-portal-page>
-<p-confirmPopup></p-confirmPopup>
+<p-dialog
+  header=" {{ 'DOCUMENT_DETAIL.DOCUMENT_CANCEL_MODAL.HEADER' | translate }}"
+  [(visible)]="cancelDialogVisible"
+  [baseZIndex]="10000"
+  [modal]="true"
+>
+  <p>
+    {{
+      'DOCUMENT_DETAIL.DOCUMENT_CANCEL_MODAL.CANCEL_CONFIRM_MESSAGE' | translate
+    }}
+  </p>
+  <div>
+    {{ 'DOCUMENT_DETAIL.DOCUMENT_CANCEL_MODAL.CONFIRM' | translate }}
+  </div>
+  <p-footer class="btn-text">
+    <button
+      type="button"
+      pButton
+      icon="pi pi-times"
+      (click)="onCancelNo()"
+      label="{{ 'GENERAL.NO' | translate }}"
+    ></button>
+    <button
+      type="button"
+      pButton
+      icon="pi pi-check"
+      (click)="onCancelYes()"
+      label="{{ 'GENERAL.YES' | translate }}"
+    ></button>
+  </p-footer>
+</p-dialog>

@@ -146,7 +146,9 @@ form {
   right: 2px;
   top: 105px;
 }
-
+.alert-danger {
+  color: var(--error-color);
+}
 ::ng-deep .p-calendar-clear-icon {
   right: 0.5rem;
 }

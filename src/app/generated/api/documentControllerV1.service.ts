@@ -11,6 +11,7 @@
  */
 /* tslint:disable:no-unused-variable member-ordering */
 
+// Core imports
 import { Inject, Injectable, Optional } from '@angular/core';
 import {
   HttpClient,
@@ -20,20 +21,21 @@ import {
   HttpEvent,
   HttpParameterCodec,
 } from '@angular/common/http';
-import { CustomHttpParameterCodec } from '../encoder';
+
+// Third party imports
 import { Observable } from 'rxjs';
 
-import { AttachmentDTO } from '../model/models';
-import { ChannelDTO } from '../model/models';
-import { DocumentCreateUpdateDTO } from '../model/models';
-import { DocumentDetailDTO } from '../model/models';
-import { LifeCycleState } from '../model/models';
-import { PageResultDTO } from '../model/models';
-import { RFCProblemDTO } from '../model/models';
-import { RestException } from '../model/models';
-
-import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
+// Application imports
 import { Configuration } from '../configuration';
+import { CustomHttpParameterCodec } from '../encoder';
+import {
+  ChannelDTO,
+  DocumentCreateUpdateDTO,
+  DocumentDetailDTO,
+  LifeCycleState,
+  PageResultDTO,
+} from '../model/models';
+import { BASE_PATH } from '../variables';
 
 export interface CreateDocumentRequestParams {
   documentCreateUpdateDTO?: DocumentCreateUpdateDTO;
@@ -44,7 +46,7 @@ export interface DeleteDocumentByIdRequestParams {
 }
 
 export interface DeleteFileRequestParams {
-  attachmentId: string;
+  deletedAttachmentsIds: string[];
 }
 
 export interface GetDocumentByCriteriaRequestParams {
@@ -198,7 +200,7 @@ export class DocumentControllerV1APIService {
     let headers = this.defaultHeaders;
 
     let httpHeaderAcceptSelected: string | undefined =
-      options && options.httpHeaderAccept;
+      options?.httpHeaderAccept;
     if (httpHeaderAcceptSelected === undefined) {
       // to determine the Accept header
       const httpHeaderAccepts: string[] = ['application/json'];
@@ -218,10 +220,7 @@ export class DocumentControllerV1APIService {
     }
 
     let responseType: 'text' | 'json' = 'json';
-    if (
-      httpHeaderAcceptSelected &&
-      httpHeaderAcceptSelected.startsWith('text')
-    ) {
+    if (httpHeaderAcceptSelected?.startsWith('text')) {
       responseType = 'text';
     }
 
@@ -278,7 +277,7 @@ export class DocumentControllerV1APIService {
     let headers = this.defaultHeaders;
 
     let httpHeaderAcceptSelected: string | undefined =
-      options && options.httpHeaderAccept;
+      options?.httpHeaderAccept;
     if (httpHeaderAcceptSelected === undefined) {
       // to determine the Accept header
       const httpHeaderAccepts: string[] = ['application/json'];
@@ -290,10 +289,7 @@ export class DocumentControllerV1APIService {
     }
 
     let responseType: 'text' | 'json' = 'json';
-    if (
-      httpHeaderAcceptSelected &&
-      httpHeaderAcceptSelected.startsWith('text')
-    ) {
+    if (httpHeaderAcceptSelected?.startsWith('text')) {
       responseType = 'text';
     }
 
@@ -313,6 +309,7 @@ export class DocumentControllerV1APIService {
 
   /**
    * Delete attachment\&#39;s file
+   * @param body accepts an array of Strings which contains the attachmentIds that is required to be deleted
    * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
@@ -341,17 +338,17 @@ export class DocumentControllerV1APIService {
     reportProgress: boolean = false,
     options?: { httpHeaderAccept?: 'application/json' }
   ): Observable<any> {
-    const attachmentId = requestParameters.attachmentId;
-    if (attachmentId === null || attachmentId === undefined) {
+    const attachmentIdsLength = requestParameters.deletedAttachmentsIds.length;
+    if (attachmentIdsLength === 0) {
       throw new Error(
-        'Required parameter attachmentId was null or undefined when calling deleteFile.'
+        'Required parameter attachmentId(s) was null when calling deleteFile.'
       );
     }
 
     let headers = this.defaultHeaders;
 
     let httpHeaderAcceptSelected: string | undefined =
-      options && options.httpHeaderAccept;
+      options?.httpHeaderAccept;
     if (httpHeaderAcceptSelected === undefined) {
       // to determine the Accept header
       const httpHeaderAccepts: string[] = ['application/json'];
@@ -363,21 +360,22 @@ export class DocumentControllerV1APIService {
     }
 
     let responseType: 'text' | 'json' = 'json';
-    if (
-      httpHeaderAcceptSelected &&
-      httpHeaderAcceptSelected.startsWith('text')
-    ) {
+    if (httpHeaderAcceptSelected?.startsWith('text')) {
       responseType = 'text';
     }
 
-    return this.httpClient.delete<any>(
-      `${this.configuration.basePath}/v1/document/file/${encodeURIComponent(
-        String(attachmentId)
-      )}`,
+    const newHeader = new HttpHeaders().set(
+      'Content-Type',
+      'application/json; charset=utf-8'
+    );
+
+    return this.httpClient.delete(
+      `${this.configuration.basePath}/v1/document/file/delete-bulk-attachment`,
       {
+        body: JSON.stringify(requestParameters.deletedAttachmentsIds),
         responseType: <any>responseType,
         withCredentials: this.configuration.withCredentials,
-        headers: headers,
+        headers: newHeader,
         observe: observe,
         reportProgress: reportProgress,
       }
@@ -412,7 +410,7 @@ export class DocumentControllerV1APIService {
     let headers = this.defaultHeaders;
 
     let httpHeaderAcceptSelected: string | undefined =
-      options && options.httpHeaderAccept;
+      options?.httpHeaderAccept;
     if (httpHeaderAcceptSelected === undefined) {
       // to determine the Accept header
       const httpHeaderAccepts: string[] = ['application/json'];
@@ -424,10 +422,7 @@ export class DocumentControllerV1APIService {
     }
 
     let responseType: 'text' | 'json' = 'json';
-    if (
-      httpHeaderAcceptSelected &&
-      httpHeaderAcceptSelected.startsWith('text')
-    ) {
+    if (httpHeaderAcceptSelected?.startsWith('text')) {
       responseType = 'text';
     }
 
@@ -575,7 +570,7 @@ export class DocumentControllerV1APIService {
     let headers = this.defaultHeaders;
 
     let httpHeaderAcceptSelected: string | undefined =
-      options && options.httpHeaderAccept;
+      options?.httpHeaderAccept;
     if (httpHeaderAcceptSelected === undefined) {
       // to determine the Accept header
       const httpHeaderAccepts: string[] = ['application/json'];
@@ -587,10 +582,7 @@ export class DocumentControllerV1APIService {
     }
 
     let responseType: 'text' | 'json' = 'json';
-    if (
-      httpHeaderAcceptSelected &&
-      httpHeaderAcceptSelected.startsWith('text')
-    ) {
+    if (httpHeaderAcceptSelected?.startsWith('text')) {
       responseType = 'text';
     }
 
@@ -647,7 +639,7 @@ export class DocumentControllerV1APIService {
     let headers = this.defaultHeaders;
 
     let httpHeaderAcceptSelected: string | undefined =
-      options && options.httpHeaderAccept;
+      options?.httpHeaderAccept;
     if (httpHeaderAcceptSelected === undefined) {
       // to determine the Accept header
       const httpHeaderAccepts: string[] = ['application/json'];
@@ -659,10 +651,7 @@ export class DocumentControllerV1APIService {
     }
 
     let responseType: 'text' | 'json' = 'json';
-    if (
-      httpHeaderAcceptSelected &&
-      httpHeaderAcceptSelected.startsWith('text')
-    ) {
+    if (httpHeaderAcceptSelected?.startsWith('text')) {
       responseType = 'text';
     }
 
@@ -728,7 +717,7 @@ export class DocumentControllerV1APIService {
     let headers = this.defaultHeaders;
 
     let httpHeaderAcceptSelected: string | undefined =
-      options && options.httpHeaderAccept;
+      options?.httpHeaderAccept;
     if (httpHeaderAcceptSelected === undefined) {
       // to determine the Accept header
       const httpHeaderAccepts: string[] = [
@@ -743,10 +732,7 @@ export class DocumentControllerV1APIService {
     }
 
     let responseType: 'text' | 'json' = 'json';
-    if (
-      httpHeaderAcceptSelected &&
-      httpHeaderAcceptSelected.startsWith('text')
-    ) {
+    if (httpHeaderAcceptSelected?.startsWith('text')) {
       responseType = 'text';
     }
 
@@ -805,7 +791,7 @@ export class DocumentControllerV1APIService {
     let headers = this.defaultHeaders;
 
     let httpHeaderAcceptSelected: string | undefined =
-      options && options.httpHeaderAccept;
+      options?.httpHeaderAccept;
     if (httpHeaderAcceptSelected === undefined) {
       // to determine the Accept header
       const httpHeaderAccepts: string[] = ['application/json'];
@@ -825,10 +811,7 @@ export class DocumentControllerV1APIService {
     }
 
     let responseType: 'text' | 'json' = 'json';
-    if (
-      httpHeaderAcceptSelected &&
-      httpHeaderAcceptSelected.startsWith('text')
-    ) {
+    if (httpHeaderAcceptSelected?.startsWith('text')) {
       responseType = 'text';
     }
 
@@ -910,7 +893,7 @@ export class DocumentControllerV1APIService {
     let headers = this.defaultHeaders;
 
     let httpHeaderAcceptSelected: string | undefined =
-      options && options.httpHeaderAccept;
+      options?.httpHeaderAccept;
     if (httpHeaderAcceptSelected === undefined) {
       // to determine the Accept header
       const httpHeaderAccepts: string[] = ['application/json'];
@@ -930,10 +913,7 @@ export class DocumentControllerV1APIService {
     }
 
     let responseType: 'text' | 'json' = 'json';
-    if (
-      httpHeaderAcceptSelected &&
-      httpHeaderAcceptSelected.startsWith('text')
-    ) {
+    if (httpHeaderAcceptSelected?.startsWith('text')) {
       responseType = 'text';
     }
 

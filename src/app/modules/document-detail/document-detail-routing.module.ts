@@ -1,9 +1,13 @@
+// Core imports
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { CanActivateGuard } from 'src/app/shared/can-active-guard.service';
+
+// Application imports
 import { DocumentCreateComponent } from './document-create/document-create.component';
 import { DocumentEditComponent } from './document-edit/document-edit.component';
 import { DocumentQuickUploadComponent } from './document-quick-upload/document-quick-upload.component';
+import { CanActivateGuard } from 'src/app/shared/can-active-guard.service';
+
 const routes: Routes = [
   {
     path: 'create',

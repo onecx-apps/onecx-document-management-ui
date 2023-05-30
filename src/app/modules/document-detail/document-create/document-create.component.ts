@@ -1,27 +1,28 @@
+// Core imports
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { BreadcrumbService } from '@onecx/portal-integration-angular';
-import { MenuItem, MessageService, ConfirmationService } from 'primeng/api';
-import { forkJoin } from 'rxjs';
-import { of, throwError } from 'rxjs';
-import { catchError, map, mergeMap, tap } from 'rxjs/operators';
-import {
-  DocumentCreateUpdateDTO,
-  DocumentControllerV1APIService,
-  AttachmentDTO,
-  TimePeriodDTO,
-  AttachmentCreateUpdateDTO,
-} from 'src/app/generated';
-import { AttachmentUploadService } from '../attachment-upload.service';
-
-import { DocumentCharacteristicsComponent } from '../document-create/document-characteristics/document-characteristics.component';
 import {
   UntypedFormBuilder,
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+
+// Third party imports
+import { TranslateService } from '@ngx-translate/core';
+import { BreadcrumbService } from '@onecx/portal-integration-angular';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
+import { throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
+// Application imports
+import { AttachmentUploadService } from '../attachment-upload.service';
+import { DocumentCharacteristicsComponent } from '../document-create/document-characteristics/document-characteristics.component';
 import { DocumentAttachmentComponent } from './document-attachment/document-attachment.component';
+import {
+  AttachmentCreateUpdateDTO,
+  DocumentCreateUpdateDTO,
+  DocumentControllerV1APIService,
+} from 'src/app/generated';
 
 @Component({
   selector: 'app-document-create',
@@ -31,57 +32,40 @@ import { DocumentAttachmentComponent } from './document-attachment/document-atta
 })
 export class DocumentCreateComponent implements OnInit {
   @ViewChild(DocumentAttachmentComponent, { static: false })
-  public documentAttachmentComponent: DocumentAttachmentComponent;
-
+  documentAttachmentComponent: DocumentAttachmentComponent;
   @ViewChild(DocumentCharacteristicsComponent, { static: false })
-  public documentCharacteristicsComponent: DocumentCharacteristicsComponent;
-  translatedData: any;
-  menuItems: MenuItem[];
+  documentCharacteristicsComponent: DocumentCharacteristicsComponent;
+
   indexActive: number;
-  documentCreateForm: UntypedFormGroup;
   isSubmitting = false;
-  public documentDescriptionIsValid = false;
+  cancelDialogVisible = false;
+  documentDescriptionIsValid = false;
+
   documentCreateUpdateDTO: DocumentCreateUpdateDTO;
+  documentCreateForm: UntypedFormGroup;
+  menuItems: MenuItem[];
   attachmentArray: any = [];
   charactersticsArray: any = [];
-  documentVersion;
   subscriptions: any;
+  translatedData: any;
+  documentVersion;
+
   constructor(
     private readonly translateService: TranslateService,
-    private readonly breadCrumbService: BreadcrumbService,
-    private readonly documentRESTAPIService: DocumentControllerV1APIService,
+    private readonly breadcrumbService: BreadcrumbService,
+    private readonly documentV1Service: DocumentControllerV1APIService,
     private readonly messageService: MessageService,
     private readonly attachmentUploadService: AttachmentUploadService,
     private readonly router: Router,
     private readonly activeRoute: ActivatedRoute,
-    private confirmationService: ConfirmationService,
-    private fb: UntypedFormBuilder
+    private readonly formBuilder: UntypedFormBuilder
   ) {}
 
   ngOnInit(): void {
-    this.translateService
-      .get([
-        'DOCUMENT_MENU.DOCUMENT_CREATE.CREATE_SUCCESS',
-        'DOCUMENT_MENU.DOCUMENT_CREATE.CREATE_ERROR',
-        'DOCUMENT_MENU.DOCUMENT_CREATE.HEADER',
-        'DOCUMENT_DETAIL.ATTACHMENTS.UPLOAD_SUCCESS',
-        'DOCUMENT_DETAIL.ATTACHMENTS.UPLOAD_ERROR',
-        'DOCUMENT_DETAIL.DOCUMENT_CANCEL_MODAL.CANCEL_CONFIRM_MESSAGE',
-        'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_SUCCESS',
-        'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_ERROR',
-        'GENERAL.PROCESSING',
-      ])
-      .subscribe((data) => {
-        this.translatedData = data;
-        this.breadCrumbService.setItems([
-          { label: data['DOCUMENT_MENU.DOCUMENT_CREATE.HEADER'] as string },
-        ]);
-        this.initSteps();
-      });
-
+    this.getTranslatedData();
     // Form Validations
-    this.documentCreateForm = this.fb.group({
-      documentDescriptionForm: this.fb.group({
+    this.documentCreateForm = this.formBuilder.group({
+      documentDescriptionForm: this.formBuilder.group({
         name: ['', Validators.required],
         typeId: ['', Validators.required],
         documentVersion: ['', Validators.min(0)],
@@ -101,7 +85,33 @@ export class DocumentCreateComponent implements OnInit {
     });
     this.initSteps();
   }
-
+  /**
+   * function to get translatedData from translateService
+   */
+  getTranslatedData(): void {
+    this.translateService
+      .get([
+        'DOCUMENT_MENU.DOCUMENT_CREATE.CREATE_SUCCESS',
+        'DOCUMENT_MENU.DOCUMENT_CREATE.CREATE_ERROR',
+        'DOCUMENT_MENU.DOCUMENT_CREATE.HEADER',
+        'DOCUMENT_DETAIL.ATTACHMENTS.UPLOAD_SUCCESS',
+        'DOCUMENT_DETAIL.ATTACHMENTS.UPLOAD_ERROR',
+        'DOCUMENT_DETAIL.DOCUMENT_CANCEL_MODAL.CANCEL_CONFIRM_MESSAGE',
+        'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_SUCCESS',
+        'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_ERROR',
+        'GENERAL.PROCESSING',
+      ])
+      .subscribe((data) => {
+        this.translatedData = data;
+        this.breadcrumbService.setItems([
+          { label: data['DOCUMENT_MENU.DOCUMENT_CREATE.HEADER'] as string },
+        ]);
+        this.initSteps();
+      });
+  }
+  /**
+   * function to get the boolean value to enable or disable the next button
+   */
   get canActivateNext(): boolean {
     switch (this.indexActive) {
       case 0:
@@ -122,7 +132,9 @@ export class DocumentCreateComponent implements OnInit {
         return true;
     }
   }
-
+  /**
+   * function to set button disable or enable according to active page index
+   */
   submitForm(): void {
     this.isSubmitting = true;
     switch (this.indexActive) {
@@ -138,16 +150,9 @@ export class DocumentCreateComponent implements OnInit {
         this.onSubmit();
     }
   }
-  onSaveSubmit() {
-    if (this.isSubmitting) {
-      return 1;
-    } else return 0;
-  }
-
   /**
-   * Returns set of attachment array that user has uploaded
+   * @returns set of attachment array that user has uploaded
    */
-
   private mapAttachments(): AttachmentCreateUpdateDTO[] {
     let setAttachments = [];
     let attachmentsArray = [];
@@ -184,7 +189,7 @@ export class DocumentCreateComponent implements OnInit {
   }
 
   /**
-   * Returns set of files array that user has uploaded
+   * @returns set of files array that user has uploaded
    */
   private mapUploads() {
     let fileUploads = [];
@@ -197,7 +202,9 @@ export class DocumentCreateComponent implements OnInit {
       console.error(err);
     }
   }
-
+  /**
+   * function to submit user input data to create the new document
+   */
   public onSubmit(): void {
     this.documentCreateUpdateDTO = {
       ...this.documentCreateForm.value.documentDescriptionForm,
@@ -229,9 +236,12 @@ export class DocumentCreateComponent implements OnInit {
     this.documentCreateUpdateDTO.documentVersion = this.documentVersion;
     this.callCreateDocumentApi(this.documentCreateUpdateDTO);
   }
-
+  /**
+   * function to pass data to the service API call to create new document
+   * @param documentCreateUpdateDTO
+   */
   callCreateDocumentApi(documentCreateUpdateDTO) {
-    this.subscriptions = this.documentRESTAPIService
+    this.subscriptions = this.documentV1Service
       .createDocument({ documentCreateUpdateDTO: documentCreateUpdateDTO })
       .pipe(
         catchError((err) => {
@@ -260,7 +270,10 @@ export class DocumentCreateComponent implements OnInit {
         });
       });
   }
-
+  /**
+   * function to pass the document id and files to be uploaded to the service API call
+   * @param documentId
+   */
   callUploadAttachmentsApi(documentId) {
     const fileUploads = this.mapUploads();
     let filesToBeUploaded = [];
@@ -298,28 +311,18 @@ export class DocumentCreateComponent implements OnInit {
         }
       });
   }
-
+  /**
+   *
+   * @param array
+   * @returns new copied array
+   */
   private deepCopyArray(array: any[]): any[] {
     return Object.assign([], array);
   }
-
-  openConfirmationModal(event) {
-    this.confirmationService.confirm({
-      target: event.target,
-      message:
-        this.translatedData[
-          'DOCUMENT_DETAIL.DOCUMENT_CANCEL_MODAL.CANCEL_CONFIRM_MESSAGE'
-        ],
-      accept: () => {
-        this.router.navigate(['../../search'], {
-          //nav to search relative to this page
-          relativeTo: this.activeRoute,
-        });
-      },
-      reject: () => {},
-    });
-  }
-
+  /**
+   * function to close the create new form flow on cancel button click
+   * @param event
+   */
   onCancel(event) {
     const isDocChanges = this.attachmentArray.length >= 1;
     const isCharChanges =
@@ -336,14 +339,26 @@ export class DocumentCreateComponent implements OnInit {
     }
 
     if (flagIsValid || isDocChanges || isCharChanges) {
-      this.openConfirmationModal(event);
+      this.cancelDialogVisible = true;
     } else {
       this.router.navigate(['../../search'], {
         relativeTo: this.activeRoute,
       });
     }
   }
-
+  /* function for no option on cancel dialogue */
+  onCancelNo() {
+    this.cancelDialogVisible = false;
+  }
+  /* function for Yes option on cancel dialogue */
+  onCancelYes() {
+    this.router.navigate(['../../search'], {
+      relativeTo: this.activeRoute,
+    });
+  }
+  /**
+   * function to set active page index
+   */
   public initSteps(): void {
     this.indexActive = this.indexActive || 0;
     this.menuItems = [
@@ -364,10 +379,16 @@ export class DocumentCreateComponent implements OnInit {
       },
     ];
   }
+  /**
+   * function to set active index on back button click
+   */
   navigateBack(): void {
     if (this.indexActive > 0) this.indexActive--;
   }
-
+  /**
+   * function to set document characteristics data from generic form array
+   * @returns characteristicsSet
+   */
   getCharacteristicsData() {
     let documentCharacteristicsData = this.deepCopyArray(
       this.documentCharacteristicsComponent.genericFormArray.value

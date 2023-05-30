@@ -18,5 +18,5 @@ export interface AttachmentCreateUpdateDTO {
   name?: string;
   type?: string;
   validFor?: TimePeriodDTO;
-  file?: String;
+  file?: string;
 }

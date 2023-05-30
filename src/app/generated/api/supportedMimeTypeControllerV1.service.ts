@@ -11,6 +11,7 @@
  */
 /* tslint:disable:no-unused-variable member-ordering */
 
+// Core imports
 import { Inject, Injectable, Optional } from '@angular/core';
 import {
   HttpClient,
@@ -20,15 +21,18 @@ import {
   HttpEvent,
   HttpParameterCodec,
 } from '@angular/common/http';
-import { CustomHttpParameterCodec } from '../encoder';
+
+// Third party imports
 import { Observable } from 'rxjs';
 
-import { RFCProblemDTO } from '../model/models';
-import { SupportedMimeTypeCreateUpdateDTO } from '../model/models';
-import { SupportedMimeTypeDTO } from '../model/models';
-
-import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
+// Apllication imports
 import { Configuration } from '../configuration';
+import { CustomHttpParameterCodec } from '../encoder';
+import {
+  SupportedMimeTypeCreateUpdateDTO,
+  SupportedMimeTypeDTO,
+} from '../model/models';
+import { BASE_PATH } from '../variables';
 
 export interface CreateSupportedMimeTypeRequestParams {
   supportedMimeTypeCreateUpdateDTO?: SupportedMimeTypeCreateUpdateDTO;
@@ -164,7 +168,7 @@ export class SupportedMimeTypeControllerV1APIService {
     let headers = this.defaultHeaders;
 
     let httpHeaderAcceptSelected: string | undefined =
-      options && options.httpHeaderAccept;
+      options?.httpHeaderAccept;
     if (httpHeaderAcceptSelected === undefined) {
       // to determine the Accept header
       const httpHeaderAccepts: string[] = ['application/json'];
@@ -184,10 +188,7 @@ export class SupportedMimeTypeControllerV1APIService {
     }
 
     let responseType: 'text' | 'json' = 'json';
-    if (
-      httpHeaderAcceptSelected &&
-      httpHeaderAcceptSelected.startsWith('text')
-    ) {
+    if (httpHeaderAcceptSelected?.startsWith('text')) {
       responseType = 'text';
     }
 
@@ -244,7 +245,7 @@ export class SupportedMimeTypeControllerV1APIService {
     let headers = this.defaultHeaders;
 
     let httpHeaderAcceptSelected: string | undefined =
-      options && options.httpHeaderAccept;
+      options?.httpHeaderAccept;
     if (httpHeaderAcceptSelected === undefined) {
       // to determine the Accept header
       const httpHeaderAccepts: string[] = ['application/json'];
@@ -256,10 +257,7 @@ export class SupportedMimeTypeControllerV1APIService {
     }
 
     let responseType: 'text' | 'json' = 'json';
-    if (
-      httpHeaderAcceptSelected &&
-      httpHeaderAcceptSelected.startsWith('text')
-    ) {
+    if (httpHeaderAcceptSelected?.startsWith('text')) {
       responseType = 'text';
     }
 
@@ -305,7 +303,7 @@ export class SupportedMimeTypeControllerV1APIService {
     let headers = this.defaultHeaders;
 
     let httpHeaderAcceptSelected: string | undefined =
-      options && options.httpHeaderAccept;
+      options?.httpHeaderAccept;
     if (httpHeaderAcceptSelected === undefined) {
       // to determine the Accept header
       const httpHeaderAccepts: string[] = ['application/json'];
@@ -317,10 +315,7 @@ export class SupportedMimeTypeControllerV1APIService {
     }
 
     let responseType: 'text' | 'json' = 'json';
-    if (
-      httpHeaderAcceptSelected &&
-      httpHeaderAcceptSelected.startsWith('text')
-    ) {
+    if (httpHeaderAcceptSelected?.startsWith('text')) {
       responseType = 'text';
     }
 
@@ -376,7 +371,7 @@ export class SupportedMimeTypeControllerV1APIService {
     let headers = this.defaultHeaders;
 
     let httpHeaderAcceptSelected: string | undefined =
-      options && options.httpHeaderAccept;
+      options?.httpHeaderAccept;
     if (httpHeaderAcceptSelected === undefined) {
       // to determine the Accept header
       const httpHeaderAccepts: string[] = ['application/json'];
@@ -388,10 +383,7 @@ export class SupportedMimeTypeControllerV1APIService {
     }
 
     let responseType: 'text' | 'json' = 'json';
-    if (
-      httpHeaderAcceptSelected &&
-      httpHeaderAcceptSelected.startsWith('text')
-    ) {
+    if (httpHeaderAcceptSelected?.startsWith('text')) {
       responseType = 'text';
     }
 
@@ -451,7 +443,7 @@ export class SupportedMimeTypeControllerV1APIService {
     let headers = this.defaultHeaders;
 
     let httpHeaderAcceptSelected: string | undefined =
-      options && options.httpHeaderAccept;
+      options?.httpHeaderAccept;
     if (httpHeaderAcceptSelected === undefined) {
       // to determine the Accept header
       const httpHeaderAccepts: string[] = ['application/json'];
@@ -471,10 +463,7 @@ export class SupportedMimeTypeControllerV1APIService {
     }
 
     let responseType: 'text' | 'json' = 'json';
-    if (
-      httpHeaderAcceptSelected &&
-      httpHeaderAcceptSelected.startsWith('text')
-    ) {
+    if (httpHeaderAcceptSelected?.startsWith('text')) {
       responseType = 'text';
     }
 

@@ -30,4 +30,5 @@ export interface AttachmentDTO {
   type?: string;
   validFor?: TimePeriodDTO;
   fileName?: string;
+  storageUploadStatus?: boolean;
 }

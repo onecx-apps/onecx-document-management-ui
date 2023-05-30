@@ -11,6 +11,7 @@
  */
 /* tslint:disable:no-unused-variable member-ordering */
 
+// Core imports
 import { Inject, Injectable, Optional } from '@angular/core';
 import {
   HttpClient,
@@ -20,15 +21,15 @@ import {
   HttpEvent,
   HttpParameterCodec,
 } from '@angular/common/http';
-import { CustomHttpParameterCodec } from '../encoder';
+
+// Third party imports
 import { Observable } from 'rxjs';
 
-import { DocumentTypeCreateUpdateDTO } from '../model/models';
-import { DocumentTypeDTO } from '../model/models';
-import { RFCProblemDTO } from '../model/models';
-
-import { BASE_PATH, COLLECTION_FORMATS } from '../variables';
+//Application imports
 import { Configuration } from '../configuration';
+import { CustomHttpParameterCodec } from '../encoder';
+import { DocumentTypeCreateUpdateDTO, DocumentTypeDTO } from '../model/models';
+import { BASE_PATH } from '../variables';
 
 export interface CreateDocumentTypeRequestParams {
   documentTypeCreateUpdateDTO?: DocumentTypeCreateUpdateDTO;
@@ -164,7 +165,7 @@ export class DocumentTypeControllerV1APIService {
     let headers = this.defaultHeaders;
 
     let httpHeaderAcceptSelected: string | undefined =
-      options && options.httpHeaderAccept;
+      options?.httpHeaderAccept;
     if (httpHeaderAcceptSelected === undefined) {
       // to determine the Accept header
       const httpHeaderAccepts: string[] = ['application/json'];
@@ -184,10 +185,7 @@ export class DocumentTypeControllerV1APIService {
     }
 
     let responseType: 'text' | 'json' = 'json';
-    if (
-      httpHeaderAcceptSelected &&
-      httpHeaderAcceptSelected.startsWith('text')
-    ) {
+    if (httpHeaderAcceptSelected?.startsWith('text')) {
       responseType = 'text';
     }
 
@@ -244,7 +242,7 @@ export class DocumentTypeControllerV1APIService {
     let headers = this.defaultHeaders;
 
     let httpHeaderAcceptSelected: string | undefined =
-      options && options.httpHeaderAccept;
+      options?.httpHeaderAccept;
     if (httpHeaderAcceptSelected === undefined) {
       // to determine the Accept header
       const httpHeaderAccepts: string[] = ['application/json'];
@@ -256,10 +254,7 @@ export class DocumentTypeControllerV1APIService {
     }
 
     let responseType: 'text' | 'json' = 'json';
-    if (
-      httpHeaderAcceptSelected &&
-      httpHeaderAcceptSelected.startsWith('text')
-    ) {
+    if (httpHeaderAcceptSelected?.startsWith('text')) {
       responseType = 'text';
     }
 
@@ -305,7 +300,7 @@ export class DocumentTypeControllerV1APIService {
     let headers = this.defaultHeaders;
 
     let httpHeaderAcceptSelected: string | undefined =
-      options && options.httpHeaderAccept;
+      options?.httpHeaderAccept;
     if (httpHeaderAcceptSelected === undefined) {
       // to determine the Accept header
       const httpHeaderAccepts: string[] = ['application/json'];
@@ -317,10 +312,7 @@ export class DocumentTypeControllerV1APIService {
     }
 
     let responseType: 'text' | 'json' = 'json';
-    if (
-      httpHeaderAcceptSelected &&
-      httpHeaderAcceptSelected.startsWith('text')
-    ) {
+    if (httpHeaderAcceptSelected?.startsWith('text')) {
       responseType = 'text';
     }
 
@@ -388,10 +380,7 @@ export class DocumentTypeControllerV1APIService {
     }
 
     let responseType: 'text' | 'json' = 'json';
-    if (
-      httpHeaderAcceptSelected &&
-      httpHeaderAcceptSelected.startsWith('text')
-    ) {
+    if (httpHeaderAcceptSelected?.startsWith('text')) {
       responseType = 'text';
     }
 
@@ -451,7 +440,7 @@ export class DocumentTypeControllerV1APIService {
     let headers = this.defaultHeaders;
 
     let httpHeaderAcceptSelected: string | undefined =
-      options && options.httpHeaderAccept;
+      options?.httpHeaderAccept;
     if (httpHeaderAcceptSelected === undefined) {
       // to determine the Accept header
       const httpHeaderAccepts: string[] = ['application/json'];
@@ -471,10 +460,7 @@ export class DocumentTypeControllerV1APIService {
     }
 
     let responseType: 'text' | 'json' = 'json';
-    if (
-      httpHeaderAcceptSelected &&
-      httpHeaderAcceptSelected.startsWith('text')
-    ) {
+    if (httpHeaderAcceptSelected?.startsWith('text')) {
       responseType = 'text';
     }
 

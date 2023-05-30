@@ -11,7 +11,6 @@
   </ocx-page-header>
 
   <div class="row" id="document-detail-block">
-    <!-- <p-card> -->
     <div class="col-12 sm:col-12 md:col-9" id="document-detail-form">
       <div class="card">
         <p-tabView
@@ -63,8 +62,6 @@
         </p-tabView>
       </div>
     </div>
-    <!-- </p-card>
-    <p-card> -->
     <div class="col-12 sm:col-12 md:col-3" id="document-detail-lifecycle">
       <div
         class="w-full card flex flex-column md:flex-row lg:flex-column justify-content-between gap-3"
@@ -74,7 +71,6 @@
         ></app-document-edit-lifecycle>
       </div>
     </div>
-    <!-- </p-card> -->
   </div>
 </ocx-portal-page>
 
@@ -107,7 +103,6 @@
     ></button>
   </p-footer>
 </p-dialog>
-<!-- delete dialog -->
 <p-dialog
   header="{{ 'DOCUMENT_MENU.DOCUMENT_DELETE.DELETE_HEADER' | translate }}"
   [(visible)]="deleteDialogVisible"

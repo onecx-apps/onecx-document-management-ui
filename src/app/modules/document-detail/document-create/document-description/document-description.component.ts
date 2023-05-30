@@ -1,6 +1,11 @@
+// Core imports
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+
+// Third party imports
 import { SelectItem } from 'primeng/api';
+
+// Application imports
 import {
   DocumentTypeControllerV1APIService,
   DocumentTypeDTO,
@@ -15,33 +20,39 @@ import { trimSpaces } from 'src/app/utils';
   providers: [UntypedFormBuilder],
 })
 export class DocumentDescriptionComponent implements OnInit {
+  @Input() documentDescriptionForm: UntypedFormGroup;
+  @Output() documentVersion = new EventEmitter<string>();
+
+  allDocumentTypes: DocumentTypeDTO[];
+  documentTypes: SelectItem[];
+  documentStatus: SelectItem[];
+
   constructor(
-    private readonly documentTypeRestApi: DocumentTypeControllerV1APIService
+    private readonly documentTypeV1Service: DocumentTypeControllerV1APIService
   ) {}
-  @Output()
-  public allDocumentTypes: DocumentTypeDTO[];
-  public documentTypes: SelectItem[];
-  public documentStatus: SelectItem[];
-  @Input() public documentDescriptionForm: UntypedFormGroup;
-  @Output() documentVersion = new EventEmitter<String>();
+
   ngOnInit(): void {
     this.loadAllDocumentTypes();
     this.loadDocumentStatus();
   }
   /**
-   * function to eliminate space from the beginning of the required fields
+   *function to trim empty space from the begining and end of the form field on blur event
    */
   trimSpace(event: any) {
     let controlName = event.target.getAttribute('formControlName');
     let value = event.target.value.trim();
     this.documentDescriptionForm.controls[controlName].setValue(value);
   }
-
+  /**
+   * function to eliminate space from the beginning of the required fields on key press event
+   */
   preventSpace(event: any) {
     if (event.target.selectionStart === 0 && event.code === 'Space')
       event.preventDefault();
   }
-
+  /**
+   * function to trim empty space from the begining and end of the form field on paste event
+   */
   trimSpaceOnPaste(
     event: ClipboardEvent,
     controlName: string,
@@ -54,9 +65,11 @@ export class DocumentDescriptionComponent implements OnInit {
       maxlength
     );
   }
-
+  /**
+   * function to load all document types to show in dropdown of document type form field
+   */
   private loadAllDocumentTypes(): void {
-    this.documentTypeRestApi.getAllTypesOfDocument().subscribe((results) => {
+    this.documentTypeV1Service.getAllTypesOfDocument().subscribe((results) => {
       this.allDocumentTypes = results;
       this.documentTypes = results.map((type) => ({
         label: type.name,
@@ -64,13 +77,14 @@ export class DocumentDescriptionComponent implements OnInit {
       }));
     });
   }
-
+  /**
+   * function to get all dropdown values for document status form field
+   */
   private loadDocumentStatus(): void {
     this.documentStatus = Object.keys(LifeCycleState).map((key) => ({
       label: LifeCycleState[key],
       value: key,
     }));
-    // set "DRAFT" as default value for document status dropdown
     let docStatusDraft = this.documentStatus.filter(
       (document) => document.value.toLowerCase() == 'draft'
     );
@@ -99,9 +113,8 @@ export class DocumentDescriptionComponent implements OnInit {
   }
 
   /**
-   *
    * @param evt document event
-   * emits newly updated documenr version value
+   * emits newly updated document version value
    */
   onKeyDocVersionUp(evt) {
     this.documentVersion.emit(evt.target.value);

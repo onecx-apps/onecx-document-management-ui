@@ -1,9 +1,9 @@
+// Core imports
 import { Component } from '@angular/core';
 import {
   UntypedFormArray,
-  UntypedFormGroup,
-  UntypedFormBuilder,
   UntypedFormControl,
+  UntypedFormGroup,
 } from '@angular/forms';
 
 @Component({
@@ -13,8 +13,6 @@ export class GenericFormArrayComponent<T> {
   public genericFormArray = new UntypedFormArray([]);
   public emptyTemplateObject = {};
   public objects: T[];
-
-  constructor(private readonly fb: UntypedFormBuilder) {}
 
   public updateForm(objectArray: T[]): void {
     this.objects = JSON.parse(JSON.stringify(objectArray));
@@ -38,7 +36,9 @@ export class GenericFormArrayComponent<T> {
       this.genericFormArray.insert(0, group);
     });
   }
-
+  /**
+   * function to add generic form array
+   */
   public addEmptyForm(): void {
     const group = new UntypedFormGroup({});
     Object.keys(this.emptyTemplateObject).forEach((key) => {
@@ -52,7 +52,10 @@ export class GenericFormArrayComponent<T> {
     });
     this.genericFormArray.insert(0, group);
   }
-
+  /**
+   *
+   * @param index function to remove generic form array
+   */
   public removeForm(index: number): void {
     this.genericFormArray.removeAt(index);
   }

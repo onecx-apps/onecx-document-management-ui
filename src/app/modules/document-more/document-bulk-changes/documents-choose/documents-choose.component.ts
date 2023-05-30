@@ -1,6 +1,10 @@
+// Core imports
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+
+// Third party imports
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+
+// Application imports
 import { DocumentDetailDTO } from 'src/app/generated';
 import { DataSharingService } from 'src/app/shared/data-sharing.service';
 
@@ -10,18 +14,27 @@ import { DataSharingService } from 'src/app/shared/data-sharing.service';
   styleUrls: ['./documents-choose.component.scss'],
 })
 export class DocumentsChooseComponent implements OnInit {
+  @Output() isCheckEvent = new EventEmitter<any>();
+
+  isHeaderChecked = false;
+
   results: DocumentDetailDTO[];
   translatedData: object;
-  isHeaderChecked = false;
-  @Output() isCheckEvent = new EventEmitter<any>();
+
   constructor(
-    private translateService: TranslateService,
-    private dataSharing: DataSharingService
+    private readonly translateService: TranslateService,
+    private readonly dataSharingService: DataSharingService
   ) {
-    this.results = this.dataSharing.getSearchResults();
+    this.results = this.dataSharingService.getSearchResults();
     this.onRowClick();
   }
   ngOnInit(): void {
+    this.getTranslatedData();
+  }
+  /**
+   * function to get translatedData from translateService
+   */
+  getTranslatedData(): void {
     this.translateService
       .get([
         'DOCUMENT_MENU.DOCUMENT_MORE.DOCUMENT_BULK.CHOOSE_DOCUMENT',
@@ -34,7 +47,6 @@ export class DocumentsChooseComponent implements OnInit {
         this.translatedData = text;
       });
   }
-
   /**
    * function to check header check box if all the rows have selected
    */
@@ -69,7 +81,7 @@ export class DocumentsChooseComponent implements OnInit {
     const isDisabled = results?.filter(
       (result: DocumentDetailDTO) => result['isChecked']
     ).length;
-    this.dataSharing.setSearchResults(results);
+    this.dataSharingService.setSearchResults(results);
     this.isCheckEvent.emit(isDisabled);
   }
 }

@@ -1,7 +1,10 @@
+// Core imports
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Validators } from '@angular/forms';
-import { DocumentCharacteristicCreateUpdateDTO } from 'src/app/generated';
+
+// Application imports
 import { GenericFormArrayComponent } from '../../generic-form-components/generic-form-array/generic-form-array.component';
+import { DocumentCharacteristicCreateUpdateDTO } from 'src/app/generated';
 
 @Component({
   selector: 'app-document-characteristics',
@@ -12,18 +15,22 @@ export class DocumentCharacteristicsComponent
   extends GenericFormArrayComponent<DocumentCharacteristicCreateUpdateDTO>
   implements OnInit, OnDestroy
 {
-  public emptyTemplateObject = {
+  @Input() isSubmitting: boolean;
+  @Input() charactersticsArray;
+
+  emptyTemplateObject = {
     id: { value: null, validators: null },
     name: { value: '', validators: Validators.maxLength(40) },
     value: { value: '', validators: Validators.maxLength(40) },
   };
-  @Input() public isSubmitting: boolean;
-  @Input() public charactersticsArray;
+
   ngOnInit(): void {
-    if (this.charactersticsArray && this.charactersticsArray.length)
+    if (this.charactersticsArray?.length)
       this.updateForm(this.charactersticsArray);
   }
-
+  /**
+   *function to trim empty space from the begining and end of the form field on blur event
+   */
   trimSpace() {
     let id = this.genericFormArray.controls[0].value.id;
     let name = this.genericFormArray.controls[0].value.name.trim();
@@ -34,17 +41,19 @@ export class DocumentCharacteristicsComponent
       value: value,
     });
   }
+  /**
+   * function to eliminate space from the beginning of the required fields on key press event
+   */
   preventSpace(event: any) {
     if (event.target.selectionStart === 0 && event.code === 'Space')
       event.preventDefault();
   }
-
+  /** life cycle hook to set data on destroy */
   ngOnDestroy(): void {
     this.charactersticsArray.length = 0;
-    let charactersticsData =
-      this.genericFormArray.value && this.genericFormArray.value.length
-        ? this.genericFormArray.value
-        : [];
+    let charactersticsData = this.genericFormArray.value?.length
+      ? this.genericFormArray.value
+      : [];
     charactersticsData.forEach((element, index) => {
       this.charactersticsArray.push(
         charactersticsData[charactersticsData.length - index - 1]
