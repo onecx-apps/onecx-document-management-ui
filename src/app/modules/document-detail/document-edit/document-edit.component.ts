@@ -536,17 +536,19 @@ export class DocumentEditComponent implements OnInit {
         mergeMap((arr) => forkJoin(arr)),
         defaultIfEmpty(null)
       )
-      .subscribe((resp) => {
-        this.refreshAttachmentComponent(this.attachmentArray);
-        if (this.deletedAttachmentsIds.length) {
-          this.documentDeleteAttachments(this.deletedAttachmentsIds);
-        } else {
-          this.getDocumentDetail();
+      .subscribe(
+        (resp) => {
+          this.refreshAttachmentComponent(this.attachmentArray);
+          if (this.deletedAttachmentsIds.length) {
+            this.documentDeleteAttachments(this.deletedAttachmentsIds);
+          } else {
+            this.getDocumentDetail();
+          }
+        },
+        (err) => {
+          console.log(err);
         }
-      }),
-      (err) => {
-        console.log(err);
-      };
+      );
   }
 
   /**
