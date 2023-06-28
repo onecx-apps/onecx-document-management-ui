@@ -50,7 +50,7 @@
     "@angular-eslint/eslint-plugin-template": "^14.0.2",
     "@angular-eslint/schematics": "^14.0.2",
     "@angular-eslint/template-parser": "^14.0.2",
-    "@angular/cli": "^14.2.3",
+    "@angular/cli": "^14.2.12",
     "@angular/compiler-cli": "^14.2.3",
     "@openapitools/openapi-generator-cli": "^2.4.25",
     "@types/jasmine": "^3.10.2",
