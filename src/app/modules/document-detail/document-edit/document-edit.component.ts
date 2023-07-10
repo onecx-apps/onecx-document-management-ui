@@ -621,16 +621,17 @@ export class DocumentEditComponent implements OnInit {
         defaultIfEmpty(null)
       )
       .subscribe((resp) => {
-        this.refreshAttachmentComponent(this.attachmentArray);
-        if (this.deletedAttachmentsIds.length) {
-          this.documentDeleteAttachments(this.deletedAttachmentsIds);
-        } else {
-          this.getDocumentDetail();
+          this.refreshAttachmentComponent(this.attachmentArray);
+          if (this.deletedAttachmentsIds.length) {
+            this.documentDeleteAttachments(this.deletedAttachmentsIds);
+          } else {
+            this.getDocumentDetail();
+          }
+        },
+        (err) => {
+          console.log(err);
         }
-      }),
-      (err) => {
-        console.log(err);
-      };
+          );
   }
 
   /**

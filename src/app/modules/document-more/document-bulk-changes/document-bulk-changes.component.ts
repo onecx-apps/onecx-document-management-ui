@@ -294,7 +294,7 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
         return false;
       }
       default:
-        return;
+        return false;
     }
   }
 
@@ -310,7 +310,7 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
       case 'B':
         return false;
       default:
-        return;
+        return false;
     }
   }
 
