@@ -96,10 +96,10 @@ describe('DocumentBulkChangesComponent', () => {
     expect(canActive).toBe(false);
   });
 
-  it('should return undefined for other values of selectedOperation', () => {
+  it('should return false for other values of selectedOperation', () => {
     component.selectedOperation = 'C';
     const canActive = component.canActive;
-    expect(canActive).toBeUndefined();
+    expect(canActive).toBe(false);
   });
 
   it('should return true when indexActive is 0 and isChecked is true', () => {
@@ -130,10 +130,10 @@ describe('DocumentBulkChangesComponent', () => {
     expect(canActivateNext).toBe(false);
   });
 
-  it('should return undefined for other values of indexActive', () => {
+  it('should return false for other values of indexActive', () => {
     component.indexActive = 2;
     const canActivateNext = component.canActivateNext;
-    expect(canActivateNext).toBeUndefined();
+    expect(canActivateNext).toBe(false);
   });
 
   it('should call getTranslatedData, getSearchResult, documentBulkFormInitialize, and documentBulkFormValueChange', () => {
@@ -270,10 +270,10 @@ describe('DocumentBulkChangesComponent', () => {
     expect(canActivateNext).toBe(false);
   });
 
-  it('should return undefined when indexActive is neither 0 nor 1', () => {
+  it('should return false when indexActive is neither 0 nor 1', () => {
     component.indexActive = 2;
     const canActivateNext = component.canActivateNext;
-    expect(canActivateNext).toBeUndefined();
+    expect(canActivateNext).toBe(false);
   });
 
   it('should return true when selectedOperation is "A" and documentBulkUpdateFormValid is false', () => {
@@ -296,10 +296,10 @@ describe('DocumentBulkChangesComponent', () => {
     expect(canActive).toBe(false);
   });
 
-  it('should return undefined when selectedOperation is neither "A" nor "B"', () => {
+  it('should return false when selectedOperation is neither "A" nor "B"', () => {
     component.selectedOperation = 'C';
     const canActive = component.canActive;
-    expect(canActive).toBeUndefined();
+    expect(canActive).toBe(false);
   });
 
   it('should update indexActive to 1, reset isSubmitting, and call setHeaderButtons() when indexActive is 0', () => {
