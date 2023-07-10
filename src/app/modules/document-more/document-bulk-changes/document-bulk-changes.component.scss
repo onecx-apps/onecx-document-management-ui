@@ -1,3 +1,22 @@
 .min-height {
   min-height: 29.3rem;
 }
+.pstep-padding-left{
+  border: 1px solid #cdd0d3
+}
+
+.pstep-padding-left ::ng-deep .p-steps .p-steps-item .p-menuitem-link {
+  padding-right: 0;
+}
+
+.header-class ::ng-deep .toolbar button{
+  margin-right: 0.75rem !important;
+}
+
+.header-class ::ng-deep .toolbar{
+  margin-right: -0.75rem !important;
+}
+
+.header-class ::ng-deep  .object-panel{
+  padding: 1rem 7rem !important;
+}

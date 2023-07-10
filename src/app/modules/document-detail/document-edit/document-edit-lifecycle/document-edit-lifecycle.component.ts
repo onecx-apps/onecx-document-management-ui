@@ -51,6 +51,13 @@ export class DocumentEditLifecycleComponent implements OnInit {
     });
   }
 
+  /**
+   * Wrapper method for loadDocumentStatus() to write Unit Test for this private method
+   */
+  public loadDocumentStatusWrapper() {
+    this.loadDocumentStatus();
+  }
+
   private loadDocumentStatus(): void {
     this.documentStatusList = Object.keys(LifeCycleState).map((key) => ({
       label: LifeCycleState[key],

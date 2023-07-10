@@ -1,13 +1,12 @@
 <form [formGroup]="documentDescriptionForm" errorTailor>
   <div class="grid p-fluid">
     <div class="col-12 sm:col-6">
-      <span class="p-float-label mb-2" controlErrorAnchor>
+      <span class="p-float-label" controlErrorAnchor>
         <input
           id="name"
           pInputText
           maxlength="60"
           type="text"
-          pattern="^[a-zA-Z0-9-_][\sa-zA-Z0-9-_]*"
           formControlName="name"
           (blur)="trimSpace($event)"
           (keypress)="preventSpace($event)"
@@ -15,6 +14,19 @@
         <label for="name" class="required">{{
           'DOCUMENT_DETAIL.BASIC_FIELDS.DOCUMENT_NAME' | translate
         }}</label>
+      </span>
+      <span
+        *ngIf="documentDescriptionForm?.controls['name']?.invalid"
+        class="alert alert-danger text-sm"
+      >
+        <span
+          *ngIf="
+            documentDescriptionForm?.controls['name']?.errors.hasSpecialChars
+          "
+        >
+          {{ 'DOCUMENT_MENU.DOCUMENT_EDIT.SPECIAL_CHARACTER_ERROR' | translate
+          }}{{ specialChar }}
+        </span>
       </span>
     </div>
     <div class="col-12 sm:col-6">

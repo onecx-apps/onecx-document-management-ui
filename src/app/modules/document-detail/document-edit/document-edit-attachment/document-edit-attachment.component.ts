@@ -21,6 +21,7 @@ import {
   SupportedMimeTypeDTO,
 } from 'src/app/generated';
 import { noSpecialCharacters, trimSpaces } from 'src/app/utils';
+import { DataSharingService } from 'src/app/shared/data-sharing.service';
 
 @Component({
   selector: 'app-document-edit-attachment',
@@ -49,15 +50,17 @@ export class DocumentEditAttachmentComponent implements OnInit {
   uploadFileMimetype: any;
   tooltipmimeType: string;
   attachmentErrorMessage = '';
-  specialChar = ' / : * ? " < > |';
+  specialChar: string;
 
   constructor(
     private readonly translateService: TranslateService,
     private readonly supportedMimeTypeV1Service: SupportedMimeTypeControllerV1APIService,
-    private readonly attachmentUploadService: AttachmentUploadService
+    private readonly attachmentUploadService: AttachmentUploadService,
+    private readonly dataSharingService: DataSharingService
   ) {}
 
   ngOnInit(): void {
+    this.specialChar = this.dataSharingService.specialChar;
     this.showAttachment = false;
     this.attachmentFieldsForm = new FormGroup({
       name: new FormControl('', [Validators.required, noSpecialCharacters]),
@@ -99,6 +102,7 @@ export class DocumentEditAttachmentComponent implements OnInit {
    */
   resetDate() {
     this.attachmentFieldsForm.controls['validity'].setValue(null);
+    this.updateAttachmentData();
   }
 
   preventSpace(event: any) {
@@ -381,11 +385,11 @@ export class DocumentEditAttachmentComponent implements OnInit {
       this.attachmentFieldsForm.controls['mimeType'].setValue(
         attachmentData['mimeType']
       );
-      if (attachmentData['validity']) {
-        this.attachmentFieldsForm.controls['validity'].setValue(
-          attachmentData['validity']
-        );
-      }
+
+      this.attachmentFieldsForm.controls['validity'].setValue(
+        attachmentData['validity']
+      );
+
       this.attachmentFieldsForm.controls['description'].setValue(
         attachmentData['description']
       );

@@ -23,9 +23,12 @@
   overflow: auto;
   border: 1px dashed;
   border-radius: 0.5rem;
-  padding: 5px;
+  padding: 0.4rem;
   text-align: center;
   background-color: #fff;
+  &.addon-padding{
+    padding: 1rem;
+  }
 }
 #upload-button {
   position: relative;
@@ -33,7 +36,7 @@
 
 #upload-file-validation > p {
   margin: 0px;
-  font-size: 10px;
+  font-size: 7px;
 }
 
 #upload-button.required::after {
@@ -63,6 +66,10 @@
   font-weight: bold;
   content: ' *';
   color: #e62a10;
+}
+
+.alert-danger {
+  color: var(--error-color);
 }
 
 

@@ -11,6 +11,7 @@ import {
   DocumentTypeDTO,
   LifeCycleState,
 } from 'src/app/generated';
+import { DataSharingService } from 'src/app/shared/data-sharing.service';
 import { trimSpaces } from 'src/app/utils';
 
 @Component({
@@ -26,12 +27,15 @@ export class DocumentDescriptionComponent implements OnInit {
   allDocumentTypes: DocumentTypeDTO[];
   documentTypes: SelectItem[];
   documentStatus: SelectItem[];
+  specialChar: string;
 
   constructor(
-    private readonly documentTypeV1Service: DocumentTypeControllerV1APIService
+    private readonly documentTypeV1Service: DocumentTypeControllerV1APIService,
+    private readonly dataSharingService: DataSharingService
   ) {}
 
   ngOnInit(): void {
+    this.specialChar = this.dataSharingService.specialChar;
     this.loadAllDocumentTypes();
     this.loadDocumentStatus();
   }
@@ -65,6 +69,21 @@ export class DocumentDescriptionComponent implements OnInit {
       maxlength
     );
   }
+
+  /**
+   * Wrapper method for loadAllDocumentTypes() to write Unit Test for this private method
+   */
+  public loadAllDocumentTypesWrapper(): void {
+    this.loadAllDocumentTypes();
+  }
+
+  /**
+   * Wrapper method for loadDocumentStatus() to write Unit Test for this private method
+   */
+  public loadDocumentStatusWrapper(): void {
+    this.loadDocumentStatus();
+  }
+
   /**
    * function to load all document types to show in dropdown of document type form field
    */
@@ -89,7 +108,7 @@ export class DocumentDescriptionComponent implements OnInit {
       (document) => document.value.toLowerCase() == 'draft'
     );
     if (docStatusDraft.length > 0) {
-      this.documentDescriptionForm.controls.lifeCycleState.patchValue(
+      this.documentDescriptionForm.controls.lifeCycleState?.patchValue(
         docStatusDraft[1].value
       );
     }

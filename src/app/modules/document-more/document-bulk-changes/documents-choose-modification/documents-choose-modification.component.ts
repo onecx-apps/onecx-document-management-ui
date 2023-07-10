@@ -1,5 +1,6 @@
 // Core imports
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 // Application imports
 import { DataSharingService } from 'src/app/shared/data-sharing.service';
@@ -26,15 +27,33 @@ export class DocumentsChooseModificationComponent implements OnInit {
   ];
   selectedValue: any;
   selectedOperation: any;
+  translatedData: object;
 
-  constructor(private readonly dataSharingService: DataSharingService) {}
+  constructor(
+    private readonly translateService: TranslateService,
+    private readonly dataSharingService: DataSharingService
+  ) {}
 
   ngOnInit(): void {
+    this.getTranslatedData();
     this.selectedOperation = this.dataSharingService.getModification();
     this.selectedValue = this.chooseModification.find(
       (element) => element.key == this.selectedOperation
     );
     this.isCheckEvent.emit(this.selectedValue);
+  }
+  /**
+   * function to get translatedData from translateService
+   */
+  getTranslatedData(): void {
+    this.translateService
+      .get([
+        'DOCUMENT_SEARCH.TABLE.HEADER.MODIFICATION_TYPE',
+        'DOCUMENT_SEARCH.TABLE.HEADER.DESCRIPTION',
+      ])
+      .subscribe((text: object) => {
+        this.translatedData = text;
+      });
   }
   /**
    * function to emit radio check event and set the selected key

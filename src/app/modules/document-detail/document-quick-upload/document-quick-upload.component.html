@@ -20,7 +20,6 @@
       <button
         class="w-12 lg:w-8 ml-2"
         pButton
-        icon="pi pi-check"
         [label]="
           isSubmitted
             ? ('GENERAL.PROCESSING' | translate)
@@ -36,13 +35,8 @@
         [disabled]="!enableCreateButton || !formValid"
         (click)="onSave()"
       >
-        <span
-          *ngIf="isSubmitted"
-          class="spinner-border spinner-border-sm"
-          style="float: right"
-          role="status"
-          aria-hidden="true"
-        ></span>
+        <span *ngIf="!isSubmitted" class="pi pi-check mr-2"> </span>
+        <span *ngIf="isSubmitted" class="pi pi-spin pi-spinner mr-1"></span>
       </button>
     </div>
     <app-document-quick-upload-form
@@ -85,9 +79,9 @@
         <ng-template let-attachment pTemplate="gridItem">
           <div class="col-12 lg:col-4 xl:col-3 flex">
             <div
-              class="card flex flex-column justify-content-between w-12 lg:w-11 mb-2 mt-2 mr-2 ml-2 align-self-stretch highlight"
+              class="card p-0 flex flex-column justify-content-between w-12 lg:w-11 mb-2 mt-2 mr-2 ml-2 align-self-stretch highlight"
             >
-              <div class="tile-remove-icon">
+              <span class="tile-remove-icon">
                 <button
                   type="button"
                   icon="pi pi-trash"
@@ -96,31 +90,38 @@
                   title="{{ 'GENERAL.REMOVE' | translate }}"
                   (click)="isSubmitted ? null : onDeleteUploadFile(attachment)"
                 ></button>
-              </div>
+              </span>
               <div class="tile-item">
-                <img
-                  alt="Attachment Icon"
-                  [src]="getAttachmentIcon(attachment)"
-                  (error)="imgError($event)"
-                  class="tile-icon"
-                />
-
-                <div class="tile-attachment-info-block col-11">
+                <div class="mb-2">
+                  <img
+                    alt="Attachment Icon"
+                    [src]="getAttachmentIcon(attachment)"
+                    (error)="imgError($event)"
+                    class="max-w-7rem min-h-7rem"
+                  />
+                </div>
+                <div class="col-11 p-0">
                   <div class="label">
-                    <p
-                      class="tile-attachment-name"
-                      [pTooltip]="attachment.name"
-                      [tooltipPosition]="'right'"
+                    <div
+                      class="flex flex-row justify-content-between align-items-center text-2xl font-medium"
                     >
-                      {{ attachment.name }}
-                    </p>
-                    <p class="tile-attachment-size font-light">
-                      {{ formatBytes(attachment.fileData.size) }}
-                    </p>
+                      <p
+                        class="white-space-nowrap"
+                        [pTooltip]="attachment.name"
+                        [tooltipPosition]="'right'"
+                      >
+                        {{ attachment.name | trim: 15 }}
+                      </p>
+                    </div>
+                    <div>
+                      <p class="text-left font-light">
+                        {{ formatBytes(attachment.fileData.size) }}
+                      </p>
+                    </div>
                   </div>
 
                   <div
-                    class="tile-statusbar"
+                    class="tile-statusbar mb-3"
                     [ngClass]="attachment.isValid ? 'green-bar' : 'red-bar'"
                     [pTooltip]="
                       attachment.isValid
@@ -143,27 +144,32 @@
         </ng-template>
         <ng-template let-attachment pTemplate="listItem">
           <div class="col-12 highlight">
-            <div class="align-items-center p-3 w-full">
+            <div class="align-items-center p-3 w-full gap-8">
               <div class="flex-1">
                 <div class="attachment-name-row list-item">
-                  <div class="list-icon-size-container">
+                  <div
+                    class="list-icon-size-container flex align-items-center justify-content-center flex-column ml-2"
+                  >
                     <img
                       alt="Attachment Icon"
                       [src]="getAttachmentIcon(attachment)"
                       (error)="imgError($event)"
-                      class="tile-icon"
+                      class="tile-icon w-5rem h-5rem"
                     />
                   </div>
 
-                  <div class="attachment-name-div">
+                  <div class="attachment-name-div -mt-4 w-5 text-left -ml-7">
                     <div
-                      class="attachment-name mr-3 font-smaller"
+                      class="attachment-name mr-8 font-medium text-2xl"
                       [pTooltip]="attachment.name"
                       [tooltipPosition]="'bottom'"
                     >
-                      {{ attachment.name }}
+                      {{ attachment.name | trim: 25 }}
                     </div>
-                    <div class="font-light" *ngIf="attachment.fileData.size">
+                    <div
+                      class="font-light mt-3"
+                      *ngIf="attachment.fileData.size"
+                    >
                       {{ formatBytes(attachment.fileData.size) }}
                     </div>
                   </div>

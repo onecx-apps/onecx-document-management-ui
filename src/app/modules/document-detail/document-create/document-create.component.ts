@@ -23,6 +23,7 @@ import {
   DocumentCreateUpdateDTO,
   DocumentControllerV1APIService,
 } from 'src/app/generated';
+import { noSpecialCharacters } from 'src/app/utils';
 
 @Component({
   selector: 'app-document-create',
@@ -66,7 +67,10 @@ export class DocumentCreateComponent implements OnInit {
     // Form Validations
     this.documentCreateForm = this.formBuilder.group({
       documentDescriptionForm: this.formBuilder.group({
-        name: ['', Validators.required],
+        name: [
+          '',
+          [Validators.required, Validators.maxLength(60), noSpecialCharacters],
+        ],
         typeId: ['', Validators.required],
         documentVersion: ['', Validators.min(0)],
         channelname: ['', Validators.required],

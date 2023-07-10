@@ -5,6 +5,7 @@
     "ACTION": "Action",
     "CREATE": "Create",
     "ADD": "Add",
+    "ADD_NEW": "Add New",
     "SAVE": "Save",
     "EDIT": "Edit",
     "CLOSE": "Close",
@@ -23,7 +24,10 @@
     "REMOVE": "Remove",
     "SUCCESS": "Success",
     "FAILED": "Failed",
-    "LOAD_MORE": "Load More"
+    "LOAD_MORE": "Load More",
+    "NO_RECORDS_TO_EXPORT": "No records found to export",
+    "NO_RECORDS_FOR_CHANGES": "No records found for changes",
+    "DOCUMENTS_SELECTED": "documents selected"
   },
   "DOCUMENT_MORE": {
     "DOCUMENT_BULK": "Bulk Changes"
@@ -84,8 +88,13 @@
       "EMPTY_REQUIRED_FIELD_ERROR": "Mandatory fields missing",
       "NEGATIVE_VALUE_ERROR": "Negative values are not allowed.",
       "INVALID_VALUE_ERROR": "Please enter valid value.",
-      "SPECIAL_CHARACTER_ERROR":"Characters not allowed"
-
+      "SPECIAL_CHARACTER_ERROR": "Characters not allowed ",
+      "ERROR": "Error",
+      "DOCUMENT_NAME_MISSING": "Document Name Missing",
+      "DOCUMENT_TYPE_MISSING": "Document Type Missing",
+      "CHANNEL_MISSING": "Channel Missing",
+      "ATTACHMENT_NAME_MISSING": "Attachment Name Missing",
+      "ATTACHMENT_FILE_MISSING": "Attachment File Missing"
     },
     "DOCUMENT_DELETE": {
       "DELETE_SUCCESS": "The document was successfully deleted.",
@@ -104,7 +113,7 @@
       "FULL": "Full"
     },
     "DOCUMENT_CANCEL_MODAL": {
-      "HEADER":"Cancel Document Creation",
+      "HEADER": "Cancel Document Creation",
       "CANCEL_CONFIRM_MESSAGE": "Unsaved data will be lost and document will not be created",
       "CONFIRM": "do you want to cancel?"
     },
@@ -231,6 +240,11 @@
       "RESET": "Reset",
       "RESET_TOOLTIP": "Clear criteria values"
     },
+    "FILTER": {
+      "CREATED_BY_ME": "Created by me",
+      "RECENTLY_UPDATED": "Recently updated",
+      "CLEAR_FILTER": "Clear filter"
+    },
     "TABLE": {
       "HEADER": {
         "NAME": "Name",
@@ -242,6 +256,7 @@
         "DOCUMENT_VERSION": "Version",
         "ACTIONS": "Actions",
         "MODIFICATION_DATE": "Modification Date",
+        "MODIFICATION_TYPE": "Modification Type",
         "EDITED": "Edited"
       }
     },
@@ -260,7 +275,7 @@
     "STATUS": "Status",
     "MODIFICATION_DATE": "Modification Date",
     "VERSION": "Version",
-    "ATTACHMENTS":"Attachments"
+    "ATTACHMENTS": "Attachments"
   },
   "DELETE_DOCUMENT": {
     "DELETE_MESSAGE": "Are you sure you want to delete this document?",
@@ -321,7 +336,8 @@
     "HEADERS": {
       "CREATE": "Create document type",
       "EDIT": "Edit document type",
-      "LIST": "Document Type"
+      "LIST": "Document Type",
+      "NAME": "Document Types"
     },
     "FIELDS": {
       "NAME": "Name"

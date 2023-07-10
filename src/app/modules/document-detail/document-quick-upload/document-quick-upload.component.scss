@@ -11,31 +11,7 @@
   }
 }
 
-@keyframes spinner-border {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.spinner-border {
-  display: inline-block;
-  width: 2rem;
-  height: 2rem;
-  vertical-align: text-bottom;
-  border: 0.25em solid currentColor;
-  border-right-color: transparent;
-  border-radius: 50%;
-  -webkit-animation: spinner-border 0.75s linear infinite;
-  animation: spinner-border 0.75s linear infinite;
-  &.spinner-border-sm {
-    width: 1rem;
-    height: 1rem;
-    border-width: 0.2em;
-  }
-}
-
 //Tile view
-
 .tile-item-container{
   display: flex;
   flex-direction: row;
@@ -92,18 +68,6 @@
   width: 100%;
 }
 
-.tile-attachment-name {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.tile-attachment-size {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 //List view
 .list-item{
   text-align: center;
@@ -111,29 +75,18 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  
+
 }
 
-.list-item .attachment-name-div{
-  width: 40%;text-align: left;
-}
 
 .list-item .attachment-name{
   width: 80%;
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-.list-item .list-icon-size-container{
-  width:10%;
-  margin-left: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
+
 
 .list-item .statusbar{
   width: 20%;
@@ -149,6 +102,5 @@
   display: flex;
   align-items: flex-end;
 }
-
-
+ 
 

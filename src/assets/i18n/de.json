@@ -5,6 +5,7 @@
     "ACTION": "Aktion",
     "CREATE": "Erstellen",
     "ADD": "hinzufügen",
+    "ADD_NEW": "Neue hinzufügen",
     "SAVE": "Speichern",
     "EDIT": "Bearbeitung",
     "CLOSE": "Schließen",
@@ -23,7 +24,10 @@
     "REMOVE": "Entfernen",
     "SUCCESS": "Erfolg",
     "FAILED": "Fehlgeschlagen",
-    "LOAD_MORE": "Mehr laden"
+    "LOAD_MORE": "Mehr laden",
+    "NO_RECORDS_TO_EXPORT": "Es wurden keine Datensätze zum Exportieren gefunden",
+    "NO_RECORDS_FOR_CHANGES": "Es wurden keine Datensätze für Änderungen gefunden",
+    "DOCUMENTS_SELECTED": "Dokumente ausgewählt"
   },
   "DOCUMENT_MORE": {
     "DOCUMENT_BULK": "Massenänderungen"
@@ -89,8 +93,14 @@
       "FETCH_ERROR": "Das Dokument konnte nicht abgerufen werden",
       "EMPTY_REQUIRED_FIELD_ERROR": "Pflichtfelder fehlen",
       "NEGATIVE_VALUE_ERROR": "Negative Werte sind nicht zulässig.",
-      "INVALID_VALUE_ERROR":"Bitte geben Sie einen gültigen Wert ein.",
-      "SPECIAL_CHARACTER_ERROR":"Zeichen nicht erlaubt"
+      "INVALID_VALUE_ERROR": "Bitte geben Sie einen gültigen Wert ein.",
+      "SPECIAL_CHARACTER_ERROR": "Zeichen nicht erlaubt",
+      "ERROR": "Fehler",
+      "DOCUMENT_NAME_MISSING": "Dokumentname fehlt",
+      "DOCUMENT_TYPE_MISSING": "Dokumenttyp fehlt",
+      "CHANNEL_MISSING": "Kanal fehlt",
+      "ATTACHMENT_NAME_MISSING": "Anhangsname fehlt",
+      "ATTACHMENT_FILE_MISSING": "Anhangdatei fehlt"
     },
     "DOCUMENT_DELETE": {
       "DELETE_HEADER": "Löschen ein Dokument",
@@ -109,7 +119,7 @@
       "FULL": "Full"
     },
     "DOCUMENT_CANCEL_MODAL": {
-      "HEADER":"Dokumenterstellung abbrechen",
+      "HEADER": "Dokumenterstellung abbrechen",
       "CANCEL_CONFIRM_MESSAGE": "Nicht gespeicherte Daten gehen verloren und das Dokument wird nicht erstellt",
       "CONFIRM": "Möchten Sie stornieren?"
     },
@@ -236,6 +246,11 @@
       "RESET": "Zurücksetzen",
       "RESET_TOOLTIP": "Löschen die vorgegebenen Kriterien"
     },
+    "FILTER": {
+      "CREATED_BY_ME": "Von mir erstellt",
+      "RECENTLY_UPDATED": "Kürzlich aktualisiert",
+      "CLEAR_FILTER": "Filter löschen"
+    },
     "TABLE": {
       "HEADER": {
         "NAME": "Name",
@@ -247,6 +262,7 @@
         "DOCUMENT_VERSION": "Version",
         "ACTIONS": "Aktionen",
         "MODIFICATION_DATE": "Änderungsdatum",
+        "MODIFICATION_TYPE": "Änderungstyp",
         "EDITED": "Bearbeitet"
       }
     },
@@ -265,7 +281,7 @@
     "STATUS": "Status",
     "MODIFICATION_DATE": "Änderungsdatum",
     "VERSION": "Version",
-    "ATTACHMENTS":"Anhänge"
+    "ATTACHMENTS": "Anhänge"
   },
   "DELETE_DOCUMENT": {
     "DELETE_MESSAGE": "Möchten Sie dieses Dokument wirklich löschen?",
@@ -326,7 +342,8 @@
     "HEADERS": {
       "CREATE": "Dokumenttyp-Erstellung",
       "EDIT": "Dokumenttyp-Bearbeitung",
-      "LIST": "Dokumenttyp"
+      "LIST": "Dokumenttyp",
+      "NAME": "Dokumenttypen"
     },
     "FIELDS": {
       "NAME": "Name"

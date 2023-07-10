@@ -1,8 +1,3 @@
-<h4 class="mb-4">
-  {{
-    'DOCUMENT_MENU.DOCUMENT_MORE.DOCUMENT_BULK.CHOOSE_MODIFICATION' | translate
-  }}
-</h4>
 <p-table
   dataKey="code"
   [scrollable]="true"
@@ -10,19 +5,31 @@
   [value]="chooseModification"
   responsiveLayout="scroll"
 >
+  <ng-template pTemplate="header" let-category>
+    <tr>
+      <th scope="col" class="fcol-flex"></th>
+      <th scope="col" class="scol-flex">
+        {{ 'DOCUMENT_SEARCH.TABLE.HEADER.MODIFICATION_TYPE' | translate }}
+      </th>
+      <th scope="col">
+        {{ 'DOCUMENT_SEARCH.TABLE.HEADER.DESCRIPTION' | translate }}
+      </th>
+    </tr>
+  </ng-template>
   <ng-template pTemplate="body" let-category>
     <tr>
-      <td style="max-width: 16rem">
+      <td class="fcol-flex">
         <p-radioButton
           [inputId]="category.key"
           name="category"
           [value]="category"
           [(ngModel)]="selectedValue"
           (ngModelChange)="onItemChange()"
+          class="ml-5"
         ></p-radioButton>
-        <label [for]="category.key" class="ml-4">{{
-          category.name | translate
-        }}</label>
+      </td>
+      <td class="scol-flex">
+        <label [for]="category.key">{{ category.name | translate }}</label>
       </td>
       <td>
         <label [for]="category.key">{{ category.desc | translate }}</label>

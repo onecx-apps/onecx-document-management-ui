@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { DocumentTabStateService } from './document-tab-state.service';
 
 describe('DocumentTabStateService', () => {

@@ -84,6 +84,20 @@ export class DocumentCriteriaAdvancedComponent implements OnInit {
       objectReferenceType: null,
     });
   }
+
+  /**
+   * Wrapper method for loadAllDocumentTypes() to write Unit Test for this private method
+   */
+  public loadAllDocumentTypesWrapper(): void {
+    this.loadAllDocumentTypes();
+  }
+
+  /**
+   * Wrapper method for loadAllChannels(); to write Unit Test for this private method
+   */
+  public loadAllChannelWrapper(): void {
+    this.loadAllChannels();
+  }
   /**
    * function to load all document types to show in the dropdown for document type in advance search
    */

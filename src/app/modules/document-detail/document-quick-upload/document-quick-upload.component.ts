@@ -12,6 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationService, SelectItem, MessageService } from 'primeng/api';
 import { catchError, Subscription, throwError, timer } from 'rxjs';
+import { BreadcrumbService } from '@onecx/portal-integration-angular';
 
 // Application imports
 import { AttachmentUploadService } from '../attachment-upload.service';
@@ -80,6 +81,7 @@ export class DocumentQuickUploadComponent implements OnInit {
     private readonly documentV1Service: DocumentControllerV1APIService,
     private readonly router: Router,
     private readonly activeRoute: ActivatedRoute,
+    private readonly breadcrumbService: BreadcrumbService,
     private readonly translateService: TranslateService
   ) {}
 
@@ -111,9 +113,13 @@ export class DocumentQuickUploadComponent implements OnInit {
         'DOCUMENT_DETAIL.ATTACHMENTS.SIZE',
         'DOCUMENT_DETAIL.ATTACHMENTS.TYPE',
         'DOCUMENT_DETAIL.ATTACHMENTS.UPLOAD_STATUS',
+        'DOCUMENT_SEARCH.QUICK_UPLOAD',
       ])
       .subscribe((data) => {
         this.translatedData = data;
+        this.breadcrumbService.setItems([
+          { label: data['DOCUMENT_SEARCH.QUICK_UPLOAD'] as string },
+        ]);
         this.sortFields = [
           {
             label: this.translatedData['DOCUMENT_DETAIL.ATTACHMENTS.NAME'],
@@ -438,63 +444,89 @@ export class DocumentQuickUploadComponent implements OnInit {
    * @param attachment file data
    */
   getAttachmentIcon(attachment) {
-    let fileName = attachment.name ?? '';
+    let fileName = attachment.fileName ?? '';
     let fileExtension = fileName.split('.').reverse();
     let fileTypeData = attachment?.fileData ? attachment.fileData.type : '';
     let attachmentIcon = '';
+
     if (fileTypeData) {
       let fileType = fileTypeData.split('/');
       if (fileType.length) {
         let type = fileType[0].toLowerCase();
         if (type == 'audio' || type == 'video' || type == 'image') {
-          switch (type) {
-            case 'audio':
-              attachmentIcon = 'audio.png';
-              break;
-            case 'video':
-              attachmentIcon = 'video.png';
-              break;
-            case 'image':
-              attachmentIcon = 'img.png';
-              break;
-            default:
-              attachmentIcon = 'file.png';
-          }
+          attachmentIcon = this.getMediaIcon(type);
         } else {
           if (fileExtension.length && fileExtension.length > 1) {
             let extension = fileExtension[0].toLowerCase();
-            switch (extension) {
-              case 'xls':
-              case 'xlsx':
-                attachmentIcon = 'xls.png';
-                break;
-              case 'doc':
-              case 'docx':
-                attachmentIcon = 'doc.png';
-                break;
-              case 'ppt':
-              case 'pptx':
-                attachmentIcon = 'ppt.png';
-                break;
-              case 'pdf':
-                attachmentIcon = 'pdf.png';
-                break;
-              case 'zip':
-                attachmentIcon = 'zip.png';
-                break;
-              case 'txt':
-                attachmentIcon = 'txt.png';
-                break;
-              default:
-                attachmentIcon = 'file.png';
-            }
+            attachmentIcon = this.getFileExtensionIcon(extension);
           }
-        }
-        if (!attachmentIcon) {
-          attachmentIcon = 'file.png';
         }
       }
     }
+    if (!attachmentIcon) {
+      attachmentIcon = 'file.png';
+    }
+    return this.getAttachmentIconUrl(attachmentIcon);
+  }
+
+  /**
+   * function to get attachmentIcon based on mediaType
+   */
+  getMediaIcon(type) {
+    let attachmentIcon = '';
+    switch (type) {
+      case 'audio':
+        attachmentIcon = 'audio.png';
+        break;
+      case 'video':
+        attachmentIcon = 'video.png';
+        break;
+      case 'image':
+        attachmentIcon = 'img.png';
+        break;
+      default:
+        attachmentIcon = 'file.png';
+    }
+    return attachmentIcon;
+  }
+
+  /**
+   * function to get attachmentIcon based on extension
+   */
+  getFileExtensionIcon(extension) {
+    let attachmentIcon = '';
+    switch (extension) {
+      case 'xls':
+      case 'xlsx':
+        attachmentIcon = 'xls.png';
+        break;
+      case 'doc':
+      case 'docx':
+        attachmentIcon = 'doc.png';
+        break;
+      case 'ppt':
+      case 'pptx':
+        attachmentIcon = 'ppt.png';
+        break;
+      case 'pdf':
+        attachmentIcon = 'pdf.png';
+        break;
+      case 'zip':
+        attachmentIcon = 'zip.png';
+        break;
+      case 'txt':
+        attachmentIcon = 'txt.png';
+        break;
+      default:
+        attachmentIcon = 'file.png';
+    }
+    return attachmentIcon;
+  }
+
+  /**
+   * function to get attachmentIconUrl
+   */
+  getAttachmentIconUrl(attachmentIcon) {
     return (
       this.attachmentUploadService.getAssetsUrl() +
       'images/file-format-icons/' +
