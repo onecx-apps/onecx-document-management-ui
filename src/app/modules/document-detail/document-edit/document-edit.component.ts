@@ -620,7 +620,8 @@ export class DocumentEditComponent implements OnInit {
         mergeMap((arr) => forkJoin(arr)),
         defaultIfEmpty(null)
       )
-      .subscribe((resp) => {
+      .subscribe(
+        (resp) => {
           this.refreshAttachmentComponent(this.attachmentArray);
           if (this.deletedAttachmentsIds.length) {
             this.documentDeleteAttachments(this.deletedAttachmentsIds);
@@ -631,7 +632,7 @@ export class DocumentEditComponent implements OnInit {
         (err) => {
           console.log(err);
         }
-          );
+      );
   }
 
   /**
