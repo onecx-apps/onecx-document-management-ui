@@ -4,11 +4,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
-import { LifeCycleState } from 'src/app/generated';
+import {
+  LifeCycleState,
+  DocumentControllerV1APIService,
+} from 'src/app/generated';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
-import { DocumentControllerV1APIService } from 'src/app/generated';
 import { DocumentEditLifecycleComponent } from './document-edit-lifecycle.component';
-import { of, Observable, throwError } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
 describe('DocumentEditLifecycleComponent', () => {
   let component: DocumentEditLifecycleComponent;

@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 import { SupportedMimeTypeControllerV1APIService } from 'src/app/generated';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { FormControl, FormGroup, FormsModule } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { of } from 'rxjs';
 
 describe('DocumentAttachmentComponent', () => {

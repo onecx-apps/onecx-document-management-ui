@@ -7,26 +7,18 @@ import {
   tick,
 } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
-import {
-  FormsModule,
-  ReactiveFormsModule,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DocumentEditComponent } from './document-edit.component';
 import { Action, MFE_INFO } from '@onecx/portal-integration-angular';
 import { DocumentDetailDTO } from 'src/app/generated/model/documentDetailDTO';
 import {
-  AttachmentDTO,
   DocumentControllerV1APIService,
   DocumentCreateUpdateDTO,
-  UpdateDocumentRequestParams,
 } from 'src/app/generated';
 import { of, throwError } from 'rxjs';
 import { HttpEvent, HttpResponse } from '@angular/common/http';

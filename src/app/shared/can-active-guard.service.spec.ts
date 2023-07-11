@@ -1,8 +1,7 @@
-import { TestBed, inject } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { CanActivateGuard } from './can-active-guard.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfigurationService } from '@onecx/portal-integration-angular';
-import { Component } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 

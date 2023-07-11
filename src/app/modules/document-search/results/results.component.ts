@@ -1,6 +1,5 @@
 // Core imports
 import {
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   Inject,
