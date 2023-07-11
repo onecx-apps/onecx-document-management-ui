@@ -266,8 +266,7 @@ describe('DocumentsDeleteComponent', () => {
   });
   it('should return the correct attachment icon URL', () => {
     const attachmentIcon = 'attachment-icon.png';
-    const expectedUrl =
-      '/images/file-format-icons/attachment-icon.png';
+    const expectedUrl = '/images/file-format-icons/attachment-icon.png';
 
     const result = component.getAttachmentIconUrl(attachmentIcon);
 
