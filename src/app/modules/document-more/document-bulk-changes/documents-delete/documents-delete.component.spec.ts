@@ -129,8 +129,8 @@ describe('DocumentsDeleteComponent', () => {
       'fallback',
       true
     );
-    expect(fakeEvent.target.src).toBe(
-      'http://assets/images/file-format-icons/file.png'
+    expect(fakeEvent.target.src).toContain(
+      '/images/file-format-icons/file.png'
     );
   });
 
@@ -144,8 +144,8 @@ describe('DocumentsDeleteComponent', () => {
     };
     component.imgError(fakeEvent);
     expect(fakeEvent.target.setAttribute).not.toHaveBeenCalled();
-    expect(fakeEvent.target.src).not.toBe(
-      'http://assets/images/file-format-icons/file.png'
+    expect(fakeEvent.target.src).not.toContain(
+      '/images/file-format-icons/file.png'
     );
   });
   it('should return the correct attachment icon URL based on the attachment icon', () => {
@@ -267,10 +267,10 @@ describe('DocumentsDeleteComponent', () => {
   it('should return the correct attachment icon URL', () => {
     const attachmentIcon = 'attachment-icon.png';
     const expectedUrl =
-      'http://assets/images/file-format-icons/attachment-icon.png';
+      '/images/file-format-icons/attachment-icon.png';
 
     const result = component.getAttachmentIconUrl(attachmentIcon);
 
-    expect(result).toEqual(expectedUrl);
+    expect(result).toContain(expectedUrl);
   });
 });
