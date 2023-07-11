@@ -4,7 +4,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { basePathProvider, convertToCSV, createTranslateLoader } from './utils';
 import { HttpClient } from '@angular/common/http';
-import { FormControl, FormGroup } from '@angular/forms';
 
 describe('AppComponent', () => {
   let httpMock: HttpClient;

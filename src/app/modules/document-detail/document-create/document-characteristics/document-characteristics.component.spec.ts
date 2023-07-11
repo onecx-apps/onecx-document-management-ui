@@ -1,13 +1,18 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  FormControl,
+  FormGroup,
+  FormArray,
+} from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 import { DocumentCharacteristicsComponent } from './document-characteristics.component';
 import { RouterTestingModule } from '@angular/router/testing';
-import { FormControl, FormGroup, FormArray } from '@angular/forms';
 
 describe('DocumentCharacteristicsComponent', () => {
   let component: DocumentCharacteristicsComponent;

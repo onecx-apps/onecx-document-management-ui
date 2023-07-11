@@ -3,7 +3,6 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
 // Third party imports
-import { TranslateService } from '@ngx-translate/core';
 import { SelectItem } from 'primeng/api';
 
 // Application imports
