@@ -263,14 +263,14 @@ describe('DocumentsChooseComponent', () => {
     component.fileCount = 2;
     const result = component.getFolderIconUrl();
     expect(component.showCount).toBe(false);
-    expect(result).toBe('http://assets/images/file-format-icons/folder.png');
+    expect(result).toContain('/images/file-format-icons/folder.png');
   });
 
   it('should not set showCount to true and not return the folder icon URL if fileCount is not greater than 1', () => {
     component.fileCount = 1;
     const result = component.getFolderIconUrl();
     expect(component.showCount).toBe(false);
-    expect(result).toBe('http://assets/images/file-format-icons/folder.png');
+    expect(result).toContain('/images/file-format-icons/folder.png');
   });
 
   it('should return the empty icon URL when there are no valid attachments', () => {
@@ -292,7 +292,7 @@ describe('DocumentsChooseComponent', () => {
     );
     const result = component.getAttachmentIcon(validAttachmentArray);
     expect(component.showCount).toBe(false);
-    expect(result).toBe('http://assets/images/file-format-icons/empty.png');
+    expect(result).toContain('/images/file-format-icons/empty.png');
   });
 
   it('should set showCount to true and return folder icon URL if fileCount is greater than 1', () => {

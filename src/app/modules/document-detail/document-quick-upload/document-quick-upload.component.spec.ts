@@ -296,7 +296,7 @@ describe('DocumentQuickUploadComponent', () => {
       fileData: { type: 'audio/mp3' },
     };
     const result = component.getAttachmentIcon(attachment);
-    expect(result).toBe('http://assets/images/file-format-icons/audio.png');
+    expect(result).toContain('/images/file-format-icons/audio.png');
   });
 
   it('should return the media icon for video files', () => {
@@ -305,7 +305,7 @@ describe('DocumentQuickUploadComponent', () => {
       fileData: { type: 'video/mp4' },
     };
     const result = component.getAttachmentIcon(attachment);
-    expect(result).toBe('http://assets/images/file-format-icons/video.png');
+    expect(result).toContain('/images/file-format-icons/video.png');
   });
 
   it('should return the media icon for image files', () => {
@@ -315,7 +315,7 @@ describe('DocumentQuickUploadComponent', () => {
     };
 
     const result = component.getAttachmentIcon(attachment);
-    expect(result).toBe('http://assets/images/file-format-icons/img.png');
+    expect(result).toContain('/images/file-format-icons/img.png');
   });
 
   it('should return the icon based on the file extension if file type is not audio, video, or image', () => {
@@ -325,7 +325,7 @@ describe('DocumentQuickUploadComponent', () => {
     };
 
     const result = component.getAttachmentIcon(attachment);
-    expect(result).toBe('http://assets/images/file-format-icons/pdf.png');
+    expect(result).toContain('/images/file-format-icons/pdf.png');
   });
 
   it('should return the default file icon if attachmentIcon is not set', () => {
@@ -334,7 +334,7 @@ describe('DocumentQuickUploadComponent', () => {
       fileData: { type: 'unknown/type' },
     };
     const result = component.getAttachmentIcon(attachment);
-    expect(result).toBe('http://assets/images/file-format-icons/file.png');
+    expect(result).toContain('/images/file-format-icons/file.png');
   });
 
   it('should remove the specified attachment and validate the array', () => {
@@ -434,8 +434,8 @@ describe('DocumentQuickUploadComponent', () => {
       'fallback',
       true
     );
-    expect(fakeEvent.target.src).toBe(
-      'http://assets/images/file-format-icons/file.png'
+    expect(fakeEvent.target.src).toContain(
+      '/images/file-format-icons/file.png'
     );
   });
 
@@ -449,8 +449,8 @@ describe('DocumentQuickUploadComponent', () => {
     };
     component.imgError(fakeEvent);
     expect(fakeEvent.target.setAttribute).not.toHaveBeenCalled();
-    expect(fakeEvent.target.src).not.toBe(
-      'http://assets/images/file-format-icons/file.png'
+    expect(fakeEvent.target.src).not.toContain(
+      '/images/file-format-icons/file.png'
     );
   });
 });

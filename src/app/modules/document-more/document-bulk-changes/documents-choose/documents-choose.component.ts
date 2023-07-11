@@ -143,23 +143,18 @@ export class DocumentsChooseComponent implements OnInit {
    * @returns attachmentIcon
    */
   getAttachmentIconName(attachment) {
-    let fileName = attachment.fileName ?? '';
-    let fileExtension = fileName.split('.').reverse();
-    let fileTypeData =
-      attachment && attachment.mimeType ? attachment.mimeType.name : '';
+    const fileName = attachment?.fileName ?? '';
+    const fileExtension = fileName.split('.').reverse();
+    const fileTypeData = attachment?.mimeType?.name ?? '';
     let attachmentIcon = '';
     if (fileTypeData) {
-      let fileType = fileTypeData.split('/');
-      if (fileType.length) {
-        let type = fileType[0].toLowerCase();
-        if (type == 'audio' || type == 'video' || type == 'image') {
-          attachmentIcon = this.getMediaIcon(type);
-        } else {
-          if (fileExtension.length && fileExtension.length > 1) {
-            let extension = fileExtension[0].toLowerCase();
-            attachmentIcon = this.getFileExtensionIcon(extension);
-          }
-        }
+      const fileType = fileTypeData.split('/');
+      const type = fileType[0]?.toLowerCase();
+      if (['audio', 'video', 'image'].includes(type)) {
+        attachmentIcon = this.getMediaIcon(type);
+      } else if (fileExtension.length > 1) {
+        const extension = fileExtension[0]?.toLowerCase();
+        attachmentIcon = this.getFileExtensionIcon(extension);
       }
     }
     if (!attachmentIcon) {
