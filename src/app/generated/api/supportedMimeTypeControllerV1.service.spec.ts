@@ -1,8 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import {
   CreateSupportedMimeTypeRequestParams,
   DeleteSupportedMimeTypeIdRequestParams,
@@ -14,13 +11,11 @@ import { HttpParams } from '@angular/common/http';
 
 describe('SupportedMimeTypeControllerV1APIService', () => {
   let service: SupportedMimeTypeControllerV1APIService;
-  let httpTestingController: HttpTestingController;
   let httpParams: HttpParams;
 
   beforeEach(() => {
     TestBed.configureTestingModule({ imports: [HttpClientTestingModule] });
     service = TestBed.inject(SupportedMimeTypeControllerV1APIService);
-    httpTestingController = TestBed.inject(HttpTestingController);
     httpParams = new HttpParams();
   });
 

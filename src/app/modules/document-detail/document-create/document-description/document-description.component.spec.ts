@@ -19,7 +19,6 @@ import { of } from 'rxjs';
 describe('DocumentDescriptionComponent', () => {
   let component: DocumentDescriptionComponent;
   let fixture: ComponentFixture<DocumentDescriptionComponent>;
-  let dataSharingService: DataSharingService;
   let documentTypeV1Service: DocumentTypeControllerV1APIService;
   @Pipe({ name: 'translate', pure: false })
   class TranslatePipeMock implements PipeTransform {
@@ -43,7 +42,6 @@ describe('DocumentDescriptionComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(DocumentDescriptionComponent);
     component = fixture.componentInstance;
-    dataSharingService = TestBed.inject(DataSharingService);
     documentTypeV1Service = TestBed.inject(DocumentTypeControllerV1APIService);
     component.documentDescriptionForm = new FormGroup({
       controlName: new FormControl(),

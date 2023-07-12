@@ -14,7 +14,6 @@ import {
 import { DocumentCreateComponent } from './document-create.component';
 import { MFE_INFO } from '@onecx/portal-integration-angular';
 import { Router } from '@angular/router';
-import { DocumentControllerV1APIService } from 'src/app/generated';
 import { AttachmentUploadService } from '../attachment-upload.service';
 import { of } from 'rxjs';
 
@@ -22,9 +21,6 @@ describe('DocumentCreateComponent', () => {
   let component: DocumentCreateComponent;
   let fixture: ComponentFixture<DocumentCreateComponent>;
   let router: Router;
-  let documentV1Service: DocumentControllerV1APIService;
-  let messageService: MessageService;
-  let attachmentUploadService: AttachmentUploadService;
   @Pipe({ name: 'translate' })
   class TranslatePipeMock implements PipeTransform {
     transform(value: string): string {
@@ -52,14 +48,7 @@ describe('DocumentCreateComponent', () => {
     router = TestBed.inject(Router);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    documentV1Service = TestBed.inject(DocumentControllerV1APIService);
-    messageService = TestBed.inject(MessageService);
     router = TestBed.inject(Router);
-    documentV1Service = jasmine.createSpyObj('DocumentV1Service', [
-      'createDocument',
-    ]);
-    messageService = jasmine.createSpyObj('MessageService', ['add']);
-    attachmentUploadService = TestBed.inject(AttachmentUploadService);
   });
 
   it('should create', () => {
@@ -68,7 +57,6 @@ describe('DocumentCreateComponent', () => {
 
   it('should be called onUpdateDocumentVersion', () => {
     component.onUpdateDocumentVersion('');
-
     expect(component.documentVersion).toBe('');
   });
 
@@ -298,21 +286,6 @@ describe('DocumentCreateComponent', () => {
     const err = new Error('Test error');
     console.error(err);
     expect(console.error).toHaveBeenCalledWith(err);
-  });
-
-  it('should map attachments else path', () => {
-    component.attachmentArray = [];
-    const setAttachments = component['mapAttachments()'];
-    expect(setAttachments).toEqual[
-      Object({
-        id: 0,
-        name: 'attachment',
-        description: null,
-        type: null,
-        mimeTypeId: 0,
-        validFor: Object({ startDateTime: null, endDateTime: null }),
-      })
-    ];
   });
 
   it('should upload attachments successfully', () => {

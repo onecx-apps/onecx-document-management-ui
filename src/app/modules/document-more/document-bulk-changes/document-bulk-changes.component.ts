@@ -246,12 +246,15 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
    * function to toggle text of button b/w next, confirm and processing icon
    */
   setButton(): string {
-    return this.indexActive !== 2
-      ? this.translatedData['GENERAL.NEXT']
-      : this.isSubmitting
-      ? this.translatedData['GENERAL.PROCESSING']
-      : this.translatedData['GENERAL.CONFIRM'];
+    if (this.indexActive !== 2) {
+      return this.translatedData['GENERAL.NEXT'];
+    } else if (this.isSubmitting) {
+      return this.translatedData['GENERAL.PROCESSING'];
+    } else {
+      return this.translatedData['GENERAL.CONFIRM'];
+    }
   }
+
   /**
    * Function sets icon dynamically
    */

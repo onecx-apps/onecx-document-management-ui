@@ -278,9 +278,7 @@ describe('DocumentAttachmentComponent', () => {
     component.fileData = file;
     component.fileType = { name: 'text/plain' };
     component.attachmentArray = [];
-    const filteredAttachments = component.attachmentArray.filter(
-      (attachment) => {}
-    );
+    component.attachmentArray.filter((attachment) => {});
     component.setAttachmentFormData(file);
     expect(component.attachmentFieldsForm.controls['name'].value).toEqual(
       file.name
@@ -292,9 +290,7 @@ describe('DocumentAttachmentComponent', () => {
 
   it('should call updateAttachmentData', () => {
     component.attachmentArray = [];
-    const filteredAttachments = component.attachmentArray.filter(
-      (attachment) => {}
-    );
+    component.attachmentArray.filter((attachment) => {});
     component.updateAttachmentData();
     component.enterDataToListView();
     component.validateAttachmentData();

@@ -8,7 +8,6 @@ import { DocumentEditDetailsComponent } from './document-edit-details.component'
 describe('DocumentEditDetailsComponent', () => {
   let component: DocumentEditDetailsComponent;
   let fixture: ComponentFixture<DocumentEditDetailsComponent>;
-  let documentTypeV1Service: DocumentTypeControllerV1APIService;
   @Pipe({ name: 'translate' })
   class TranslatePipeMock implements PipeTransform {
     transform(value: string): string {
@@ -26,7 +25,6 @@ describe('DocumentEditDetailsComponent', () => {
     fixture = TestBed.createComponent(DocumentEditDetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    documentTypeV1Service = TestBed.inject(DocumentTypeControllerV1APIService);
   });
 
   it('should disable the form when isEditable is false', () => {

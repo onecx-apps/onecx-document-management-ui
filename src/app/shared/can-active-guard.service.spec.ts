@@ -7,8 +7,6 @@ import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
 describe('CanActivateGuard', () => {
   let guard: CanActivateGuard;
-  let translateService: jasmine.SpyObj<TranslateService>;
-  let configService: jasmine.SpyObj<ConfigurationService>;
 
   beforeEach(async () => {
     const translateSpy = jasmine.createSpyObj('TranslateService', ['use']);
@@ -21,12 +19,6 @@ describe('CanActivateGuard', () => {
       ],
     }).compileComponents();
     guard = TestBed.inject(CanActivateGuard);
-    translateService = TestBed.inject(
-      TranslateService
-    ) as jasmine.SpyObj<TranslateService>;
-    configService = TestBed.inject(
-      ConfigurationService
-    ) as jasmine.SpyObj<ConfigurationService>;
   });
 
   it('should return the provided language if it is supported', () => {

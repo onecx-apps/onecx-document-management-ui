@@ -217,7 +217,6 @@ describe('DocumentEditAttachmentComponent', () => {
   });
   it('should set showAttachment and isHavingAttachment to false when attachment array is empty', () => {
     const attachmentArray = [];
-    const fileData = null;
     const expectedShowAttachment = false;
     const expectedIsHavingAttachment = false;
 
@@ -227,40 +226,11 @@ describe('DocumentEditAttachmentComponent', () => {
   });
 
   it('should set showAttachment to true when incomplete attachments exist', () => {
-    const attachmentArray = [
-      {
-        name: 'Attachment 1',
-        mimeType: 'image/jpeg',
-        fileData: { name: 'file1.jpg' },
-      },
-      { name: '', mimeType: 'image/png', fileData: { name: 'file2.png' } },
-      { name: 'Attachment 3', mimeType: '', fileData: { name: 'file3.docx' } },
-    ];
-    const fileData = null;
     const expectedShowAttachment = true;
-
     expect(expectedShowAttachment).toBe(true);
   });
 
   it('should set showAttachment and isHavingAttachment to false when all attachments are complete', () => {
-    const attachmentArray = [
-      {
-        name: 'Attachment 1',
-        mimeType: 'image/jpeg',
-        fileData: { name: 'file1.jpg' },
-      },
-      {
-        name: 'Attachment 2',
-        mimeType: 'image/png',
-        fileData: { name: 'file2.png' },
-      },
-      {
-        name: 'Attachment 3',
-        mimeType: 'application/pdf',
-        fileData: { name: 'file3.pdf' },
-      },
-    ];
-    const fileData = null;
     const expectedShowAttachment = false;
     const expectedIsHavingAttachment = true;
 

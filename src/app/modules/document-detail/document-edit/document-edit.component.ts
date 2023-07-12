@@ -729,9 +729,7 @@ export class DocumentEditComponent implements OnInit {
       document?.type?.id ? document?.type?.id : ''
     );
     documentDescriptionForm.controls['documentVersion'].setValue(
-      document && document.documentVersion?.toString()
-        ? document.documentVersion
-        : ''
+      document?.documentVersion?.toString() ? document?.documentVersion : ''
     );
     documentDescriptionForm.controls['channelname'].setValue(
       document?.channel?.name ? document?.channel?.name : null
@@ -774,10 +772,8 @@ export class DocumentEditComponent implements OnInit {
    * @param document
    */
   setCharacteristics(document: DocumentDetailDTO): void {
-    let sortCharacteristics = document.characteristics?.sort(function (
-      a: any,
-      b: any
-    ) {
+    let sortedCharacteristics = document?.characteristics?.slice();
+    sortedCharacteristics?.sort(function (a: any, b: any) {
       let x = a.modificationDate.toLowerCase();
       let y = b.modificationDate.toLowerCase();
       if (x < y) {
@@ -788,8 +784,11 @@ export class DocumentEditComponent implements OnInit {
       }
       return 0;
     });
-    this.documentEditCharacteristicsComponent?.updateForm(sortCharacteristics);
+    this.documentEditCharacteristicsComponent?.updateForm(
+      sortedCharacteristics
+    );
   }
+
   /**
    * function to show active tab on refresh
    * @param event
@@ -831,29 +830,36 @@ export class DocumentEditComponent implements OnInit {
     attachments = document.attachments ? document.attachments : [];
     if (attachments.length) {
       attachments.forEach((attachment) => {
-        if (attachment?.storageUploadStatus) {
-          let fileData: any = {};
-          fileData['name'] = attachment.fileName ?? '';
-          fileData['size'] = attachment.size ?? '';
-          fileData['type'] = attachment.type ?? '';
-
-          let attachmntObj: object = {};
-          attachmntObj['name'] = attachment.name ?? '';
-          attachmntObj['description'] = attachment.description ?? '';
-          attachmntObj['mimeType'] = attachment.mimeType.name ?? '';
-          attachmntObj['mimeTypeId'] = attachment.mimeType.id ?? '';
-          attachmntObj['fileData'] = fileData;
-          attachmntObj['validity'] = attachment?.validFor?.endDateTime
-            ? new Date(attachment.validFor.endDateTime)
-            : null;
-          attachmntObj['id'] = attachment.id ?? '';
-          attachmntObj['isDownloadable'] = attachment.id ? true : false;
-          this.attachmentArray.push(attachmntObj);
-        }
+        this.populateAttachmentArray(attachment);
       });
       this.initialAttachmentData = JSON.parse(
         JSON.stringify(this.attachmentArray)
       );
+    }
+  }
+  /**
+   * function to populate attachmentArray
+   * @param attachment
+   */
+  populateAttachmentArray(attachment) {
+    if (attachment?.storageUploadStatus) {
+      let fileData: any = {};
+      fileData['name'] = attachment.fileName ?? '';
+      fileData['size'] = attachment.size ?? '';
+      fileData['type'] = attachment.type ?? '';
+
+      let attachmntObj: object = {};
+      attachmntObj['name'] = attachment.name ?? '';
+      attachmntObj['description'] = attachment.description ?? '';
+      attachmntObj['mimeType'] = attachment.mimeType.name ?? '';
+      attachmntObj['mimeTypeId'] = attachment.mimeType.id ?? '';
+      attachmntObj['fileData'] = fileData;
+      attachmntObj['validity'] = attachment?.validFor?.endDateTime
+        ? new Date(attachment.validFor.endDateTime)
+        : null;
+      attachmntObj['id'] = attachment.id ?? '';
+      attachmntObj['isDownloadable'] = attachment.id ? true : false;
+      this.attachmentArray.push(attachmntObj);
     }
   }
   /**

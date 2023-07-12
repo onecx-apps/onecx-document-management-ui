@@ -14,7 +14,6 @@ import { of, throwError } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
-import { DataSharingService } from 'src/app/shared/data-sharing.service';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
@@ -23,16 +22,12 @@ import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 import { CriteriaComponent } from './criteria/criteria.component';
 import { DocumentCriteriaAdvancedComponent } from './document-criteria-advanced/document-criteria-advanced.component';
 import { DocumentSearchComponent } from './document-search.component';
-import { BreadcrumbService } from '@onecx/portal-integration-angular';
 import { UserDetailsService } from 'src/app/generated/api/user-details.service';
 import { DocumentControllerV1APIService } from 'src/app/generated';
 
 describe('DocumentSearchComponent', () => {
   let component: DocumentSearchComponent;
   let fixture: ComponentFixture<DocumentSearchComponent>;
-  let service: BreadcrumbService;
-  let httpMock: HttpTestingController;
-  let dataSharingService: DataSharingService;
   let userDetailsService: UserDetailsService;
   let documentV1Service: DocumentControllerV1APIService;
   let messageService: MessageService;
@@ -108,9 +103,6 @@ describe('DocumentSearchComponent', () => {
       { creationUser: 'JaneSmith', title: 'Item 2' },
       { creationUser: 'JohnDoe', title: 'Item 3' },
     ];
-    const dataSharingService = {
-      setSearchResults: jasmine.createSpy('setSearchResults'),
-    };
     component.loggedUserName = loggedUserName;
     component.searchedResults = searchedResults;
     component.getTranslatedData();
@@ -128,9 +120,6 @@ describe('DocumentSearchComponent', () => {
       { modificationDate: new Date().toISOString(), title: 'Item 2' },
       { modificationDate: new Date().toISOString(), title: 'Item 3' },
     ];
-    const dataSharingService = {
-      setSearchResults: jasmine.createSpy('setSearchResults'),
-    };
     component.getTranslatedData();
     component.getFilteredRecentlyUpdated();
     expect(component.results.length).toBe(3);

@@ -1,8 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import {
   BulkUpdateDocumentRequestParams,
   CreateDocumentRequestParams,
@@ -18,7 +15,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Configuration } from '../configuration';
 describe('DocumentTypeControllerV1APIService', () => {
   let service: DocumentControllerV1APIService;
-  let httpTestingController: HttpTestingController;
+
   let httpParams: HttpParams;
   let httpClient: HttpClient;
   let configuration: Configuration;
@@ -41,7 +38,6 @@ describe('DocumentTypeControllerV1APIService', () => {
       ],
     });
     service = TestBed.inject(DocumentControllerV1APIService);
-    httpTestingController = TestBed.inject(HttpTestingController);
     httpParams = new HttpParams();
   });
   it('should be created', () => {
