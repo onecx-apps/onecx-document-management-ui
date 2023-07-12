@@ -4,6 +4,14 @@
     header="{{ 'DOCUMENT_SEARCH.HEADER' | translate }}"
     [actions]="headerActions"
   >
+    <div toolbarItems class="flex gap-1 w-4rem">
+      <p-splitButton
+        [disabled]="this.results.length === 0"
+        icon="pi pi-filter"
+        [model]="items"
+        styleClass="w-8"
+      ></p-splitButton>
+    </div>
     <div toolbarItems class="flex gap-1">
       <button
         *ocxIfPermission="'DOCUMENT_MGMT#DOCUMENT_UPLOAD'"

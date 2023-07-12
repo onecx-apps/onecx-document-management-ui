@@ -1,24 +1,40 @@
-<h4 class="mb-2">
-  {{ 'DOCUMENT_MENU.DOCUMENT_MORE.DOCUMENT_BULK.CHOOSE_DOCUMENT' | translate }}
-</h4>
-<div>
+<div class="card p-0">
   <p-table
     dataKey="code"
-    [scrollable]="true"
-    scrollHeight="24rem"
     [value]="results"
     responsiveLayout="scroll"
     styleClass="p-datatable-sm"
+    paginatorPosition="top"
+    [paginator]="true"
+    [rows]="rowsPerPage"
+    [rowsPerPageOptions]="rowsPerPageOptions"
+    [showFirstLastIcon]="false"
+    [showCurrentPageReport]="true"
+    [totalRecords]="results"
+    currentPageReportTemplate="Showing {last} of {{ results?.length }}"
   >
+    <ng-template pTemplate="paginatorleft">
+      <div>
+        {{ selectedResults }} of {{ results?.length }}
+        {{ 'GENERAL.DOCUMENTS_SELECTED' | translate }}
+      </div>
+    </ng-template>
     <ng-template pTemplate="header" let-columns>
       <tr>
-        <th scope="col" class="pb-3 pt-3 pl-3" style="max-width: 4rem">
+        <th scope="col" class="pb-3 pt-3 pl-3 max-w-4rem">
           <p-checkbox
             [(ngModel)]="isHeaderChecked"
             (click)="onHeaderClick()"
             [binary]="true"
             inputId="binary"
           ></p-checkbox>
+        </th>
+        <th scope="col max-w-4rem">
+          <img
+            alt="Attachment Header Icon"
+            class="w-2rem"
+            [src]="getAttachmentHeaderIcon()"
+          />
         </th>
         <th scope="col" pSortableColumn="name">
           {{ 'RESULTS.NAME' | translate }}
@@ -39,14 +55,32 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-result>
-      <tr>
-        <td class="pl-3" style="max-width: 4rem">
+      <tr
+        class="max-h-4rem justify-content-center"
+        [ngClass]="result.isChecked ? 'results-selected' : ''"
+      >
+        <td class="pl-3 max-w-4rem">
           <p-checkbox
             (click)="onRowClick()"
             [(ngModel)]="result.isChecked"
             [binary]="true"
             inputId="binary"
           ></p-checkbox>
+        </td>
+        <td class="max-w-4rem">
+          <div class="relative inline-block max-w-full">
+            <img
+              alt="Attachment Icon"
+              class="w-2rem h-2rem"
+              [src]="getAttachmentIcon(result)"
+              (error)="imgError($event)"
+            />
+            <div class="file-count">
+              <ng-container *ngIf="showCount">
+                {{ fileCount }}
+              </ng-container>
+            </div>
+          </div>
         </td>
         <td>
           <span pTooltip="{{ result.name }}">

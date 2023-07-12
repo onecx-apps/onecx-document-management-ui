@@ -8,6 +8,7 @@ import { DocumentDetailDTO } from '../generated';
   providedIn: 'root',
 })
 export class DataSharingService {
+  specialChar = ' \\ / : * ? " < > |';
   searchResults: DocumentDetailDTO[];
   selectedModification = '';
   selectUpdated = [];
@@ -50,5 +51,32 @@ export class DataSharingService {
    */
   getUpdateModification() {
     return this.selectUpdated;
+  }
+  /**
+   *
+   * @returns filtered results for current logged in user
+   */
+  getCreatedByMe(loggedUserName: any) {
+    const searchedResults = this.getSearchResults();
+    const results = searchedResults.filter((item) => {
+      if (item.creationUser == loggedUserName) {
+        return item;
+      }
+    });
+    return results;
+  }
+  /**
+   *
+   * @returns filtered results for recently updated based on time(24 hours)
+   */
+  getRecentlyUpdated() {
+    const searchedResults = this.getSearchResults();
+    const twentyFourHoursAgo = new Date();
+    twentyFourHoursAgo.setDate(twentyFourHoursAgo.getDate() - 1);
+    const results = searchedResults.filter((item) => {
+      const itemDate = new Date(item.modificationDate);
+      return itemDate >= twentyFourHoursAgo;
+    });
+    return results;
   }
 }

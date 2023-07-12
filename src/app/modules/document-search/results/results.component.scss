@@ -18,12 +18,12 @@
   text-align: right;
 }
 
-::ng-deep .p-datatable .p-datatable-tbody > tr > td{
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td{
   padding-top: 0.05rem;
   padding-bottom: 0.05rem;
 }
 
-::ng-deep .p-datatable .p-datatable-thead > tr > th {
+:host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
   padding-top: 0.05rem;
   padding-bottom: 0.05rem;
 }

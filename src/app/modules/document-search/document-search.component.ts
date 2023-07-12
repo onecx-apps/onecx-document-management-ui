@@ -10,7 +10,7 @@ import {
   PortalSearchPage,
   provideParent,
 } from '@onecx/portal-integration-angular';
-import { MessageService } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { Observable, timer } from 'rxjs';
 import { finalize, map, tap } from 'rxjs/operators';
 
@@ -22,7 +22,9 @@ import {
   DocumentDetailDTO,
   GetDocumentByCriteriaRequestParams,
 } from 'src/app/generated';
+import { DataSharingService } from 'src/app/shared/data-sharing.service';
 import { convertToCSV } from 'src/app/utils';
+import { UserDetailsService } from 'src/app/generated/api/user-details.service';
 
 @Component({
   selector: 'app-document-search',
@@ -42,6 +44,7 @@ export class DocumentSearchComponent
   page = 0;
   size = 200;
   totalElements: number;
+  completeElements: number;
   isBulkEnable: boolean;
   isExportDocEnable: boolean;
   isLoading = false;
@@ -49,6 +52,8 @@ export class DocumentSearchComponent
   isLoadMoreVisible = false;
   isShow = true;
   isSearchClicked = false;
+  isFilterClick: boolean;
+  isLoadMoreClicked = false;
 
   headerActions: Action[] = [];
   helpArticleId = 'PAGE_DOCUMENT_MGMT_SEARCH';
@@ -56,6 +61,11 @@ export class DocumentSearchComponent
   criteria: GetDocumentByCriteriaRequestParams = {};
   translatedData: any;
   updatedDataView: any;
+  items: MenuItem[];
+  searchedResults: any;
+  loggedUserName: any;
+  isFiltered: any;
+  loadMoreSearchResult: DocumentDetailDTO[];
 
   constructor(
     private readonly translateService: TranslateService,
@@ -63,14 +73,18 @@ export class DocumentSearchComponent
     private readonly messageService: MessageService,
     private readonly router: Router,
     private readonly activeRoute: ActivatedRoute,
-    private readonly datepipe: DatePipe
+    private readonly datepipe: DatePipe,
+    private readonly userDetailsService: UserDetailsService,
+    private readonly dataSharingService: DataSharingService
   ) {
     super();
   }
 
   public ngOnInit(): void {
+    this.getLoggedInUserData();
     this.getTranslatedData();
     this.setHeaderActions();
+    this.setFilterActions();
   }
   /**
    * function to get translatedData from translateService
@@ -84,6 +98,11 @@ export class DocumentSearchComponent
         'DOCUMENT_MENU.DOCUMENT_EXPORT',
         'DOCUMENT_MENU.DOCUMENT_MORE.DOCUMENT_BULK.HEADER',
         'GENERAL.LOAD_MORE',
+        'GENERAL.NO_RECORDS_TO_EXPORT',
+        'GENERAL.NO_RECORDS_FOR_CHANGES',
+        'DOCUMENT_SEARCH.FILTER.CREATED_BY_ME',
+        'DOCUMENT_SEARCH.FILTER.RECENTLY_UPDATED',
+        'DOCUMENT_SEARCH.FILTER.CLEAR_FILTER',
       ])
       .subscribe((data) => {
         this.translatedData = data;
@@ -100,7 +119,6 @@ export class DocumentSearchComponent
     this.isExportDocEnable = false;
     this.isLoadMoreVisible = false;
   }
-
   /**
    * Search document based on criteria
    * @param mode flag to return data depending on mode type.
@@ -112,6 +130,8 @@ export class DocumentSearchComponent
     page = 0,
     size = 200
   ): Observable<any> {
+    this.isFilterClick = false;
+    this.setFilterActions();
     this.mode = mode;
     if (!usePreviousCriteria) {
       if (mode === 'basic') {
@@ -148,13 +168,19 @@ export class DocumentSearchComponent
             if (data.stream.length) {
               this.isBulkEnable = true;
               this.isExportDocEnable = true;
-              this.isLoadMoreVisible = true;
-              this.isLoadMoreDisable = true;
               this.isSearchClicked = true;
               this.totalElements = data.totalElements;
+              this.completeElements = data.totalElements;
+              this.isLoadMoreDisable = true;
+              this.isLoadMoreVisible = true;
             }
           });
         }
+        this.searchedResults = JSON.parse(JSON.stringify([...data.stream]));
+        localStorage.setItem(
+          'searchResults',
+          JSON.stringify(this.searchedResults)
+        );
         return [...data.stream];
       }),
       tap({
@@ -176,6 +202,97 @@ export class DocumentSearchComponent
       })
     );
   }
+  /**
+   * function to get split button options
+   */
+  setFilterActions() {
+    this.items = [
+      {
+        label: this.translatedData['DOCUMENT_SEARCH.FILTER.CREATED_BY_ME'],
+        styleClass: this.isFiltered === 'A' ? 'bg-primary' : '',
+        command: () => {
+          this.getFilteredCreatedByMe();
+        },
+      },
+      {
+        label: this.translatedData['DOCUMENT_SEARCH.FILTER.RECENTLY_UPDATED'],
+        styleClass: this.isFiltered === 'B' ? 'bg-primary' : '',
+        command: () => {
+          this.getFilteredRecentlyUpdated();
+        },
+      },
+      {
+        label: this.translatedData['DOCUMENT_SEARCH.FILTER.CLEAR_FILTER'],
+        disabled: !this.isFilterClick,
+        command: () => {
+          this.clearFilter();
+        },
+      },
+    ];
+  }
+  /**
+   * function to get the logged in username
+   */
+
+  getLoggedInUserData() {
+    this.userDetailsService.getLoggedInUsername().subscribe((data) => {
+      this.loggedUserName = JSON.parse(JSON.stringify(data.userId));
+    });
+  }
+  /**
+   * function to filter the results for created by me
+   */
+
+  getFilteredCreatedByMe() {
+    this.dataSharingService.setSearchResults(this.searchedResults);
+    if (this.isLoadMoreClicked) {
+      this.dataSharingService.setSearchResults(this.loadMoreSearchResult);
+    }
+    this.isFilterClick = true;
+    this.isFiltered = 'A';
+    this.setFilterActions();
+    this.isSearchClicked = true;
+    this.isLoadMoreDisable = true;
+    this.results = this.dataSharingService.getCreatedByMe(this.loggedUserName);
+    this.dataSharingService.setSearchResults(this.results);
+    this.totalElements = this.results.length;
+  }
+
+  /**
+   * function to filter the results for recently updated
+   */
+
+  getFilteredRecentlyUpdated() {
+    this.dataSharingService.setSearchResults(this.searchedResults);
+    if (this.isLoadMoreClicked) {
+      this.dataSharingService.setSearchResults(this.loadMoreSearchResult);
+    }
+    this.isFilterClick = true;
+    this.isFiltered = 'B';
+    this.setFilterActions();
+    this.isSearchClicked = true;
+    this.isLoadMoreDisable = true;
+    this.results = this.dataSharingService.getRecentlyUpdated();
+    this.dataSharingService.setSearchResults(this.results);
+    this.totalElements = this.results.length;
+  }
+
+  /**
+   * function to clear the filtered results
+   */
+  clearFilter() {
+    this.isFilterClick = false;
+    this.setFilterActions();
+    this.isFiltered = '';
+    this.search(this.mode || 'basic', true).subscribe({
+      next: (data) => {
+        this.results = data;
+        this.totalElements = this.completeElements;
+      },
+    });
+    this.dataSharingService.setSearchResults(this.searchedResults);
+    this.isSearchClicked = true;
+  }
 
   /**
    * Delete document based on selected document
@@ -192,8 +309,12 @@ export class DocumentSearchComponent
         this.search(this.mode || 'basic', true).subscribe({
           next: (data) => {
             this.results = data;
+            this.totalElements = this.completeElements - 1;
+            this.completeElements = this.totalElements;
           },
         });
+        this.isSearchClicked = false;
+        this.clearFilter();
       },
       error: () => {
         this.messageService.add({
@@ -214,6 +335,12 @@ export class DocumentSearchComponent
         title: this.translateService.instant('DOCUMENT_MENU.DOCUMENT_EXPORT'),
         show: 'asOverflow',
         actionCallback: () => {
+          if (this.results.length == 0) {
+            this.messageService.add({
+              severity: 'success',
+              summary: this.translatedData['GENERAL.NO_RECORDS_TO_EXPORT'],
+            });
+          }
           if (this.isExportDocEnable == true) {
             localStorage.setItem(
               'searchCriteria',
@@ -234,11 +361,18 @@ export class DocumentSearchComponent
         ),
         show: 'asOverflow',
         actionCallback: () => {
+          if (this.results.length == 0) {
+            this.messageService.add({
+              severity: 'success',
+              summary: this.translatedData['GENERAL.NO_RECORDS_FOR_CHANGES'],
+            });
+          }
           if (this.isBulkEnable == true) {
             localStorage.setItem(
               'searchCriteria',
               JSON.stringify(this.criteria)
             );
+            localStorage.setItem('isFiltered', this.isFiltered);
             this.router.navigate(['../more/bulkchanges'], {
               relativeTo: this.activeRoute,
             });
@@ -279,7 +413,14 @@ export class DocumentSearchComponent
     let dwldLink = document.createElement('a');
     let url = URL.createObjectURL(blob);
     dwldLink.setAttribute('href', url);
-    dwldLink.setAttribute('download', 'DocumentDetails' + '.csv');
+
+    const now = new Date();
+    const date = this.datepipe.transform(now, 'ddMMyy');
+    const time = this.datepipe.transform(now, 'HHmmss');
+    dwldLink.setAttribute(
+      'download',
+      'DocumentDetails-' + date + '-' + time + '.csv'
+    );
     dwldLink.click();
   }
   /** function loads more documents if search result has large count */
@@ -288,8 +429,12 @@ export class DocumentSearchComponent
     this.search(this.mode || 'basic', true, this.page, this.size).subscribe({
       next: (data) => {
         this.results = this.results.concat(data);
+        this.loadMoreSearchResult = this.results;
+        this.dataSharingService.setSearchResults(this.results);
+        localStorage.setItem('searchResults', JSON.stringify(this.results));
       },
     });
+    this.isLoadMoreClicked = true;
     this.isLoadMoreDisable = true;
     this.isSearchClicked = false;
   }

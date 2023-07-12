@@ -12,6 +12,7 @@ import {
   LifeCycleState,
 } from 'src/app/generated';
 import { trimSpaces } from 'src/app/utils';
+import { DataSharingService } from 'src/app/shared/data-sharing.service';
 
 @Component({
   selector: 'app-document-edit-details',
@@ -27,14 +28,17 @@ export class DocumentEditDetailsComponent implements OnInit {
   allDocumentTypes: DocumentTypeDTO[];
   documentTypes: SelectItem[];
   documentStatus: SelectItem[];
+  specialChar: string;
 
   constructor(
-    private readonly documentTypeV1Service: DocumentTypeControllerV1APIService
+    private readonly documentTypeV1Service: DocumentTypeControllerV1APIService,
+    private readonly dataSharingService: DataSharingService
   ) {}
 
   ngOnInit(): void {
     this.loadAllDocumentTypes();
     this.loadDocumentStatus();
+    this.specialChar = this.dataSharingService.specialChar;
   }
   ngOnChanges() {
     if (!this.isEditable) {

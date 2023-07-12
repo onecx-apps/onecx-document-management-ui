@@ -21,7 +21,8 @@ import {
   SupportedMimeTypeControllerV1APIService,
   SupportedMimeTypeDTO,
 } from 'src/app/generated';
-import { trimSpaces } from 'src/app/utils';
+import { noSpecialCharacters, trimSpaces } from 'src/app/utils';
+import { DataSharingService } from 'src/app/shared/data-sharing.service';
 
 @Component({
   selector: 'app-document-quick-upload-form',
@@ -53,17 +54,23 @@ export class DocumentQuickUploadFormComponent implements OnInit {
   fileData: any;
   uploadFileMimetype: any;
   subscriptions = new Subscription();
+  specialChar: string;
 
   constructor(
     private readonly documentTypeV1Service: DocumentTypeControllerV1APIService,
     private readonly supportedMimeTypeV1Service: SupportedMimeTypeControllerV1APIService,
-    private readonly translateService: TranslateService
+    private readonly translateService: TranslateService,
+    private readonly dataSharingService: DataSharingService
   ) {}
 
   ngOnInit(): void {
     this.getTranslatedData();
+    this.specialChar = this.dataSharingService.specialChar;
     this.documentQuickUploadForm = new FormGroup({
-      documentName: new FormControl('', [Validators.required]),
+      documentName: new FormControl('', [
+        Validators.required,
+        noSpecialCharacters,
+      ]),
       typeId: new FormControl('', [Validators.required]),
       channelname: new FormControl('', [Validators.required]),
       lifeCycleState: new FormControl(),

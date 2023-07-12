@@ -73,7 +73,6 @@ export class AttachmentUploadService {
     for (let file of attachmentFileArray) {
       formData.append('file', file);
     }
-    console.log('formData: ', formData);
     return this.http.post<any>(
       `${this.configuration.basePath}/v1/document/files/upload/${documentId}`,
       formData

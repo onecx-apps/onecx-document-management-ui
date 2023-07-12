@@ -11,11 +11,25 @@
             formControlName="documentName"
             (blur)="trimSpace($event)"
             (keypress)="preventSpace($event)"
-            pattern="^[a-zA-Z0-9-_][\sa-zA-Z0-9-_]*"
           />
           <label for="documentName" class="required">{{
             'DOCUMENT_DETAIL.BASIC_FIELDS.DOCUMENT_NAME' | translate
           }}</label>
+        </span>
+        <span
+          *ngIf="documentQuickUploadForm?.controls['documentName']?.invalid"
+          class="alert alert-danger text-sm"
+        >
+          <span
+            *ngIf="
+              documentQuickUploadForm?.controls['documentName']?.errors
+                .hasSpecialChars
+            "
+          >
+            {{
+              'DOCUMENT_MENU.DOCUMENT_EDIT.SPECIAL_CHARACTER_ERROR' | translate
+            }}{{ specialChar }}
+          </span>
         </span>
       </div>
       <div class="col-6">
@@ -73,7 +87,16 @@
         (dragover)="allowDrop($event)"
         (drop)="dropFile($event)"
       >
-        <div class="col-12" id="upload-button-block">
+        <div
+          class="col-12"
+          id="upload-button-block"
+          [ngClass]="{
+            'addon-padding':
+              documentQuickUploadForm?.controls['documentName']?.errors
+                ?.hasSpecialChars &&
+              documentQuickUploadForm?.controls['documentName']?.dirty
+          }"
+        >
           <div id="dragDropTitle">
             {{ 'DOCUMENT_DETAIL.ATTACHMENTS.DRAG_DROP' | translate }}
           </div>

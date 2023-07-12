@@ -19,7 +19,7 @@ import {
 } from '@onecx/portal-integration-angular';
 import { saveAs } from 'file-saver';
 import { MessageService } from 'primeng/api';
-import { throwError, forkJoin } from 'rxjs';
+import { throwError, forkJoin, of } from 'rxjs';
 import { catchError, defaultIfEmpty, tap, map, mergeMap } from 'rxjs/operators';
 
 // Application imports
@@ -35,12 +35,14 @@ import {
   UpdateDocumentRequestParams,
 } from 'src/app/generated';
 import { DocumentTabStateService } from 'src/app/shared/document-tab-state.service';
-import { convertToCSV } from 'src/app/utils';
+import { convertToCSV, noSpecialCharacters } from 'src/app/utils';
+import { DataSharingService } from 'src/app/shared/data-sharing.service';
 
 @Component({
   selector: 'app-document-edit',
   templateUrl: './document-edit.component.html',
   styleUrls: ['./document-edit.component.scss'],
+  providers: [DatePipe],
 })
 export class DocumentEditComponent implements OnInit {
   @ViewChild(DocumentEditLifecycleComponent, { static: false })
@@ -71,6 +73,7 @@ export class DocumentEditComponent implements OnInit {
   documentVersion;
   documentId: string;
   channelName: string;
+  specialChar: string;
 
   constructor(
     private readonly activeRoute: ActivatedRoute,
@@ -81,10 +84,13 @@ export class DocumentEditComponent implements OnInit {
     private readonly formBuilder: UntypedFormBuilder,
     private readonly attachmentUploadService: AttachmentUploadService,
     private readonly router: Router,
-    public documentTabStateService: DocumentTabStateService
+    public documentTabStateService: DocumentTabStateService,
+    private readonly dataSharingService: DataSharingService,
+    private readonly datepipe: DatePipe
   ) {}
 
   public ngOnInit(): void {
+    this.specialChar = this.dataSharingService.specialChar;
     this.getTranslatedData();
     const tabQuery = +this.activeRoute.snapshot.queryParamMap.get('tab');
 
@@ -104,7 +110,10 @@ export class DocumentEditComponent implements OnInit {
      */
     this.documentEditForm = this.formBuilder.group({
       documentDescriptionForm: this.formBuilder.group({
-        name: ['', [Validators.required, Validators.maxLength(60)]],
+        name: [
+          '',
+          [Validators.required, Validators.maxLength(60), noSpecialCharacters],
+        ],
         typeId: ['', Validators.required],
         documentVersion: ['', Validators.min(0)],
         channelname: ['', [Validators.required, Validators.maxLength(60)]],
@@ -154,6 +163,12 @@ export class DocumentEditComponent implements OnInit {
         'DOCUMENT_MENU.DOCUMENT_EDIT.EMPTY_REQUIRED_FIELD_ERROR',
         'DOCUMENT_MENU.DOCUMENT_DELETE.DELETE_ERROR',
         'DOCUMENT_MENU.DOCUMENT_DELETE.DELETE_SUCCESS',
+        'DOCUMENT_MENU.DOCUMENT_EDIT.SPECIAL_CHARACTER_ERROR',
+        'DOCUMENT_MENU.DOCUMENT_EDIT.DOCUMENT_NAME_MISSING',
+        'DOCUMENT_MENU.DOCUMENT_EDIT.DOCUMENT_TYPE_MISSING',
+        'DOCUMENT_MENU.DOCUMENT_EDIT.CHANNEL_MISSING',
+        'DOCUMENT_MENU.DOCUMENT_EDIT.ATTACHMENT_NAME_MISSING',
+        'DOCUMENT_MENU.DOCUMENT_EDIT.ATTACHMENT_FILE_MISSING',
       ])
       .subscribe((data) => {
         this.translatedData = data;
@@ -175,8 +190,8 @@ export class DocumentEditComponent implements OnInit {
         this.setRelatedFormFields(this.document);
         this.setCharacteristics(this.document);
         this.setAttachmentData(this.document);
-        this.channelName = data.channel.name;
-        this.documentEditLifecycleComponent.refreshTimeline();
+        this.channelName = data.channel?.name;
+        this.documentEditLifecycleComponent?.refreshTimeline();
       },
       error: () => {
         this.messageService.add({
@@ -187,6 +202,14 @@ export class DocumentEditComponent implements OnInit {
       },
     });
   }
+
+  /**
+   * Wrapper method for setHeaderFields to write Unit Test for this private method
+   */
+  public setHeaderFieldsWrapper(document: DocumentDetailDTO) {
+    this.setHeaderFields(document);
+  }
+
   /**
    * function to set header fields with label
    * @param document
@@ -196,7 +219,7 @@ export class DocumentEditComponent implements OnInit {
       {
         label: 'DOCUMENT_MENU.DOCUMENT_EDIT.TYPE',
         labelPipe: TranslatePipe,
-        value: document.type.name,
+        value: document.type?.name,
       },
       {
         label: 'DOCUMENT_MENU.DOCUMENT_EDIT.CREATED_BY',
@@ -215,6 +238,13 @@ export class DocumentEditComponent implements OnInit {
         value: document.lifeCycleState,
       },
     ];
+  }
+
+  /**
+   * Wrapper method for setHeaderButtons to write Unit Test for this private method
+   */
+  public setHeaderButtonsWrapper(document: DocumentDetailDTO) {
+    this.setHeaderButtons(document);
   }
   /**
    * function to set the header buttons
@@ -330,6 +360,14 @@ export class DocumentEditComponent implements OnInit {
     }
     return setAttachments;
   }
+
+  /**
+   * Wrapper method for mapUploads to write Unit Test for this private method
+   */
+  public mapUploadsWrapper() {
+    this.mapUploads();
+  }
+
   /**
    * @returns set of files array that user has uploaded
    */
@@ -345,54 +383,100 @@ export class DocumentEditComponent implements OnInit {
       console.error(err);
     }
   }
+
   formFieldValidate() {
-    let formFieldArray = [];
+    let formFieldArray = new Set();
+    const formDetails = this.documentEditForm.controls.documentDescriptionForm;
     try {
-      if (
-        this.documentEditForm.controls.documentDescriptionForm.get('name')
-          .invalid
-      ) {
-        formFieldArray.push('Document Name');
-      }
-      if (
-        this.documentEditForm.controls.documentDescriptionForm.get('typeId')
-          .invalid
-      ) {
-        formFieldArray.push('Document Type');
-      }
-      if (
-        this.documentEditForm.controls.documentDescriptionForm.get(
-          'channelname'
-        ).invalid
-      ) {
-        formFieldArray.push('Channel');
-      }
-      if (
-        this.documentEditAttachmentComponent &&
-        this.attachmentArray.length !== 0
-      ) {
-        this.attachmentArray.map((el) => {
-          Object.keys(el).forEach((data) => {
-            const pattern = /[\\/:*?<>|"]/;
-            if (el[data] == '' || pattern.test(el[data]))
-              switch (data) {
-                case 'name':
-                  if (!formFieldArray.includes('Attachment Name'))
-                    formFieldArray.push('Attachment Name');
-                  break;
-                case 'fileData':
-                  if (!formFieldArray.includes('Attachment File'))
-                    formFieldArray.push('Attachment File');
-                  break;
-              }
-          });
-        });
-      }
-      return formFieldArray;
+      this.specialCharsCheck(formFieldArray, formDetails);
+      this.documentFormValidation(formFieldArray, formDetails);
+      this.attachmentFormValidation(formFieldArray);
+      return [...formFieldArray];
     } catch (err) {
       console.error(err);
     }
   }
+
+  /**
+  special characters not allowed check 
+   */
+  specialCharsCheck(formFieldArray, formDetails) {
+    const pattern = /[\\/:*?<>|"]/;
+    //attachmentName
+    if (this.attachmentArray) {
+      this.attachmentArray.map((el) => {
+        if (pattern.test(el['name'])) {
+          formFieldArray.add(
+            this.translatedData[
+              'DOCUMENT_MENU.DOCUMENT_EDIT.SPECIAL_CHARACTER_ERROR'
+            ] + this.specialChar
+          );
+        }
+      });
+    }
+    //documentName
+    if (pattern.test(formDetails.get('name').value)) {
+      formFieldArray.add(
+        this.translatedData[
+          'DOCUMENT_MENU.DOCUMENT_EDIT.SPECIAL_CHARACTER_ERROR'
+        ] + this.specialChar
+      );
+    }
+  }
+
+  /**
+  document form missing fields
+   */
+  documentFormValidation(formFieldArray, formDetails) {
+    if (formDetails.get('name').value.trim() == '') {
+      formFieldArray.add(
+        this.translatedData['DOCUMENT_MENU.DOCUMENT_EDIT.DOCUMENT_NAME_MISSING']
+      );
+    }
+    if (formDetails.get('typeId').invalid) {
+      formFieldArray.add(
+        this.translatedData['DOCUMENT_MENU.DOCUMENT_EDIT.DOCUMENT_TYPE_MISSING']
+      );
+    }
+    if (formDetails.get('channelname').invalid) {
+      formFieldArray.add(
+        this.translatedData['DOCUMENT_MENU.DOCUMENT_EDIT.CHANNEL_MISSING']
+      );
+    }
+  }
+
+  /**
+  attachment form missing fields 
+   */
+  attachmentFormValidation(formFieldArray) {
+    if (
+      this.documentEditAttachmentComponent &&
+      this.attachmentArray.length !== 0
+    ) {
+      this.attachmentArray.map((el) => {
+        Object.keys(el).forEach((data) => {
+          if (el[data] == '' || el[data] == null)
+            switch (data) {
+              case 'name':
+                formFieldArray.add(
+                  this.translatedData[
+                    'DOCUMENT_MENU.DOCUMENT_EDIT.ATTACHMENT_NAME_MISSING'
+                  ]
+                );
+                break;
+              case 'fileData':
+                formFieldArray.add(
+                  this.translatedData[
+                    'DOCUMENT_MENU.DOCUMENT_EDIT.ATTACHMENT_FILE_MISSING'
+                  ]
+                );
+                break;
+            }
+        });
+      });
+    }
+  }
+
   /**
    * function to refresh attachment when user edit the attachments
    * @param data
@@ -645,7 +729,7 @@ export class DocumentEditComponent implements OnInit {
       document?.type?.id ? document?.type?.id : ''
     );
     documentDescriptionForm.controls['documentVersion'].setValue(
-      document?.documentVersion?.toString() ? document.documentVersion : ''
+      document?.documentVersion?.toString() ? document?.documentVersion : ''
     );
     documentDescriptionForm.controls['channelname'].setValue(
       document?.channel?.name ? document?.channel?.name : null
@@ -688,10 +772,8 @@ export class DocumentEditComponent implements OnInit {
    * @param document
    */
   setCharacteristics(document: DocumentDetailDTO): void {
-    let sortCharacteristics = document.characteristics.sort(function (
-      a: any,
-      b: any
-    ) {
+    let sortedCharacteristics = document?.characteristics?.slice();
+    sortedCharacteristics?.sort(function (a: any, b: any) {
       let x = a.modificationDate.toLowerCase();
       let y = b.modificationDate.toLowerCase();
       if (x < y) {
@@ -702,8 +784,11 @@ export class DocumentEditComponent implements OnInit {
       }
       return 0;
     });
-    this.documentEditCharacteristicsComponent.updateForm(sortCharacteristics);
+    this.documentEditCharacteristicsComponent?.updateForm(
+      sortedCharacteristics
+    );
   }
+
   /**
    * function to show active tab on refresh
    * @param event
@@ -745,29 +830,36 @@ export class DocumentEditComponent implements OnInit {
     attachments = document.attachments ? document.attachments : [];
     if (attachments.length) {
       attachments.forEach((attachment) => {
-        if (attachment?.storageUploadStatus) {
-          let fileData: any = {};
-          fileData['name'] = attachment.fileName ?? '';
-          fileData['size'] = attachment.size ?? '';
-          fileData['type'] = attachment.type ?? '';
-
-          let attachmntObj: object = {};
-          attachmntObj['name'] = attachment.name ?? '';
-          attachmntObj['description'] = attachment.description ?? '';
-          attachmntObj['mimeType'] = attachment.mimeType.name ?? '';
-          attachmntObj['mimeTypeId'] = attachment.mimeType.id ?? '';
-          attachmntObj['fileData'] = fileData;
-          attachmntObj['validity'] = attachment.validFor?.endDateTime
-            ? new Date(attachment.validFor.endDateTime)
-            : '';
-          attachmntObj['id'] = attachment.id ?? '';
-          attachmntObj['isDownloadable'] = attachment.id ? true : false;
-          this.attachmentArray.push(attachmntObj);
-        }
+        this.populateAttachmentArray(attachment);
       });
       this.initialAttachmentData = JSON.parse(
         JSON.stringify(this.attachmentArray)
       );
+    }
+  }
+  /**
+   * function to populate attachmentArray
+   * @param attachment
+   */
+  populateAttachmentArray(attachment) {
+    if (attachment?.storageUploadStatus) {
+      let fileData: any = {};
+      fileData['name'] = attachment.fileName ?? '';
+      fileData['size'] = attachment.size ?? '';
+      fileData['type'] = attachment.type ?? '';
+
+      let attachmntObj: object = {};
+      attachmntObj['name'] = attachment.name ?? '';
+      attachmntObj['description'] = attachment.description ?? '';
+      attachmntObj['mimeType'] = attachment.mimeType.name ?? '';
+      attachmntObj['mimeTypeId'] = attachment.mimeType.id ?? '';
+      attachmntObj['fileData'] = fileData;
+      attachmntObj['validity'] = attachment?.validFor?.endDateTime
+        ? new Date(attachment.validFor.endDateTime)
+        : null;
+      attachmntObj['id'] = attachment.id ?? '';
+      attachmntObj['isDownloadable'] = attachment.id ? true : false;
+      this.attachmentArray.push(attachmntObj);
     }
   }
   /**
@@ -873,7 +965,12 @@ export class DocumentEditComponent implements OnInit {
   downloadZip(documentId: string) {
     const zip = new JSZip();
     let formData = {};
-    let docName = this.document?.name;
+
+    const now = new Date();
+    const date = this.datepipe.transform(now, 'ddMMyy');
+    const time = this.datepipe.transform(now, 'HHmmss');
+
+    let docName = this.document?.name + '-' + date + '-' + time;
     formData = {
       documentName: this.document?.name,
       documentType: this.document?.type.name,

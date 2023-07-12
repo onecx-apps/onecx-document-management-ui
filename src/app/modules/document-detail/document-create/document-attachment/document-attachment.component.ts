@@ -16,6 +16,7 @@ import {
   SupportedMimeTypeControllerV1APIService,
   SupportedMimeTypeDTO,
 } from 'src/app/generated';
+import { DataSharingService } from 'src/app/shared/data-sharing.service';
 import { noSpecialCharacters, trimSpaces } from 'src/app/utils';
 
 @Component({
@@ -44,14 +45,16 @@ export class DocumentAttachmentComponent implements OnInit {
   uploadFileMimetype: any;
   tooltipmimeType: string;
   attachmentErrorMessage = '';
-  specialChar = ' / : * ? " < > |';
+  specialChar: string;
 
   constructor(
     private readonly translateService: TranslateService,
-    private readonly supportedMimeTypeV1Service: SupportedMimeTypeControllerV1APIService
+    private readonly supportedMimeTypeV1Service: SupportedMimeTypeControllerV1APIService,
+    private readonly dataSharingService: DataSharingService
   ) {}
 
   ngOnInit(): void {
+    this.specialChar = this.dataSharingService.specialChar;
     this.showAttachment = false;
     this.attachmentFieldsForm = new FormGroup({
       name: new FormControl('', [Validators.required, noSpecialCharacters]),

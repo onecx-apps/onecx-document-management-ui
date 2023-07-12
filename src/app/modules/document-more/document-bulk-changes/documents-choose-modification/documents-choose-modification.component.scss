@@ -1,0 +1,15 @@
+:host ::ng-deep .p-datatable-tbody > tr {
+  height: 45px;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  border-bottom-color: black;
+}
+
+.fcol-flex {
+  flex: 0 0 10rem !important;
+}
+
+.scol-flex {
+  flex: 0 0 20rem !important;
+}

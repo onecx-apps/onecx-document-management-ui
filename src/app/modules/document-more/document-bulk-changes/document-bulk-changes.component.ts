@@ -4,20 +4,23 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 // Third party imports
-import { BreadcrumbService } from '@onecx/portal-integration-angular';
+import { Action, BreadcrumbService } from '@onecx/portal-integration-angular';
 import { TranslateService } from '@ngx-translate/core';
-import { MenuItem, MessageService } from 'primeng/api';
+import { MenuItem, MessageService, SelectItem } from 'primeng/api';
 
 // Application imports
 import {
   BulkUpdateDocumentRequestParams,
   DocumentControllerV1APIService,
   DocumentCreateUpdateDTO,
+  DocumentTypeControllerV1APIService,
+  DocumentTypeDTO,
 } from 'src/app/generated';
 import { DocumentsChooseComponent } from './documents-choose/documents-choose.component';
 import { DocumentsUpdateComponent } from './documents-update/documents-update.component';
 import { DocumentsChooseModificationComponent } from './documents-choose-modification/documents-choose-modification.component';
 import { DataSharingService } from 'src/app/shared/data-sharing.service';
+import { UserDetailsService } from 'src/app/generated/api/user-details.service';
 
 @Component({
   selector: 'app-document-bulk-changes',
@@ -38,6 +41,8 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
   isChecked = false;
   radioCheck = false;
   documentBulkUpdateFormValid = false;
+  subHeader = '';
+  headerActions: Action[] = [];
 
   updateFormobject: DocumentCreateUpdateDTO;
   documentCreateUpdateDTO: DocumentCreateUpdateDTO;
@@ -48,6 +53,11 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
   updateFormArray: DocumentCreateUpdateDTO[] = [];
   selectedOperation = null;
   translatedData: any;
+  allDocumentTypes: DocumentTypeDTO[];
+  documentTypes: SelectItem[];
+  loggedUserName: any;
+  results: any;
+  searchedResults: any;
 
   constructor(
     private readonly documentV1Service: DocumentControllerV1APIService,
@@ -57,14 +67,19 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
     private readonly router: Router,
     private readonly activeRoute: ActivatedRoute,
     private readonly messageService: MessageService,
-    private readonly dataSharingService: DataSharingService
+    private readonly userDetailsService: UserDetailsService,
+    private readonly dataSharingService: DataSharingService,
+    private readonly documentTypeV1Service: DocumentTypeControllerV1APIService
   ) {}
 
   ngOnInit(): void {
     this.getTranslatedData();
+    this.getLoggedInUserData();
     this.getSearchResult();
     this.documentBulkFormInitialize();
     this.documentBulkFormValueChange();
+    this.loadAllDocumentTypes();
+    this.setHeaderButtons();
   }
 
   /**
@@ -78,6 +93,7 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
         'GENERAL.CANCEL',
         'GENERAL.NEXT',
         'GENERAL.CONFIRM',
+        'GENERAL.PROCESSING',
         'DOCUMENT_MENU.DOCUMENT_MORE.SELECTED_DOCUMENTS.DELETE_SUCCESS',
         'DOCUMENT_MENU.DOCUMENT_MORE.SELECTED_DOCUMENTS.BULK_ERROR',
         'DOCUMENT_DETAIL.BULK_UPDATE.UPDATE_MODIFICATION_DETAILS',
@@ -95,6 +111,8 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
         'DOCUMENT_DETAIL.BULK_UPDATE.UPDATE_ATTACHMENT_DESCRIPTION',
         'DOCUMENT_MENU.DOCUMENT_MORE.SELECTED_DOCUMENTS.UPDATE_SUCCESS',
         'DOCUMENT_SEARCH.MSG_NO_RESULTS',
+        'DOCUMENT_MENU.DOCUMENT_MORE.DOCUMENT_BULK.CHOOSE_DOCUMENT',
+        'DOCUMENT_MENU.DOCUMENT_MORE.DOCUMENT_BULK.CHOOSE_MODIFICATION',
       ])
       .subscribe((data) => {
         this.translatedData = data;
@@ -173,11 +191,83 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * function to set header buttons accroding to header actions
+   */
+  setHeaderButtons() {
+    this.headerActions = [
+      {
+        label: this.translatedData['GENERAL.BACK'],
+        title: this.translateService.instant('GENERAL.BACK'),
+        show: 'always',
+        icon: 'pi pi-arrow-left',
+        conditional: true,
+        showCondition: this.indexActive !== 0,
+        disabled: this.isSubmitting,
+        actionCallback: () => {
+          this.OnBack();
+        },
+      },
+      {
+        label: this.translatedData['GENERAL.CANCEL'],
+        title: this.translateService.instant('GENERAL.CANCEL'),
+        show: 'always',
+        icon: 'pi pi-times',
+        disabled: this.isSubmitting,
+        actionCallback: () => {
+          this.onCancel();
+        },
+      },
+      {
+        label: this.setButton(),
+        title: this.setButton(),
+        icon: this.setIcon(),
+        conditional: true,
+        show: 'always',
+        showCondition: true,
+        disabled: this.buttonEnable(),
+
+        actionCallback: () => {
+          this.submitForm();
+        },
+      },
+    ];
+  }
+
+  /**
+   * function to enable button based on index value
+   */
+  buttonEnable(): boolean {
+    return this.indexActive !== 2
+      ? !this.canActivateNext || this.isSubmitting
+      : this.canActive || this.isSubmitting;
+  }
+
+  /**
+   * function to toggle text of button b/w next, confirm and processing icon
+   */
+  setButton(): string {
+    if (this.indexActive !== 2) {
+      return this.translatedData['GENERAL.NEXT'];
+    } else if (this.isSubmitting) {
+      return this.translatedData['GENERAL.PROCESSING'];
+    } else {
+      return this.translatedData['GENERAL.CONFIRM'];
+    }
+  }
+
+  /**
+   * Function sets icon dynamically
+   */
+  setIcon(): string {
+    return this.isSubmitting ? 'pi pi-spin pi-spinner' : 'pi pi-chevron-right';
+  }
+  /**
    * Holds the event If any check box is selected from the documentChooseComponent
    * @param event takes true or false value
    */
   isCheck(event: boolean) {
     this.isChecked = event;
+    this.setHeaderButtons();
   }
 
   /**
@@ -186,6 +276,7 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
    */
   isRadioCheck(event: boolean) {
     this.radioCheck = event;
+    this.setHeaderButtons();
   }
 
   /**
@@ -231,13 +322,32 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
    */
   getSearchResult(): void {
     let criteria = localStorage.getItem('searchCriteria');
+    let isFiltered = localStorage.getItem('isFiltered');
+    let searchResults = JSON.parse(localStorage.getItem('searchResults'));
     this.isShow = false;
     this.documentV1Service
       .getDocumentByCriteria(JSON.parse(criteria))
       .subscribe({
         next: (data: any) => {
           this.isShow = true;
-          this.dataSharingService.setSearchResults([...data.stream]);
+          switch (isFiltered) {
+            case 'A':
+              this.dataSharingService.setSearchResults(searchResults);
+              this.results = this.dataSharingService.getCreatedByMe(
+                this.loggedUserName
+              );
+              this.dataSharingService.setSearchResults(this.results);
+              break;
+            case 'B':
+              this.dataSharingService.setSearchResults(searchResults);
+              this.results = this.dataSharingService.getRecentlyUpdated();
+              this.dataSharingService.setSearchResults(this.results);
+              break;
+            default:
+              this.dataSharingService.setSearchResults(searchResults);
+              return;
+          }
+
           if (data.stream.length === 0) {
             this.messageService.add({
               severity: 'success',
@@ -261,16 +371,19 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
     switch (this.indexActive) {
       case 0:
         this.indexActive = 1;
-        this.checkedArrayResults = this.documentChooseComponent.results?.filter(
-          (item) => item['isChecked']
-        );
+        this.checkedArrayResults =
+          this.documentChooseComponent?.results?.filter(
+            (item) => item['isChecked']
+          );
         this.isSubmitting = false;
+        this.setHeaderButtons();
         break;
       case 1:
         this.indexActive = 2;
         this.selectedOperation =
-          this.documentChooseModificationComponent.selectedValue.key;
+          this.documentChooseModificationComponent?.selectedValue?.key;
         this.isSubmitting = false;
+        this.setHeaderButtons();
         break;
       case 2:
         this.onCheckBulkOperation();
@@ -355,111 +468,144 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
         }
         if (
           res.find(
-            (obj) =>
-              obj.value == null || (obj.value === '' && obj.isChecked == true)
+            (obj) => obj.value == null || (obj.value === '' && obj.isChecked)
           )
         )
           this.documentBulkUpdateFormValid = false;
         else this.documentBulkUpdateFormValid = true;
       }
     } else this.documentBulkUpdateFormValid = false;
-    this.dataSharingService.setUpdateModification(this.validCheckedValues);
-    this.documentsUpdateComponent.initializeCheckedStatus();
+    this.setHeaderButtons();
+  }
+  /**
+   * function to get the logged in username
+   */
+
+  getLoggedInUserData() {
+    this.userDetailsService.getLoggedInUsername().subscribe((data) => {
+      this.loggedUserName = JSON.parse(JSON.stringify(data.userId));
+    });
   }
 
   /**
    * Generates a custom document array of objects with user selected documents and then calls bulk update API
    */
   onConfirm(): void {
-    let updateForm = this.documentsUpdateComponent.documentBulkUpdateForm;
+    const updateForm = this.documentsUpdateComponent.documentBulkUpdateForm;
     if (updateForm.value && updateForm.valid) {
       this.isSubmitting = true;
       this.checkedArrayResults.forEach((data) => {
-        this.updateFormobject = {
-          id: data.id,
-          name: data?.name,
-          documentVersion: this.validCheckedValues.some(
-            (val) => val.name == 'documentVersion'
-          )
-            ? updateForm.value.documentVersion
-            : data?.documentVersion,
-          typeId: this.validCheckedValues.some((val) => val.name == 'typeId')
-            ? updateForm.value.typeId
-            : data.type.id,
-          lifeCycleState: this.validCheckedValues.some(
-            (val) => val.name == 'lifeCycleState'
-          )
-            ? updateForm.value.lifeCycleState
-            : data?.lifeCycleState,
-          categories: [],
-          characteristics: data?.characteristics,
-          description: this.validCheckedValues.some(
-            (val) => val.name == 'documentDescription'
-          )
-            ? updateForm.value.documentDescription.trim()
-            : data?.description,
-          documentRelationships: [],
-          relatedParties: [],
-          tags: [],
-          specification: {
-            name: this.validCheckedValues.some(
-              (val) => val.name == 'specificationName'
-            )
-              ? updateForm.value.specificationName.trim()
-              : data.specification?.name,
-            specificationVersion: null,
-          },
-          channel: {
-            id: data.channel?.id,
-            name: this.validCheckedValues.some(
-              (val) => val.name == 'channelname'
-            )
-              ? updateForm.value.channelname.trim()
-              : data.channel?.name,
-          },
-          relatedObject: {
-            id: data.relatedObject?.id,
-            involvement: this.validCheckedValues.some(
-              (val) => val.name == 'involvement'
-            )
-              ? updateForm.value.involvement.trim()
-              : data.relatedObject?.involvement,
-            objectReferenceId: this.validCheckedValues.some(
-              (val) => val.name == 'reference_id'
-            )
-              ? updateForm.value.reference_id.trim()
-              : data.relatedObject?.objectReferenceId,
-            objectReferenceType: this.validCheckedValues.some(
-              (val) => val.name == 'reference_type'
-            )
-              ? updateForm.value.reference_type.trim()
-              : data.relatedObject?.objectReferenceType,
-          },
-          attachments: data.attachments.map((el) => ({
-            id: el.id,
-            name: el?.name,
-            description: this.validCheckedValues.some(
-              (val) => val.name == 'attachmentDescription'
-            )
-              ? updateForm.value.attachmentDescription.trim()
-              : el?.description,
-            mimeTypeId: el.mimeType.id,
-            validFor: {
-              startDateTime: null,
-              endDateTime: this.validCheckedValues.some(
-                (val) => val.name == 'validity'
-              )
-                ? updateForm.value.validity
-                : el.validFor?.endDateTime,
-            },
-            fileName: el?.fileName,
-          })),
-        };
+        this.updateFormobject = this.createUpdateFormObject(data, updateForm);
         this.updateFormArray.push(this.updateFormobject);
       });
       this.documentBulkForm.disable();
+      this.setHeaderButtons();
       this.onBulkUpdate(this.updateFormArray);
+      this.dataSharingService.setUpdateModification([]);
     }
+  }
+  /**
+   * function to create update object to push in updateFormArray
+   * @param data
+   * @param updateForm
+   * @returns
+   */
+  createUpdateFormObject(data: any, updateForm: any): any {
+    const updateFormObject: any = {
+      id: data.id,
+      name: data?.name,
+      documentVersion: this.getUpdatedValue(
+        'documentVersion',
+        updateForm,
+        data.documentVersion
+      ),
+      typeId: this.getUpdatedValue('typeId', updateForm, data.type.id),
+      lifeCycleState: this.getUpdatedValue(
+        'lifeCycleState',
+        updateForm,
+        data.lifeCycleState
+      ),
+      categories: [],
+      characteristics: data.characteristics,
+      description: this.getUpdatedValue(
+        'documentDescription',
+        updateForm,
+        data.description
+      ),
+      documentRelationships: [],
+      relatedParties: [],
+      tags: [],
+      specification: {
+        name: this.getUpdatedValue(
+          'specificationName',
+          updateForm,
+          data.specification?.name
+        ),
+        specificationVersion: null,
+      },
+      channel: {
+        id: data.channel?.id,
+        name: this.getUpdatedValue(
+          'channelname',
+          updateForm,
+          data.channel?.name
+        ),
+      },
+      relatedObject: {
+        id: data.relatedObject?.id,
+        involvement: this.getUpdatedValue(
+          'involvement',
+          updateForm,
+          data.relatedObject?.involvement
+        ),
+        objectReferenceId: this.getUpdatedValue(
+          'reference_id',
+          updateForm,
+          data.relatedObject?.objectReferenceId
+        ),
+        objectReferenceType: this.getUpdatedValue(
+          'reference_type',
+          updateForm,
+          data.relatedObject?.objectReferenceType
+        ),
+      },
+      attachments: data.attachments.map((el) => ({
+        id: el.id,
+        name: el?.name,
+        description: this.getUpdatedValue(
+          'attachmentDescription',
+          updateForm,
+          el?.description
+        ),
+        mimeTypeId: el.mimeType.id,
+        validFor: {
+          startDateTime: null,
+          endDateTime: this.getUpdatedValue(
+            'validity',
+            updateForm,
+            el.validFor?.endDateTime
+          ),
+        },
+        fileName: el?.fileName,
+      })),
+    };
+    return updateFormObject;
+  }
+  /**
+   * function to return fieldValue on update
+   * @param fieldName
+   * @param updateForm
+   * @param defaultValue
+   * @returns
+   */
+  getUpdatedValue(fieldName: string, updateForm: any, defaultValue: any): any {
+    const validCheckedValue = this.validCheckedValues.find(
+      (val) => val.name === fieldName
+    );
+    const fieldValue = updateForm.value[fieldName];
+    if (typeof fieldValue === 'string')
+      return validCheckedValue ? fieldValue.trim() : defaultValue;
+    else return validCheckedValue ? fieldValue : defaultValue;
   }
 
   /**
@@ -501,6 +647,7 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
     this.router.navigate(['../../search'], {
       relativeTo: this.activeRoute,
     });
+    this.dataSharingService.setUpdateModification([]);
   }
 
   /**
@@ -508,6 +655,7 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
    */
   OnBack() {
     if (this.indexActive > 0) this.indexActive--;
+    this.setHeaderButtons();
   }
 
   /**
@@ -540,12 +688,54 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
         },
       });
   }
-
+  /**
+   * Wrapper method for loadAllDocumentTypes() to write Unit Test for this private method
+   */
+  public loadAllDocumentTypesWrapper(): void {
+    this.loadAllDocumentTypes();
+  }
+  /**
+   * function to load all document types to show in dropdown of document type form field
+   */
+  private loadAllDocumentTypes(): void {
+    this.documentTypeV1Service.getAllTypesOfDocument().subscribe((results) => {
+      this.allDocumentTypes = results;
+      this.documentTypes = results.map((type) => ({
+        label: type.name,
+        value: type.id,
+      }));
+    });
+  }
   /**
    * Invoved when the component is destroyed
    */
   ngOnDestroy(): void {
     this.dataSharingService.setModification('');
     localStorage.removeItem('searchCriteria');
+    localStorage.removeItem('isFiltered');
+    localStorage.removeItem('searchResults');
+  }
+
+  /**
+   * function to render subheader dynamically based on index value on all 3 steps of bulk changes
+   */
+  renderSubheader() {
+    if (this.indexActive === 0) {
+      this.subHeader =
+        this.translatedData[
+          'DOCUMENT_MENU.DOCUMENT_MORE.DOCUMENT_BULK.CHOOSE_DOCUMENT'
+        ];
+    } else if (this.indexActive === 1) {
+      this.subHeader =
+        this.translatedData[
+          'DOCUMENT_MENU.DOCUMENT_MORE.DOCUMENT_BULK.CHOOSE_MODIFICATION'
+        ];
+    } else if (this.indexActive === 2) {
+      this.subHeader =
+        this.translatedData[
+          'DOCUMENT_DETAIL.BULK_UPDATE.UPDATE_MODIFICATION_DETAILS'
+        ];
+    }
+    return this.subHeader;
   }
 }

@@ -7,12 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { SelectItem } from 'primeng/api/selectitem';
 
 // Application imports
-import {
-  DocumentDetailDTO,
-  DocumentTypeControllerV1APIService,
-  DocumentTypeDTO,
-  LifeCycleState,
-} from 'src/app/generated';
+import { DocumentDetailDTO, LifeCycleState } from 'src/app/generated';
 import { BulkUpdateInitFormField } from 'src/app/generated/model/DocumentUpdate';
 import { DataSharingService } from 'src/app/shared/data-sharing.service';
 import { trimSpaces } from 'src/app/utils';
@@ -26,38 +21,36 @@ export class DocumentsUpdateComponent implements OnInit {
   @Input() checkedResults: DocumentDetailDTO[] = [];
   @Input() documentBulkUpdateForm: UntypedFormGroup;
   @Input() isSubmitting: boolean;
+  @Input() documentTypes: SelectItem[];
   @Output() documentVersion = new EventEmitter<string>();
   @Output() formValue = new EventEmitter<boolean>();
 
   checkedStatus = BulkUpdateInitFormField;
-  allDocumentTypes: DocumentTypeDTO[];
-  documentTypes: SelectItem[];
   documentStatus: SelectItem[];
   checkedArray = [];
   inputMessage = [];
 
   constructor(
-    private readonly documentTypeV1Service: DocumentTypeControllerV1APIService,
     private readonly translateService: TranslateService,
     private readonly dataSharingService: DataSharingService
   ) {}
 
   ngOnInit(): void {
-    this.loadAllDocumentTypes();
+    this.checkedStatus = {
+      attachmentDescription: null,
+      channelname: null,
+      documentDescription: null,
+      documentVersion: null,
+      involvement: null,
+      lifeCycleState: null,
+      reference_id: null,
+      reference_type: null,
+      specificationName: null,
+      typeId: null,
+      validity: null,
+    };
     this.loadDocumentStatus();
     this.initializeCheckedStatus();
-  }
-  /**
-   * function to load all document types to show in dropdown of document type form field
-   */
-  private loadAllDocumentTypes(): void {
-    this.documentTypeV1Service.getAllTypesOfDocument().subscribe((results) => {
-      this.allDocumentTypes = results;
-      this.documentTypes = results.map((type) => ({
-        label: type.name,
-        value: type.id,
-      }));
-    });
   }
   /**
    * function to get all dropdown values for document status form field
@@ -110,7 +103,8 @@ export class DocumentsUpdateComponent implements OnInit {
   clearField(event: any, controlName: string, inputType: number) {
     switch (inputType) {
       case 1:
-        if (!event.target.value) this.fieldReset(controlName);
+        if (!event.target.value || event.target.value.trim() == '')
+          this.fieldReset(controlName);
         else this.inputMessage[controlName] = '';
         break;
       case 2:
@@ -159,6 +153,7 @@ export class DocumentsUpdateComponent implements OnInit {
     if (len == 0) {
       this.checkedArray.push({ name: formControl, isChecked: event.checked });
     }
+    this.dataSharingService.setUpdateModification(this.checkedArray);
     this.formValue.emit(true);
   }
 
@@ -189,17 +184,23 @@ export class DocumentsUpdateComponent implements OnInit {
    * function to set checkbox state
    */
   initializeCheckedStatus() {
-    let val = this.documentBulkUpdateForm?.controls;
+    let val = this.documentBulkUpdateForm?.controls ?? {};
     let checkedValues = this.dataSharingService.getUpdateModification();
-    Object.entries(this.documentBulkUpdateForm.value).forEach((el) => {
-      let controlName = el[0];
-      if (
-        (el[1] === '' || el[1] == null) &&
-        this.checkedStatus[controlName] &&
-        this.checkedStatus[controlName] != '0'
-      )
-        this.showInputErrorMessage(el[0]);
-    });
+    this.checkedArray = checkedValues;
+    if (this.checkedArray) {
+      this.checkedArray.forEach((el) => {
+        let controlName = el.name;
+        if (
+          checkedValues.some(
+            (data) =>
+              data.name === controlName &&
+              data.isChecked &&
+              (data.value == null || data.value == '')
+          )
+        )
+          this.showInputErrorMessage(el.name);
+      });
+    }
     Object.keys(val).forEach((el) => {
       checkedValues?.map((data) => {
         let name = data.name;

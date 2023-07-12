@@ -12,6 +12,7 @@ import { DocumentSearchComponent } from './document-search.component';
 import { DocumentSearchRoutingModule } from './document-search-routing.module';
 import { ResultsComponent } from './results/results.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { SplitButtonModule } from 'primeng/splitbutton';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
   imports: [
     SharedModule,
     CommonModule,
+    SplitButtonModule,
     DocumentSearchRoutingModule,
     PortalCoreModule.forMicroFrontend(),
   ],

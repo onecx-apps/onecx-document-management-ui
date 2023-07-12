@@ -3,3 +3,27 @@
   border-radius: 50%;
   color: white;
 }
+
+.file-count {
+  background-color: transparent;
+  font-size: 0.5rem;
+  margin-top: -1.4rem;
+  padding: 0.25rem;
+  text-align: right;
+}
+
+
+:host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  padding-top: 0rem;
+  padding-bottom: 0.05rem;
+  padding-left: 1rem;
+}
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td{
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  padding-left: 1rem;
+}
+
+:host ::ng-deep .p-datatable-responsive-scroll>.p-datatable-wrapper {
+  overflow-y: hidden;
+}

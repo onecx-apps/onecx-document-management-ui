@@ -44,7 +44,7 @@
           }} &#010;{{ 'RESULTS.DOCUMENT_TYPE' | translate }}&nbsp;:&nbsp;{{
             result.type.name
           }} &#010;{{ 'RESULTS.ATTACHMENTS' | translate }}&nbsp;:&nbsp;{{
-            result.attachments.length
+            getValidAttachmentArray(result).length
           }}&#010;{{ 'RESULTS.MODIFICATION_DATE' | translate }}&nbsp;:&nbsp;{{
             'RESULTS.EDITED' | translate
           }} {{ result.modificationDate | relativeDate }}"
@@ -247,8 +247,13 @@
               </td>
             </ng-template>
             <ng-template #ifDocumentType>
-              <td *ngIf="col.field === 'type.name'; else elseBlock">
+              <td *ngIf="col.field === 'type.name'; else ifCreationDate">
                 {{ result.type.name }}
+              </td>
+            </ng-template>
+            <ng-template #ifCreationDate>
+              <td *ngIf="col.field === 'creationDate'; else elseBlock">
+                {{ result.creationDate | date: 'dd/MM/yyyy' }}
               </td>
             </ng-template>
             <ng-template #elseBlock>
@@ -284,7 +289,7 @@
       </ng-template>
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="8">{{ 'RESULTS.NO_DATA' | translate }}</td>
+          <td class="p-3" colspan="8">{{ 'RESULTS.NO_DATA' | translate }}</td>
         </tr>
       </ng-template>
     </p-table>

@@ -71,6 +71,21 @@ export class CriteriaComponent implements OnInit {
       typeId: null,
     });
   }
+
+  /**
+   * Wrapper method for loadAllDocumentTypes() to write Unit Test for this private method
+   */
+  public loadAllDocumentTypesWrapper(): void {
+    this.loadAllDocumentTypes();
+  }
+
+  /**
+   * Wrapper method for loadAllChannels() to write Unit Test for this private method
+   */
+  public loadAllChannelsWrapper(): void {
+    this.loadAllChannels();
+  }
+
   /**
    * function to load all document types
    */

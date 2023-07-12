@@ -1,52 +1,72 @@
-<h4 class="mb-1">
-  {{
-    'DOCUMENT_MENU.DOCUMENT_MORE.DOCUMENT_BULK.MODIFICATION_CONFIRMATION'
-      | translate
-  }}
-</h4>
-<p class="mb-2">
-  <i class="pi pi-info-circle info-icon"></i>
-  {{
-    'DOCUMENT_MENU.DOCUMENT_MORE.DOCUMENT_BULK.DELETE_DOCUMENT_NOTIFICATION'
-      | translate
-  }}
-</p>
-<p-table
-  dataKey="code"
-  [scrollable]="true"
-  scrollHeight="22.5rem"
-  [value]="checkedResults"
-  responsiveLayout="scroll"
-  styleClass="p-datatable-sm"
->
-  <ng-template pTemplate="header" let-columns>
-    <tr>
-      <th scope="col" pSortableColumn="name" class="pt-3 pb-3 pl-3">
-        {{ 'RESULTS.NAME' | translate }}
-        <p-sortIcon field="name"></p-sortIcon>
-      </th>
-      <th scope="col" pSortableColumn="type.name">
-        {{ 'RESULTS.DOCUMENT_TYPE' | translate }}
-        <p-sortIcon field="type.name"></p-sortIcon>
-      </th>
-      <th scope="col" pSortableColumn="lifeCycleState">
-        {{ 'RESULTS.STATUS' | translate }}
-        <p-sortIcon field="lifeCycleState"></p-sortIcon>
-      </th>
-      <th scope="col" pSortableColumn="documentVersion">
-        {{ 'RESULTS.VERSION' | translate }}
-        <p-sortIcon field="documentVersion"></p-sortIcon>
-      </th>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-result>
-    <tr>
-      <td class="pl-3">
-        <span pTooltip="{{ result.name }}"> {{ result.name | trim: 25 }} </span>
-      </td>
-      <td>{{ result.type.name }}</td>
-      <td>{{ result.lifeCycleState }}</td>
-      <td>{{ result.documentVersion }}</td>
-    </tr>
-  </ng-template>
-</p-table>
+<div class="card p-0">
+  <p class="border-bottom-1 p-3 m-0">
+    <i class="pi pi-info-circle info-icon"></i>
+    {{
+      'DOCUMENT_MENU.DOCUMENT_MORE.DOCUMENT_BULK.DELETE_DOCUMENT_NOTIFICATION'
+        | translate
+    }}
+  </p>
+  <div class="px-1">
+    <p-table
+      dataKey="code"
+      [value]="checkedResults"
+      responsiveLayout="scroll"
+      styleClass="p-datatable-sm"
+    >
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th scope="col" style="max-width: 4rem">
+            <img
+              alt="Attachment Header Icon"
+              class="w-2rem"
+              [src]="getAttachmentHeaderIcon()"
+            />
+          </th>
+          <th scope="col" pSortableColumn="name" class="pt-3 pb-3 pl-3">
+            {{ 'RESULTS.NAME' | translate }}
+            <p-sortIcon field="name"></p-sortIcon>
+          </th>
+          <th scope="col" pSortableColumn="type.name">
+            {{ 'RESULTS.DOCUMENT_TYPE' | translate }}
+            <p-sortIcon field="type.name"></p-sortIcon>
+          </th>
+          <th scope="col" pSortableColumn="lifeCycleState">
+            {{ 'RESULTS.STATUS' | translate }}
+            <p-sortIcon field="lifeCycleState"></p-sortIcon>
+          </th>
+          <th scope="col" pSortableColumn="documentVersion">
+            {{ 'RESULTS.VERSION' | translate }}
+            <p-sortIcon field="documentVersion"></p-sortIcon>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-result>
+        <tr>
+          <td style="max-width: 4rem">
+            <div class="relative inline-block max-w-full">
+              <img
+                alt="Attachment Icon"
+                class="w-2rem h-2rem"
+                [src]="getAttachmentIcon(result)"
+                (error)="imgError($event)"
+              />
+              <div class="file-count">
+                <ng-container *ngIf="showCount">
+                  {{ fileCount }}
+                </ng-container>
+              </div>
+            </div>
+          </td>
+          <td class="pl-3">
+            <span pTooltip="{{ result.name }}">
+              {{ result.name | trim: 25 }}
+            </span>
+          </td>
+          <td>{{ result.type.name }}</td>
+          <td>{{ result.lifeCycleState }}</td>
+          <td>{{ result.documentVersion }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
