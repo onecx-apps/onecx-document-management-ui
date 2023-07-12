@@ -1,8 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import {
   CreateDocumentTypeRequestParams,
   DeleteDocumentTypeByIdRequestParams,
@@ -14,13 +11,11 @@ import { HttpParams } from '@angular/common/http';
 
 describe('DocumentTypeControllerV1APIService', () => {
   let service: DocumentTypeControllerV1APIService;
-  let httpTestingController: HttpTestingController;
   let httpParams: HttpParams;
 
   beforeEach(() => {
     TestBed.configureTestingModule({ imports: [HttpClientTestingModule] });
     service = TestBed.inject(DocumentTypeControllerV1APIService);
-    httpTestingController = TestBed.inject(HttpTestingController);
     httpParams = new HttpParams();
   });
 

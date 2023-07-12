@@ -1,7 +1,4 @@
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 import {
   ComponentFixture,
@@ -29,13 +26,10 @@ describe('DocumentBulkChangesComponent', () => {
   let fixture: ComponentFixture<DocumentBulkChangesComponent>;
   let router: Router;
   let formBuilder: FormBuilder;
-  let httpMock: HttpTestingController;
   let documentService: DocumentControllerV1APIService;
   let dataSharingService: DataSharingService;
-  let messageService: MessageService;
   let userDetailsService: UserDetailsService;
   let documentTypeV1Service: DocumentTypeControllerV1APIService;
-
   @Pipe({ name: 'translate' })
   class TranslatePipeMock implements PipeTransform {
     transform(value: string): string {
@@ -67,10 +61,8 @@ describe('DocumentBulkChangesComponent', () => {
     }).compileComponents();
     fixture = TestBed.createComponent(DocumentBulkChangesComponent);
     component = fixture.componentInstance;
-    httpMock = TestBed.inject(HttpTestingController);
     documentService = TestBed.inject(DocumentControllerV1APIService);
     dataSharingService = TestBed.inject(DataSharingService);
-    messageService = TestBed.inject(MessageService);
     router = TestBed.inject(Router);
     formBuilder = TestBed.inject(FormBuilder);
     userDetailsService = TestBed.inject(UserDetailsService);
@@ -698,5 +690,35 @@ describe('DocumentBulkChangesComponent', () => {
         'attachmentDescription'
       ].value
     ).toBe(mockFormValue.attachmentDescription);
+  });
+
+  it('should return the correct button label based on indexActive and isSubmitting', () => {
+    component.translatedData = {
+      'GENERAL.NEXT': 'Next',
+    };
+    component.indexActive = 0;
+    component.isSubmitting = false;
+    const result = component.setButton();
+    expect(result).toEqual(component.translatedData['GENERAL.NEXT']);
+  });
+
+  it('should return the correct button label when indexActive is 2 and isSubmitting is true', () => {
+    component.translatedData = {
+      'GENERAL.PROCESSING': 'Processing',
+    };
+    component.indexActive = 2;
+    component.isSubmitting = true;
+    const result = component.setButton();
+    expect(result).toEqual(component.translatedData['GENERAL.PROCESSING']);
+  });
+
+  it('should return the correct button label when indexActive is 2 and isSubmitting is false', () => {
+    component.translatedData = {
+      'GENERAL.CONFIRM': 'Confirm',
+    };
+    component.indexActive = 2;
+    component.isSubmitting = false;
+    const result = component.setButton();
+    expect(result).toEqual(component.translatedData['GENERAL.CONFIRM']);
   });
 });
