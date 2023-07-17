@@ -28,7 +28,7 @@ export class DocumentsUpdateComponent implements OnInit {
   checkedStatus = BulkUpdateInitFormField;
   documentStatus: SelectItem[];
   checkedArray = [];
-  inputMessage = [];
+  inputMessage = {};
 
   constructor(
     private readonly translateService: TranslateService,

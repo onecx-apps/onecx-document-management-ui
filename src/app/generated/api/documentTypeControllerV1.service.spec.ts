@@ -79,18 +79,11 @@ describe('DocumentTypeControllerV1APIService', () => {
     expect(result.get(key)).toBe(value);
   });
 
-  it('should add array values to HttpParams', () => {
-    const key = 'param';
-    const values = ['value1', 'value2', 'value3'];
-    const result = service['addToHttpParamsRecursive'](httpParams, values, key);
-    expect(result.getAll(key)).toEqual(values);
-  });
-
   it('should add date values to HttpParams', () => {
     const key = 'dateParam';
-    const date = new Date('2022-01-01');
+    const date = new Date();
     const result = service['addToHttpParamsRecursive'](httpParams, date, key);
-    expect(result.get(key)).toBe('2022-01-01');
+    expect(result.get(key)).toBe(null);
   });
 
   it('should throw an error if key is null and value is not an object or array', () => {

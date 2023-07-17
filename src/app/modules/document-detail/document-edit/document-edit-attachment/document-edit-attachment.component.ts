@@ -476,13 +476,15 @@ export class DocumentEditAttachmentComponent implements OnInit {
     let attachments: any = [];
     this.attachmentArray.length = 0;
     attachments = document.attachments ? document.attachments : [];
+    this.setAllAttachmentData(attachments);
+  }
+  setAllAttachmentData(attachments) {
     if (attachments.length) {
       attachments.forEach((attachment) => {
         let fileData: any = {};
         fileData['name'] = attachment.fileName ?? '';
         fileData['size'] = attachment.size ?? '';
         fileData['type'] = attachment.type ?? '';
-
         let attachmntObj: object = {};
         attachmntObj['name'] = attachment.name ?? '';
         attachmntObj['description'] = attachment.description ?? '';
