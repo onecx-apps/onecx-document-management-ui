@@ -63,11 +63,8 @@ describe('DocumentSpecificationControllerV1APIService', () => {
   });
 
   it('should add value to HttpParams with key', () => {
-    const httpParams = new HttpParams();
-    const value = 'Value';
-    const key = 'Key';
-    const result = service['addToHttpParams'](httpParams, value, key);
-    expect(result.get(key)).toBe(value);
+    const result = service['addToHttpParams'](httpParams, 'Value', 'Key');
+    expect(result.get('Key')).toBe('Value');
   });
 
   it('should return the same HttpParams if value is null', () => {
@@ -76,30 +73,32 @@ describe('DocumentSpecificationControllerV1APIService', () => {
   });
 
   it('should add a single key-value pair to HttpParams', () => {
-    const key = 'param1';
-    const value = 'value1';
-    const result = service['addToHttpParamsRecursive'](httpParams, value, key);
-    expect(result.get(key)).toBe(value);
+    const result = service['addToHttpParamsRecursive'](
+      httpParams,
+      'value1',
+      'param1'
+    );
+    expect(result.get('param1')).toBe('value1');
   });
 
   it('should add date values to HttpParams', () => {
-    const key = 'dateParam';
-    const date = new Date();
-    const result = service['addToHttpParamsRecursive'](httpParams, date, key);
-    expect(result.get(key)).toBe(null);
+    const result = service['addToHttpParamsRecursive'](
+      httpParams,
+      new Date(),
+      'dateParam'
+    );
+    expect(result.get('dateParam')).toBe(null);
   });
 
   it('should throw an error if key is null and value is not an object or array', () => {
-    const value = 'someValue';
     expect(() =>
-      service['addToHttpParamsRecursive'](httpParams, value)
+      service['addToHttpParamsRecursive'](httpParams, 'someValue')
     ).toThrowError('key may not be null if value is not object or array');
   });
 
   it('should throw an error if key is null and value is a date', () => {
-    const date = new Date('2022-01-01');
     expect(() =>
-      service['addToHttpParamsRecursive'](httpParams, date)
+      service['addToHttpParamsRecursive'](httpParams, new Date('2022-01-01'))
     ).toThrowError('key may not be null if value is Date');
   });
 });
