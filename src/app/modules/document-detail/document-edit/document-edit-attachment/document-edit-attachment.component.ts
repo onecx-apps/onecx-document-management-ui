@@ -495,7 +495,7 @@ export class DocumentEditAttachmentComponent implements OnInit {
           ? new Date(attachment.validFor.endDateTime)
           : '';
         attachmntObj['id'] = attachment.id ?? '';
-        attachmntObj['isDownloadable'] = attachment.id ? true : false;
+        attachmntObj['isDownloadable'] = !!attachment.id;
         this.attachmentArray.push(attachmntObj);
       });
     }
