@@ -14,11 +14,6 @@ documents, or any other form of digital content, OneCX Document
 Management provides a centralized and user-friendly solution for
 effectively managing your documents.
 
-=== Issue tracking
-
-All OneCX Document Management issues are tracked and maintained here
-link:[issue tracking tool].
-
 === Overview
 
 OneCX-Document-Management is a comprehensive solution for managing
@@ -26,19 +21,16 @@ documents in a user-friendly and efficient manner. It is a solution that
 consists of three main components which are explained in more detail in
 the general documentation. Please refer to the following documentation
 to learn more
-https://github.com/onecx-apps/onecx-document-management[Document-Management
+https://onecx.github.io/docs/document-management/current/general/index.html[Document-Management
 Documenation]. However, in this document we are only referring to one of
-the three components, the OneCX-Document-Management-Service (Backend) of
+the three components, the OneCX-Document-Management-User-Interface (UI) of
 OneCX-Document-Management.
 
-This component provides the core functionality for document management.
-It handles tasks such as document storage, retrieval, metadata
-management, and access control. The backend is built cloud native using
-Quarkus.
+The user interface (UI) for this document management component is designed to provide an intuitive and user-friendly experience for managing documents in the cloud-native environment built with Quarkus.
 
 === Getting Started
 
-To start developing the OneCX Document Management Service, you need to
+To start developing the OneCX Document Management User Interface, you need to
 set up your local development environment. It’s recommended that you use
 WSL as the runtime for your application, as shown in the figure below.
 If you are using a different runtime, please check that you meet the
@@ -53,6 +45,7 @@ Before you begin, ensure you have the following installed:
 * Git
 * Docker + Docker Compose (Windows Subsystem for Linux (WSL)
 recommended)
+* NodeJS
 
 ==== Clone the Repository
 
@@ -61,24 +54,24 @@ the following command:
 
 [source,bash]
 ----
-git clone https://github.com/onecx-apps/onecx-document-management-svc.git
+git clone https://github.com/onecx-apps/onecx-document-management-ui.git
 git clone https://github.com/onecx-apps/document-management-dev.git
 ----
 
-The repository `onecx-document-management` contains the source code of
-the document management backend. The repository
+The repository `onecx-document-management-ui` contains the source code of
+the document management user interface. The repository
 `document-management-dev` contains the necessary OneCX platform
 dependencies and the docker-compose script required to run the OneCX
-Document-Management-Service on your local machine.
+Document-Management-User-Interface on your local machine.
 
 ==== Build the Project
 
-Navigate to the project directory and build the application using Maven:
+Navigate to the project directory and build the application using NPM:
 
 [source,bash]
 ----
-cd onecx-document-management-svc
-mvn clean install
+cd onecx-document-management-ui
+node install
 ----
 
 Downloading the required Maven dependencies for the first time may take
@@ -185,7 +178,7 @@ tasks before shutting down.
 docker-compose stop
 ----
 
-==== Starting the OneCX Document Management Service
+==== Starting the OneCX Document Management User Interface
 
 The command mvn compile quarkus:dev is used in a Maven-based Quarkus
 project to compile the source code and start a live coding development
@@ -195,20 +188,5 @@ for rapid development and testing.
 
 [source,bash]
 ----
-mvn compile quarkus:dev
+tbd
 ----
-
-* `mvn compile`: This command tells Maven to compile the source code of
-the project. It resolves dependencies, compiles the Java source files,
-and generates the compiled bytecode.
-* `quarkus:dev`: This is a Maven plugin goal provided by the Quarkus
-framework. It starts the Quarkus dev mode, which is a live coding mode
-for development. It launches your application in development mode, which
-includes features like hot-reloading and automatic recompilation.
-
-When you run mvn compile quarkus:dev, the build process compiles your
-application, and once it’s built, Quarkus starts a development server
-that listens for changes in the source code. If any changes are
-detected, the affected parts of the application are automatically
-recompiled and redeployed, allowing you to see the changes in real-time
-without restarting the application manually.
