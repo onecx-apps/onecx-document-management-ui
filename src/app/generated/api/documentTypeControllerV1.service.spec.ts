@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { HttpParams } from '@angular/common/http';
 import {
   CreateDocumentTypeRequestParams,
   DeleteDocumentTypeByIdRequestParams,
@@ -8,6 +7,7 @@ import {
   GetDocumentTypeByIdRequestParams,
   UpdateDocumentTypeByIdRequestParams,
 } from './documentTypeControllerV1.service';
+import { HttpParams } from '@angular/common/http';
 
 describe('DocumentTypeControllerV1APIService', () => {
   let service: DocumentTypeControllerV1APIService;
@@ -19,37 +19,39 @@ describe('DocumentTypeControllerV1APIService', () => {
     httpParams = new HttpParams();
   });
 
+  function expectDocumentTypeResponseDefined(serviceSpy: any) {
+    expect(serviceSpy).toBeDefined();
+  }
+
+  function expectDocumentTypeResponse(result: any, value: any) {
+    expect(result).toBe(value);
+  }
+
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  function expectResponseDefined(serviceSpy: any) {
-    expect(serviceSpy).toBeDefined();
-  }
-
   it('should check response of getAllTypesOfDocument is defined', () => {
-    expectResponseDefined(service.getAllTypesOfDocument('body', false));
+    expectDocumentTypeResponseDefined(
+      service.getAllTypesOfDocument('body', false)
+    );
   });
 
   it('should check response of createDocumentType is defined', () => {
     const value: CreateDocumentTypeRequestParams = {
       documentTypeCreateUpdateDTO: {},
     };
-    expectResponseDefined(service.createDocumentType(value));
+    expectDocumentTypeResponseDefined(service.createDocumentType(value));
   });
 
   it('should check response of deleteDocumentTypeById is defined', () => {
-    const value: DeleteDocumentTypeByIdRequestParams = {
-      id: '1',
-    };
-    expectResponseDefined(service.deleteDocumentTypeById(value));
+    const value: DeleteDocumentTypeByIdRequestParams = { id: '1' };
+    expectDocumentTypeResponseDefined(service.deleteDocumentTypeById(value));
   });
 
   it('should check response of getDocumentTypeById is defined', () => {
-    const value: GetDocumentTypeByIdRequestParams = {
-      id: '1',
-    };
-    expectResponseDefined(service.getDocumentTypeById(value));
+    const value: GetDocumentTypeByIdRequestParams = { id: '1' };
+    expectDocumentTypeResponseDefined(service.getDocumentTypeById(value));
   });
 
   it('should check response of updateDocumentTypeById is defined', () => {
@@ -57,46 +59,58 @@ describe('DocumentTypeControllerV1APIService', () => {
       id: '1',
       documentTypeCreateUpdateDTO: {},
     };
-    expectResponseDefined(service.updateDocumentTypeById(value));
+    expectDocumentTypeResponseDefined(service.updateDocumentTypeById(value));
   });
 
   it('should add value to HttpParams with key', () => {
+    const httpParams = new HttpParams();
     const value = 'Value';
     const key = 'Key';
     const result = service['addToHttpParams'](httpParams, value, key);
     expect(result.get(key)).toBe(value);
+
+    expectDocumentTypeResponse(
+      service['addToHttpParams'](new HttpParams(), 'Value', 'Key').get('Key'),
+      'Value'
+    );
   });
 
   it('should return the same HttpParams if value is null', () => {
-    const result = service['addToHttpParamsRecursive'](httpParams, null);
-    expect(result).toBe(httpParams);
+    expectDocumentTypeResponse(
+      service['addToHttpParamsRecursive'](httpParams, null),
+      httpParams
+    );
   });
 
   it('should add a single key-value pair to HttpParams', () => {
-    const key = 'param1';
-    const value = 'value1';
-    const result = service['addToHttpParamsRecursive'](httpParams, value, key);
-    expect(result.get(key)).toBe(value);
+    expectDocumentTypeResponse(
+      service['addToHttpParamsRecursive'](httpParams, 'value1', 'param1').get(
+        'param1'
+      ),
+      'value1'
+    );
   });
 
   it('should add date values to HttpParams', () => {
-    const key = 'dateParam';
-    const date = new Date();
-    const result = service['addToHttpParamsRecursive'](httpParams, date, key);
-    expect(result.get(key)).toBe(null);
+    expectDocumentTypeResponse(
+      service['addToHttpParamsRecursive'](
+        httpParams,
+        new Date(),
+        'dateParam'
+      ).get('dateParam'),
+      null
+    );
   });
 
   it('should throw an error if key is null and value is not an object or array', () => {
-    const value = 'someValue';
     expect(() =>
-      service['addToHttpParamsRecursive'](httpParams, value)
+      service['addToHttpParamsRecursive'](httpParams, 'someValue2')
     ).toThrowError('key may not be null if value is not object or array');
   });
 
   it('should throw an error if key is null and value is a date', () => {
-    const date = new Date('2022-01-01');
     expect(() =>
-      service['addToHttpParamsRecursive'](httpParams, date)
+      service['addToHttpParamsRecursive'](httpParams, new Date('2022-01-03'))
     ).toThrowError('key may not be null if value is Date');
   });
 });

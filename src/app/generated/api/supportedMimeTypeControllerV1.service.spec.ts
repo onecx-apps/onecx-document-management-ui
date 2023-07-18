@@ -19,42 +19,49 @@ describe('SupportedMimeTypeControllerV1APIService', () => {
     httpParams = new HttpParams();
   });
 
+  function expectSupportedMimeTypeResponseDefined(serviceSpy: any) {
+    expect(serviceSpy).toBeDefined();
+  }
+
+  function expectSupportedMimeTypeResponse(result: any, value: any) {
+    expect(result).toBe(value);
+  }
+
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
   it('should check response of getAllSupportedMimeTypes is defined', () => {
-    const observe = 'body';
-    const reportProgress = false;
-    const serviceSpy = service.getAllSupportedMimeTypes(
-      observe,
-      reportProgress
+    expectSupportedMimeTypeResponseDefined(
+      service.getAllSupportedMimeTypes('body', false)
     );
-    expect(serviceSpy).toBeDefined();
   });
 
   it('should check response of createSupportedMimeType is defined', () => {
     const value: CreateSupportedMimeTypeRequestParams = {
       supportedMimeTypeCreateUpdateDTO: {},
     };
-    const serviceSpy = service.createSupportedMimeType(value);
-    expect(serviceSpy).toBeDefined();
+    expectSupportedMimeTypeResponseDefined(
+      service.createSupportedMimeType(value)
+    );
   });
 
   it('should check response of deleteSupportedMimeTypeId is defined', () => {
     const value: DeleteSupportedMimeTypeIdRequestParams = {
       id: '1',
     };
-    const serviceSpy = service.deleteSupportedMimeTypeId(value);
-    expect(serviceSpy).toBeDefined();
+    expectSupportedMimeTypeResponseDefined(
+      service.deleteSupportedMimeTypeId(value)
+    );
   });
 
   it('should check response of getSupportedMimeTypeById is defined', () => {
     const value: GetSupportedMimeTypeByIdRequestParams = {
       id: '1',
     };
-    const serviceSpy = service.getSupportedMimeTypeById(value);
-    expect(serviceSpy).toBeDefined();
+    expectSupportedMimeTypeResponseDefined(
+      service.getSupportedMimeTypeById(value)
+    );
   });
 
   it('should check response of updateSupportedMimeTypeById is defined', () => {
@@ -62,48 +69,54 @@ describe('SupportedMimeTypeControllerV1APIService', () => {
       id: '1',
       supportedMimeTypeCreateUpdateDTO: {},
     };
-    const serviceSpy = service.updateSupportedMimeTypeById(value);
-    expect(serviceSpy).toBeDefined();
+    expectSupportedMimeTypeResponseDefined(
+      service.updateSupportedMimeTypeById(value)
+    );
   });
 
   it('should add value to HttpParams with key', () => {
-    const httpParams = new HttpParams();
-    const value = 'Value';
-    const key = 'Key';
-    const result = service['addToHttpParams'](httpParams, value, key);
-    expect(result.get(key)).toBe(value);
+    expectSupportedMimeTypeResponse(
+      service['addToHttpParams'](new HttpParams(), 'Value', 'Key').get('Key'),
+      'Value'
+    );
   });
 
   it('should return the same HttpParams if value is null', () => {
-    const result = service['addToHttpParamsRecursive'](httpParams, null);
-    expect(result).toBe(httpParams);
+    expectSupportedMimeTypeResponse(
+      service['addToHttpParamsRecursive'](httpParams, null),
+      httpParams
+    );
   });
 
   it('should add a single key-value pair to HttpParams', () => {
-    const key = 'param1';
-    const value = 'value1';
-    const result = service['addToHttpParamsRecursive'](httpParams, value, key);
-    expect(result.get(key)).toBe(value);
+    expectSupportedMimeTypeResponse(
+      service['addToHttpParamsRecursive'](httpParams, 'value1', 'param1').get(
+        'param1'
+      ),
+      'value1'
+    );
   });
 
   it('should add date values to HttpParams', () => {
-    const key = 'dateParam';
-    const date = new Date();
-    const result = service['addToHttpParamsRecursive'](httpParams, date, key);
-    expect(result.get(key)).toBe(null);
+    expectSupportedMimeTypeResponse(
+      service['addToHttpParamsRecursive'](
+        httpParams,
+        new Date(),
+        'dateParam'
+      ).get('dateParam'),
+      null
+    );
   });
 
   it('should throw an error if key is null and value is not an object or array', () => {
-    const value = 'someValue';
     expect(() =>
-      service['addToHttpParamsRecursive'](httpParams, value)
+      service['addToHttpParamsRecursive'](httpParams, 'someValue1')
     ).toThrowError('key may not be null if value is not object or array');
   });
 
   it('should throw an error if key is null and value is a date', () => {
-    const date = new Date('2022-01-01');
     expect(() =>
-      service['addToHttpParamsRecursive'](httpParams, date)
+      service['addToHttpParamsRecursive'](httpParams, new Date('2022-01-02'))
     ).toThrowError('key may not be null if value is Date');
   });
 });
