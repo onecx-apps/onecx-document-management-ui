@@ -98,23 +98,35 @@ export function generateFilteredColumns(
     filteredColumns,
   };
 }
+
+/**
+ *
+ * @param line
+ * @param headerList
+ * @param element
+ * convert the data to lines
+ */
+function convertToLines(headerList, element) {
+  let line = '';
+  for (let index in headerList) {
+    let head = headerList[index];
+    if (typeof element[head] === 'string') {
+      if (element[head].includes('\n'))
+        element[head] = element[head].replaceAll('\n', ' ');
+      if (element[head].includes('"'))
+        element[head] = element[head].replaceAll('"', "'");
+      element[head] = JSON.stringify(element[head]);
+    }
+    line += element[head] + ',';
+  }
+  return line;
+}
 /**
  * subfunction for the convertToCSV
  */
 function convertToCSVArray(obj, str, headerList) {
   for (const element of obj) {
-    let line = '';
-    for (let index in headerList) {
-      let head = headerList[index];
-      if (typeof element[head] === 'string') {
-        if (element[head].includes('\n'))
-          element[head] = element[head].replaceAll('\n', ' ');
-        if (element[head].includes('"'))
-          element[head] = element[head].replaceAll('"', "'");
-        element[head] = JSON.stringify(element[head]);
-      }
-      line += element[head] + ',';
-    }
+    let line = convertToLines(headerList, element);
     str += line + '\r\n';
   }
   return str;
@@ -125,19 +137,7 @@ function convertToCSVArray(obj, str, headerList) {
 function convertToCSVObject(array, obj, headerList, str) {
   array.push(obj);
   for (const element of array) {
-    let line = '';
-    for (let index in headerList) {
-      let head = headerList[index];
-
-      if (typeof element[head] === 'string') {
-        if (element[head].includes('\n'))
-          element[head] = element[head].replaceAll('\n', ' ');
-        if (element[head].includes('"'))
-          element[head] = element[head].replaceAll('"', "'");
-        element[head] = JSON.stringify(element[head]);
-      }
-      line += element[head] + ',';
-    }
+    let line = convertToLines(headerList, element);
     str += line + '\r\n';
   }
   return str;

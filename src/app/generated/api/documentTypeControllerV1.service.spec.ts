@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpParams } from '@angular/common/http';
 import {
   CreateDocumentTypeRequestParams,
   DeleteDocumentTypeByIdRequestParams,
@@ -7,7 +8,6 @@ import {
   GetDocumentTypeByIdRequestParams,
   UpdateDocumentTypeByIdRequestParams,
 } from './documentTypeControllerV1.service';
-import { HttpParams } from '@angular/common/http';
 
 describe('DocumentTypeControllerV1APIService', () => {
   let service: DocumentTypeControllerV1APIService;
@@ -23,31 +23,33 @@ describe('DocumentTypeControllerV1APIService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should check response of getAllTypesOfDocument is defined', () => {
-    const observe = 'body';
-    const reportProgress = false;
-    const serviceSpy = service.getAllTypesOfDocument(observe, reportProgress);
+  function expectResponseDefined(serviceSpy: any) {
     expect(serviceSpy).toBeDefined();
+  }
+
+  it('should check response of getAllTypesOfDocument is defined', () => {
+    expectResponseDefined(service.getAllTypesOfDocument('body', false));
   });
 
   it('should check response of createDocumentType is defined', () => {
     const value: CreateDocumentTypeRequestParams = {
       documentTypeCreateUpdateDTO: {},
     };
-    const serviceSpy = service.createDocumentType(value);
-    expect(serviceSpy).toBeDefined();
+    expectResponseDefined(service.createDocumentType(value));
   });
 
   it('should check response of deleteDocumentTypeById is defined', () => {
-    const value: DeleteDocumentTypeByIdRequestParams = { id: '1' };
-    const serviceSpy = service.deleteDocumentTypeById(value);
-    expect(serviceSpy).toBeDefined();
+    const value: DeleteDocumentTypeByIdRequestParams = {
+      id: '1',
+    };
+    expectResponseDefined(service.deleteDocumentTypeById(value));
   });
 
   it('should check response of getDocumentTypeById is defined', () => {
-    const value: GetDocumentTypeByIdRequestParams = { id: '1' };
-    const serviceSpy = service.getDocumentTypeById(value);
-    expect(serviceSpy).toBeDefined();
+    const value: GetDocumentTypeByIdRequestParams = {
+      id: '1',
+    };
+    expectResponseDefined(service.getDocumentTypeById(value));
   });
 
   it('should check response of updateDocumentTypeById is defined', () => {
@@ -55,12 +57,10 @@ describe('DocumentTypeControllerV1APIService', () => {
       id: '1',
       documentTypeCreateUpdateDTO: {},
     };
-    const serviceSpy = service.updateDocumentTypeById(value);
-    expect(serviceSpy).toBeDefined();
+    expectResponseDefined(service.updateDocumentTypeById(value));
   });
 
   it('should add value to HttpParams with key', () => {
-    const httpParams = new HttpParams();
     const value = 'Value';
     const key = 'Key';
     const result = service['addToHttpParams'](httpParams, value, key);
