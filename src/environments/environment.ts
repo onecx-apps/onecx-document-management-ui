@@ -5,12 +5,12 @@
 
 export const environment = {
   production: false,
-  appId: 'tkit-document-management-ui',
+  appId: 'onecx-document-management-ui',
   KEYCLOAK_REALM: 'OneCX',
   KEYCLOAK_URL: 'http://keycloak-app',
   DISABLE_PERMISSION_CHECK: 'true',
   TKIT_PORTAL_ID: 'ADMIN',
-  KEYCLOAK_CLIENT_ID: 'tkit-document-management-ui',
+  KEYCLOAK_CLIENT_ID: 'onecx-document-management-ui',
   API_BASE_PATH: './api/event',
   skipRemoteConfigLoad: true,
   portal: 'portal',
