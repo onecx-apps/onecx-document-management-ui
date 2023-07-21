@@ -70,7 +70,7 @@ function initializer(
   ],
   providers: [
     { provide: APP_CONFIG, useValue: environment },
-    { provide: BASE_PATH, useValue: 'tkit-document-management-api' },
+    { provide: BASE_PATH, useValue: 'onecx-document-management-api' },
     { provide: MessageService, useExisting: PortalMessageService },
     {
       provide: APP_INITIALIZER,

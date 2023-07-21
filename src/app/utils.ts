@@ -37,8 +37,8 @@ export function createTranslateLoader(http: HttpClient, mfeInfo: MfeInfo) {
 export const basePathProvider = (mfeInfo: MfeInfo) => {
   console.log(`Base path provider ${mfeInfo?.remoteBaseUrl}`);
   return mfeInfo
-    ? mfeInfo.remoteBaseUrl + 'tkit-document-management-api'
-    : '.tkit-document-management-api';
+    ? mfeInfo.remoteBaseUrl + 'onecx-document-management-api'
+    : '.onecx-document-management-api';
 };
 /**
  * filter columns for table view

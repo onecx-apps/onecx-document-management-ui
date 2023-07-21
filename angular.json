@@ -3,7 +3,7 @@
 	"version": 1,
 	"newProjectRoot": "projects",
 	"projects": {
-		"tkit-document-management-ui": {
+		"onecx-document-management-ui": {
 			"projectType": "application",
 			"schematics": {
 				"@schematics/angular:component": {
@@ -17,7 +17,7 @@
 				"build": {
 					"builder": "ngx-build-plus:browser",
 					"options": {
-						"outputPath": "dist/tkit-document-management-ui",
+						"outputPath": "dist/onecx-document-management-ui",
 						"index": "src/index.html",
 						"main": "src/main.ts",
 						"polyfills": "src/polyfills.ts",
@@ -83,25 +83,25 @@
 				"serve": {
 					"builder": "ngx-build-plus:dev-server",
 					"options": {
-						"browserTarget": "tkit-document-management-ui:build",
+						"browserTarget": "onecx-document-management-ui:build",
 						"port": 4200,
 						"publicHost": "http://localhost:4200",
 						"extraWebpackConfig": "webpack.config.js"
 					},
 					"configurations": {
 						"production": {
-							"browserTarget": "tkit-document-management-ui:build:production",
+							"browserTarget": "onecx-document-management-ui:build:production",
 							"extraWebpackConfig": "webpack.prod.config.js"
 						},
 						"development": {
-							"browserTarget": "tkit-document-management-ui:build:development"
+							"browserTarget": "onecx-document-management-ui:build:development"
 						}
 					}
 				},
 				"extract-i18n": {
 					"builder": "ngx-build-plus:extract-i18n",
 					"options": {
-						"browserTarget": "tkit-document-management-ui:build",
+						"browserTarget": "onecx-document-management-ui:build",
 						"extraWebpackConfig": "webpack.config.js"
 					}
 				},
@@ -135,11 +135,11 @@
 					"builder": "@angular-devkit/build-angular:protractor",
 					"options": {
 						"protractorConfig": "e2e/protractor.conf.js",
-						"devServerTarget": "tkit-document-management-ui:serve"
+						"devServerTarget": "onecx-document-management-ui:serve"
 					},
 					"configurations": {
 						"production": {
-							"devServerTarget": "tkit-document-management-ui:serve:production"
+							"devServerTarget": "onecx-document-management-ui:serve:production"
 						}
 					}
 				}

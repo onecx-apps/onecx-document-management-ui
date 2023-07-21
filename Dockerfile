@@ -1,7 +1,7 @@
 FROM ghcr.io/onecx/docker-spa-base:v1
 
 COPY nginx/locations.conf $DIR_LOCATION/locations.conf
-COPY dist/tkit-document-management-ui $DIR_HTML
+COPY dist/onecx-document-management-ui $DIR_HTML
 
 ENV BFF_URL http://onecx-document-management-bff:8080/
 ENV APP_BASE_HREF /master/document-mgmt/

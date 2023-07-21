@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: "tkit-document-mgmt-ui-apm-config"
+  name: "onecx-document-mgmt-ui-apm-config"
   annotations:
-    appId: tkit-document-mgmt-ui
+    appId: onecx-document-mgmt-ui
     filename: "permissions.csv"
 data:
   permissions.csv: |-

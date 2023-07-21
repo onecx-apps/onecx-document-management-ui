@@ -21,10 +21,10 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it("should have as title 'tkit-document-management-ui'", () => {
+  it("should have as title 'onecx-document-management-ui'", () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('tkit-document-management-ui');
+    expect(app.title).toEqual('onecx-document-management-ui');
   });
   it('should return a TranslateHttpLoader with remote base URL when mfeInfo is provided', () => {
     const mfeInfo = {
@@ -61,7 +61,7 @@ describe('AppComponent', () => {
         baseHref: '/my-app/',
         shellName: 'my-app-shell',
       };
-      const expectedPath = 'https://example.com/tkit-document-management-api';
+      const expectedPath = 'https://example.com/onecx-document-management-api';
 
       const result = basePathProvider(mfeInfo);
 

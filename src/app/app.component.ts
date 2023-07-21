@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'tkit-document-management-ui';
+  title = 'onecx-document-management-ui';
 }

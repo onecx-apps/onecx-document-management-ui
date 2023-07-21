@@ -11,11 +11,11 @@ const bypassFn = function (req, res, proxyOptions) {
   }
 };
 const PROXY_CONFIG = {
-  '/tkit-document-management-api': {
+  '/onecx-document-management-api': {
     target: 'http://localhost:8084',
     secure: false,
     pathRewrite: {
-      '^/tkit-document-management-api': '',
+      '^/onecx-document-management-api': '',
     },
     bypass: bypassFn,
   },
