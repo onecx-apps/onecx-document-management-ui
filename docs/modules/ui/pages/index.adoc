@@ -1,4 +1,6 @@
 == OneCX Document-Management-User-Interface
+image:https://github.com/onecx-apps/onecx-document-management-ui/actions/workflows/build.yml/badge.svg[OneCX Document Management UI]
+
 === What is Document Management
 
 Document management refers to the systematic process of capturing,
