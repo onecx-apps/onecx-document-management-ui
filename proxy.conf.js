@@ -12,15 +12,16 @@ const bypassFn = function (req, res, proxyOptions) {
 };
 const PROXY_CONFIG = {
   '/onecx-document-management-api': {
-    target: 'http://localhost:8084',
+    target: 'http://onecx-document-management-bff',
     secure: false,
+    changeOrigin: true,
     pathRewrite: {
       '^/onecx-document-management-api': '',
     },
     bypass: bypassFn,
   },
   '/portal-api': {
-    target: 'http://tkit-portal-server/',
+    target: 'http://tkit-portal-server',
     secure: false,
     pathRewrite: {
       '^/portal-api': '',
@@ -30,7 +31,7 @@ const PROXY_CONFIG = {
     bypass: bypassFn,
   },
   '/launchpad-api': {
-    target: 'http://localhost:9000',
+    target: 'http://onecx-document-management-bff',
     secure: false,
     pathRewrite: {
       '^/launchpad-api': '',
@@ -40,7 +41,7 @@ const PROXY_CONFIG = {
     bypass: bypassFn,
   },
   '/ahm-api': {
-    target: 'http://localhost:9000',
+    target: 'http://onecx-document-management-bff',
     secure: false,
     pathRewrite: {
       '^/ahm-api': '',
