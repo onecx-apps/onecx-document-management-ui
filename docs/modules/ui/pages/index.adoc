@@ -64,19 +64,6 @@ the document management user interface. The repository
 dependencies and the docker-compose script required to run the OneCX
 Document-Management-User-Interface on your local machine.
 
-==== Build the Project
-
-Navigate to the project directory and build the application using NPM:
-
-[source,bash]
-----
-cd onecx-document-management-ui
-node install
-----
-
-Downloading the required Maven dependencies for the first time may take
-some time.
-
 ==== Update local DNS resolution
 Assuming you are using WSL, updating the local host file for local 
 development allows you to map domain names to specific IP addresses,
@@ -157,36 +144,31 @@ the Keycloak admin console and are retrieved from tokens, while strings
 defined in APM are used to grant access to specific components or views
 on the frontend.
 
-==== Stopping OneCX dependencies
-
-The `docker-compose stop` command is used to stop the containers defined
-in a Docker Compose file. It gracefully stops the running containers by
-sending a stop signal, allowing them to perform any necessary cleanup
-tasks before shutting down.
-
-[source,bash]
-----
-docker compose stop
-----
-
 ==== Starting the OneCX Document Management User Interface
-
-The command mvn compile quarkus:dev is used in a Maven-based Quarkus
-project to compile the source code and start a live coding development
-mode. In this mode, Quarkus will automatically rebuild and redeploy the
-application whenever changes are detected in the source code, allowing
-for rapid development and testing.
+Navigate to the project directory and build the application using NPM:
 
 [source,bash]
 ----
 cd onecx-document-management-ui
 npm install --force
 ----
-
 Note: If you face any issues while npm install, try deleting the node_module folder and package-lock.json from the project.
 
-Start the user interface
+Start the user interface:
 [source,bash]
 ----
+cd onecx-document-management-ui
 npm start
+----
+
+==== Stopping OneCX dependencies
+The `docker compose stop` command is used to stop the containers defined
+in a Docker Compose file. It gracefully stops the running containers by
+sending a stop signal, allowing them to perform any necessary cleanup
+tasks before shutting down.
+
+[source,bash]
+----
+cd onecx-document-management-dev
+docker compose stop
 ----
