@@ -445,38 +445,42 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
       this.documentsUpdateComponent.checkedArray.length > 0 &&
       this.documentsUpdateComponent.documentBulkUpdateForm.valid
     ) {
-      for (
-        let i = 0;
-        i < this.documentsUpdateComponent.checkedArray.length;
-        i++
-      ) {
-        values.forEach((el) => {
-          if (this.documentsUpdateComponent.checkedArray[i].name == el[0])
-            this.documentsUpdateComponent.checkedArray[i].value = el[1];
-        });
-        let res = this.documentsUpdateComponent.checkedArray;
-        if (
-          res[i].value !== null &&
-          res[i].value !== '' &&
-          res[i].isChecked == true
-        ) {
-          this.validCheckedValues.push({
-            name: res[i].name,
-            value: res[i].value,
-            isChecked: res[i].isChecked,
-          });
-        }
-        if (
-          res.find(
-            (obj) => obj.value == null || (obj.value === '' && obj.isChecked)
-          )
-        )
-          this.documentBulkUpdateFormValid = false;
-        else this.documentBulkUpdateFormValid = true;
-      }
+      this.onChangeFormValueIteration(values);
     } else this.documentBulkUpdateFormValid = false;
     this.setHeaderButtons();
   }
+  onChangeFormValueIteration(values) {
+    for (
+      let i = 0;
+      i < this.documentsUpdateComponent.checkedArray.length;
+      i++
+    ) {
+      values.forEach((el) => {
+        if (this.documentsUpdateComponent.checkedArray[i].name == el[0])
+          this.documentsUpdateComponent.checkedArray[i].value = el[1];
+      });
+      let res = this.documentsUpdateComponent.checkedArray;
+      if (
+        res[i].value !== null &&
+        res[i].value !== '' &&
+        res[i].isChecked === true
+      ) {
+        this.validCheckedValues.push({
+          name: res[i].name,
+          value: res[i].value,
+          isChecked: res[i].isChecked,
+        });
+      }
+      if (
+        res.find(
+          (obj) => obj.value == null || (obj.value === '' && obj.isChecked)
+        )
+      )
+        this.documentBulkUpdateFormValid = false;
+      else this.documentBulkUpdateFormValid = true;
+    }
+  }
+
   /**
    * function to get the logged in username
    */

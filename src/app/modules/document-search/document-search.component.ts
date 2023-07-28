@@ -341,7 +341,7 @@ export class DocumentSearchComponent
               summary: this.translatedData['GENERAL.NO_RECORDS_TO_EXPORT'],
             });
           }
-          if (this.isExportDocEnable == true) {
+          if (this.isExportDocEnable) {
             localStorage.setItem(
               'searchCriteria',
               JSON.stringify(this.criteria)
@@ -367,7 +367,7 @@ export class DocumentSearchComponent
               summary: this.translatedData['GENERAL.NO_RECORDS_FOR_CHANGES'],
             });
           }
-          if (this.isBulkEnable == true) {
+          if (this.isBulkEnable) {
             localStorage.setItem(
               'searchCriteria',
               JSON.stringify(this.criteria)

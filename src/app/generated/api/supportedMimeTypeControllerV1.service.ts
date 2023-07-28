@@ -90,6 +90,30 @@ export class SupportedMimeTypeControllerV1APIService {
     return httpParams;
   }
 
+  private addToHttpParamsRecursiveObject(value, httpParams, key) {
+    if (Array.isArray(value)) {
+      value.forEach(
+        (elem) =>
+          (httpParams = this.addToHttpParamsRecursive(httpParams, elem, key))
+      );
+    } else if (value instanceof Date) {
+      if (key != null) {
+        httpParams = httpParams.append(key, value.toISOString().slice(0, 10));
+      } else {
+        throw Error('key may not be null if value is Date');
+      }
+    } else {
+      Object.keys(value).forEach(
+        (k) =>
+          (httpParams = this.addToHttpParamsRecursive(
+            httpParams,
+            value[k],
+            key != null ? `${key}.${k}` : k
+          ))
+      );
+    }
+  }
+
   private addToHttpParamsRecursive(
     httpParams: HttpParams,
     value?: any,
@@ -100,30 +124,7 @@ export class SupportedMimeTypeControllerV1APIService {
     }
 
     if (typeof value === 'object') {
-      if (Array.isArray(value)) {
-        (value as any[]).forEach(
-          (elem) =>
-            (httpParams = this.addToHttpParamsRecursive(httpParams, elem, key))
-        );
-      } else if (value instanceof Date) {
-        if (key != null) {
-          httpParams = httpParams.append(
-            key,
-            (value as Date).toISOString().substr(0, 10)
-          );
-        } else {
-          throw Error('key may not be null if value is Date');
-        }
-      } else {
-        Object.keys(value).forEach(
-          (k) =>
-            (httpParams = this.addToHttpParamsRecursive(
-              httpParams,
-              value[k],
-              key != null ? `${key}.${k}` : k
-            ))
-        );
-      }
+      this.addToHttpParamsRecursiveObject(value, httpParams, key);
     } else if (key != null) {
       httpParams = httpParams.append(key, value);
     } else {

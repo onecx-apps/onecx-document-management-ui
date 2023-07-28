@@ -447,8 +447,7 @@ export class DocumentQuickUploadComponent implements OnInit {
     let fileName = attachment.fileName ?? '';
     let fileExtension = fileName.split('.').reverse();
     let fileTypeData = attachment?.fileData ? attachment.fileData.type : '';
-    let attachmentIcon = '';
-
+    let attachmentIcon = 'file.png';
     if (fileTypeData) {
       let fileType = fileTypeData.split('/');
       if (fileType.length) {
@@ -462,9 +461,6 @@ export class DocumentQuickUploadComponent implements OnInit {
           }
         }
       }
-    }
-    if (!attachmentIcon) {
-      attachmentIcon = 'file.png';
     }
     return this.getAttachmentIconUrl(attachmentIcon);
   }

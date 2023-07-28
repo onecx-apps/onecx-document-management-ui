@@ -123,6 +123,30 @@ export class DocumentControllerV1APIService {
     return httpParams;
   }
 
+  private addToHttpParamsRecursiveObject(value, httpParams, key) {
+    if (Array.isArray(value)) {
+      value.forEach(
+        (elem) =>
+          (httpParams = this.addToHttpParamsRecursive(httpParams, elem, key))
+      );
+    } else if (value instanceof Date) {
+      if (key != null) {
+        httpParams = httpParams.append(key, value.toISOString().slice(0, 10));
+      } else {
+        throw Error('key may not be null if value is Date');
+      }
+    } else {
+      Object.keys(value).forEach(
+        (k) =>
+          (httpParams = this.addToHttpParamsRecursive(
+            httpParams,
+            value[k],
+            key != null ? `${key}.${k}` : k
+          ))
+      );
+    }
+  }
+
   private addToHttpParamsRecursive(
     httpParams: HttpParams,
     value?: any,
@@ -133,30 +157,7 @@ export class DocumentControllerV1APIService {
     }
 
     if (typeof value === 'object') {
-      if (Array.isArray(value)) {
-        (value as any[]).forEach(
-          (elem) =>
-            (httpParams = this.addToHttpParamsRecursive(httpParams, elem, key))
-        );
-      } else if (value instanceof Date) {
-        if (key != null) {
-          httpParams = httpParams.append(
-            key,
-            (value as Date).toISOString().substr(0, 10)
-          );
-        } else {
-          throw Error('key may not be null if value is Date');
-        }
-      } else {
-        Object.keys(value).forEach(
-          (k) =>
-            (httpParams = this.addToHttpParamsRecursive(
-              httpParams,
-              value[k],
-              key != null ? `${key}.${k}` : k
-            ))
-        );
-      }
+      this.addToHttpParamsRecursiveObject(value, httpParams, key);
     } else if (key != null) {
       httpParams = httpParams.append(key, value);
     } else {
@@ -356,7 +357,7 @@ export class DocumentControllerV1APIService {
         this.configuration.selectHeaderAccept(httpHeaderAccepts);
     }
     if (httpHeaderAcceptSelected !== undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
+      headers.set('Accept', httpHeaderAcceptSelected);
     }
 
     let responseType: 'text' | 'json' = 'json';
@@ -439,6 +440,53 @@ export class DocumentControllerV1APIService {
   }
 
   /**
+   * Iterate & return query params
+   */
+  public checkAllprops(props) {
+    let queryParameters = new HttpParams({ encoder: this.encoder });
+    for (let prop of props) {
+      const key = Object.keys(prop)[0];
+      const val = prop[key];
+      if (key == 'typeId' || key == 'state') {
+        if (val !== undefined && val !== null) {
+          val.forEach((element) => {
+            queryParameters = this.addToHttpParams(
+              queryParameters,
+              element,
+              key
+            );
+          });
+        }
+      } else if (val !== undefined && val !== null) {
+        queryParameters = this.addToHttpParams(queryParameters, val, key);
+      }
+      console.log(key.toString());
+    }
+    return queryParameters;
+  }
+
+  /**
+   * Populate Query Params
+   */
+  public populateQueryParameters(requestParameters) {
+    const props = [
+      { channelName: requestParameters.channelName },
+      { id: requestParameters.id },
+      { name: requestParameters.name },
+      { page: requestParameters.page },
+      { size: requestParameters.size },
+      { state: requestParameters.state },
+      { typeId: requestParameters.typeId },
+      { startDate: requestParameters.startDate },
+      { endDate: requestParameters.endDate },
+      { createdBy: requestParameters.createdBy },
+      { objectReferenceId: requestParameters.objectReferenceId },
+      { objectReferenceType: requestParameters.objectReferenceType },
+    ];
+    return this.checkAllprops(props);
+  }
+
+  /**
    * Gets documents by criteria
    * @param requestParameters
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -468,104 +516,7 @@ export class DocumentControllerV1APIService {
     reportProgress: boolean = false,
     options?: { httpHeaderAccept?: 'application/json' }
   ): Observable<any> {
-    const channelName = requestParameters.channelName;
-    const id = requestParameters.id;
-    const name = requestParameters.name;
-    const page = requestParameters.page;
-    const size = requestParameters.size;
-    const state = requestParameters.state;
-    const typeId = requestParameters.typeId;
-    const startDate = requestParameters.startDate;
-    const endDate = requestParameters.endDate;
-    const createdBy = requestParameters.createdBy;
-    const objectReferenceId = requestParameters.objectReferenceId;
-    const objectReferenceType = requestParameters.objectReferenceType;
-
-    let queryParameters = new HttpParams({ encoder: this.encoder });
-    if (channelName !== undefined && channelName !== null) {
-      queryParameters = this.addToHttpParams(
-        queryParameters,
-        <any>channelName,
-        'channelName'
-      );
-    }
-    if (id && id !== undefined && id !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>id, 'id');
-    }
-    if (name !== undefined && name !== null) {
-      queryParameters = this.addToHttpParams(
-        queryParameters,
-        <any>name,
-        'name'
-      );
-    }
-    if (page !== undefined && page !== null) {
-      queryParameters = this.addToHttpParams(
-        queryParameters,
-        <any>page,
-        'page'
-      );
-    }
-    if (size !== undefined && size !== null) {
-      queryParameters = this.addToHttpParams(
-        queryParameters,
-        <any>size,
-        'size'
-      );
-    }
-    if (state !== undefined && state !== null) {
-      state.forEach((element) => {
-        queryParameters = this.addToHttpParams(
-          queryParameters,
-          <any>element,
-          'state'
-        );
-      });
-    }
-    if (typeId !== undefined && typeId !== null) {
-      typeId.forEach((element) => {
-        queryParameters = this.addToHttpParams(
-          queryParameters,
-          <any>element,
-          'typeId'
-        );
-      });
-    }
-    if (startDate !== undefined && startDate !== null) {
-      queryParameters = this.addToHttpParams(
-        queryParameters,
-        <any>startDate,
-        'startDate'
-      );
-    }
-    if (endDate !== undefined && endDate !== null) {
-      queryParameters = this.addToHttpParams(
-        queryParameters,
-        <any>endDate,
-        'endDate'
-      );
-    }
-    if (createdBy !== undefined && createdBy !== null) {
-      queryParameters = this.addToHttpParams(
-        queryParameters,
-        <any>createdBy,
-        'createdBy'
-      );
-    }
-    if (objectReferenceId !== undefined && objectReferenceId !== null) {
-      queryParameters = this.addToHttpParams(
-        queryParameters,
-        <any>objectReferenceId,
-        'objectReferenceId'
-      );
-    }
-    if (objectReferenceType !== undefined && objectReferenceType !== null) {
-      queryParameters = this.addToHttpParams(
-        queryParameters,
-        <any>objectReferenceType,
-        'objectReferenceType'
-      );
-    }
+    let queryParameters = this.populateQueryParameters(requestParameters);
 
     let headers = this.defaultHeaders;
 
