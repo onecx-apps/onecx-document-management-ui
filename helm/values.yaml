@@ -11,4 +11,4 @@ app:
       enabled: true
       client: '{"clientId": "{{ .Release.Name }}","enabled": true,"description": "Keycloack client for {{ .Release.Name }}","redirectUris": ["*"],"webOrigins": ["*"],"publicClient": true,"protocol": "openid-connect"}'
   product: false
- 
+
