@@ -65,8 +65,20 @@ describe('RelativeDatePipe', () => {
     expect(result).toBe('2 years ago');
   });
 
+  it('should return "1 hour ago" for exactly one hour ago', () => {
+    const now = new Date();
+    const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000); // 1 hour ago
+    const result = pipe.transform(oneHourAgo);
+    expect(result).toBe('1 hour ago');
+  });
+
   it('should handle invalid input gracefully', () => {
     const result = pipe.transform('invalid-date');
+    expect(result).toBeUndefined();
+  });
+
+  it('should handle invalid input gracefully', () => {
+    const result = pipe.transform(undefined);
     expect(result).toBeUndefined();
   });
 });
