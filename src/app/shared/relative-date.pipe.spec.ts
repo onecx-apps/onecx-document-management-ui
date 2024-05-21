@@ -12,8 +12,8 @@ describe('RelativeDatePipe', () => {
     TestBed.configureTestingModule({
       providers: [
         RelativeDatePipe,
-        { provide: TranslateService, useClass: TranslateServiceMock }
-      ]
+        { provide: TranslateService, useClass: TranslateServiceMock },
+      ],
     });
 
     pipe = TestBed.inject(RelativeDatePipe);
