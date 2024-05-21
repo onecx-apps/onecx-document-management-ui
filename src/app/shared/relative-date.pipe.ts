@@ -1,51 +1,39 @@
-// Core imports
 import { Pipe, PipeTransform } from '@angular/core';
 
-// Third party imports
-import { TranslateService } from '@ngx-translate/core';
-
-const DIVISIONS: { amount: number; name: Intl.RelativeTimeFormatUnit }[] = [
-  { amount: 60, name: 'seconds' },
-  { amount: 60, name: 'minutes' },
-  { amount: 24, name: 'hours' },
-  { amount: 7, name: 'days' },
-  { amount: 4.34524, name: 'weeks' },
-  { amount: 12, name: 'months' },
-  { amount: Number.POSITIVE_INFINITY, name: 'years' },
-];
-
-@Pipe({
-  name: 'relativeDate',
-})
+@Pipe({name: 'relativeDate'})
 export class RelativeDatePipe implements PipeTransform {
-  rtf: Intl.RelativeTimeFormat;
+    transform(value: Date | string | number| undefined): string | undefined {
+        if (value === undefined) {
+            return undefined;
+        }
 
-  constructor(private readonly translateService: TranslateService) {
-    this.rtf = new Intl.RelativeTimeFormat(this.translateService.currentLang, {
-      style: 'long',
-    });
-  }
-  /** convert string format into relative date format  */
-  transform(value: any, args?: any): any {
-    let date: Date;
-    switch (typeof value) {
-      case 'string':
-        date = new Date(value);
-        break;
-      case 'object':
-        date = value;
-        break;
-      default:
-        break;
-    }
+        if (!(value instanceof Date)) {
+            value = new Date(value);
+            if (isNaN(value.getTime())) {
+                return undefined;
+            }
+        }
 
-    let duration = (date.getTime() - new Date().getTime()) / 1000;
-    for (let i = 0; i <= DIVISIONS.length; i++) {
-      const division = DIVISIONS[i];
-      if (Math.abs(duration) < division.amount) {
-        return this.rtf.format(Math.round(duration), division.name);
-      }
-      duration /= division.amount;
+        const seconds = Math.floor(((new Date()).getTime() - value.getTime()) / 1000);
+
+        if (seconds < 60) {
+            return 'just now';
+        }
+
+        const intervals = [
+            { label: 'year', seconds: 31536000 },
+            { label: 'month', seconds: 2592000 },
+            { label: 'day', seconds: 86400 },
+            { label: 'hour', seconds: 3600 },
+            { label: 'minute', seconds: 60 },
+            { label: 'second', seconds: 1 }
+        ];
+
+        for (const interval of intervals) {
+            const count = Math.floor(seconds / interval.seconds);
+            if (count >= 1) {
+                return count + ` ${interval.label}${count !== 1 ? 's' : ''} ago`;
+            }
+        }
     }
-  }
 }
