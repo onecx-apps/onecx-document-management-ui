@@ -2,6 +2,7 @@ app:
   image:
     repository: 'onexc-apps/${project.name}'
     tag: ${project.version}
+  nameOverride: ${project.name}
   routing:
     enabled: true
   operator:
