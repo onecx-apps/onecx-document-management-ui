@@ -16,6 +16,7 @@ import {
   Action,
   BreadcrumbService,
   ObjectDetailItem,
+  PortalMessageService,
 } from '@onecx/portal-integration-angular';
 import { saveAs } from 'file-saver';
 import { MessageService } from 'primeng/api';
@@ -78,7 +79,7 @@ export class DocumentEditComponent implements OnInit {
   constructor(
     private readonly activeRoute: ActivatedRoute,
     private readonly documentV1Service: DocumentControllerV1APIService,
-    private readonly messageService: MessageService,
+    private readonly portalMessageService: PortalMessageService,
     private readonly translateService: TranslateService,
     private readonly breadcrumbService: BreadcrumbService,
     private readonly formBuilder: UntypedFormBuilder,
@@ -194,10 +195,8 @@ export class DocumentEditComponent implements OnInit {
         this.documentEditLifecycleComponent?.refreshTimeline();
       },
       error: () => {
-        this.messageService.add({
-          severity: 'error',
-          summary:
-            this.translatedData['DOCUMENT_MENU.DOCUMENT_EDIT.FETCH_ERROR'],
+        this.portalMessageService.error({
+          summaryKey: 'DOCUMENT_MENU.DOCUMENT_EDIT.FETCH_ERROR',
         });
       },
     });
@@ -564,19 +563,15 @@ export class DocumentEditComponent implements OnInit {
       .updateDocument(params)
       .pipe(
         catchError((err) => {
-          this.messageService.add({
-            severity: 'error',
-            summary:
-              this.translatedData['DOCUMENT_MENU.DOCUMENT_EDIT.UPDATE_ERROR'],
+          this.portalMessageService.error({
+            summaryKey: 'DOCUMENT_MENU.DOCUMENT_EDIT.UPDATE_ERROR',
           });
           this.refreshAttachmentComponent(this.document);
           return throwError(err);
         }),
         tap((resp) => {
-          this.messageService.add({
-            severity: 'success',
-            summary:
-              this.translatedData['DOCUMENT_MENU.DOCUMENT_EDIT.UPDATE_SUCCESS'],
+          this.portalMessageService.success({
+            summaryKey: 'DOCUMENT_MENU.DOCUMENT_EDIT.UPDATE_SUCCESS',
           });
         }),
         map((resp) => resp.attachments),
@@ -647,16 +642,18 @@ export class DocumentEditComponent implements OnInit {
     };
     this.documentV1Service.deleteFile(params).subscribe({
       next: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: `${attachmentsId.length} ${this.translatedData['DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.DELETE_SUCCESS']}`,
+        this.portalMessageService.success({
+          summaryKey: `${attachmentsId.length} ${[
+            'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.DELETE_SUCCESS',
+          ]}`,
         });
         this.getDocumentDetail();
       },
       error: () => {
-        this.messageService.add({
-          severity: 'error',
-          summary: `${attachmentsId.length} ${this.translatedData['DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.DELETE_ERROR']}`,
+        this.portalMessageService.error({
+          summaryKey: `${attachmentsId.length} ${[
+            'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.DELETE_ERROR',
+          ]}`,
         });
         this.getDocumentDetail();
       },
@@ -695,16 +692,18 @@ export class DocumentEditComponent implements OnInit {
               }
             });
             if (successFiles > 0) {
-              this.messageService.add({
-                severity: 'success',
-                summary: `${successFiles} ${this.translatedData['DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_SUCCESS']}`,
+              this.portalMessageService.success({
+                summaryKey: `${successFiles} ${[
+                  'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_SUCCESS',
+                ]}`,
               });
             }
             if (failedFiles > 0) {
-              this.messageService.add({
-                severity: 'error',
+              this.portalMessageService.error({
+                summaryKey: `${failedFiles} ${[
+                  'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_ERROR',
+                ]}`,
                 life: 5000,
-                summary: `${failedFiles} ${this.translatedData['DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_ERROR']}`,
               });
               this.attachmentUploadService.exportAllFailedAttachments(
                 documentId
@@ -928,20 +927,16 @@ export class DocumentEditComponent implements OnInit {
   public deleteDocument(id: string): void {
     this.documentV1Service.deleteDocumentById({ id }).subscribe({
       next: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary:
-            this.translatedData['DOCUMENT_MENU.DOCUMENT_DELETE.DELETE_SUCCESS'],
+        this.portalMessageService.success({
+          summaryKey: 'DOCUMENT_MENU.DOCUMENT_DELETE.DELETE_SUCCESS',
         });
         this.router.navigate(['../../../search'], {
           relativeTo: this.activeRoute,
         });
       },
       error: () => {
-        this.messageService.add({
-          severity: 'error',
-          summary:
-            this.translatedData['DOCUMENT_MENU.DOCUMENT_DELETE.DELETE_ERROR'],
+        this.portalMessageService.error({
+          summaryKey: 'DOCUMENT_MENU.DOCUMENT_DELETE.DELETE_ERROR',
         });
       },
     });

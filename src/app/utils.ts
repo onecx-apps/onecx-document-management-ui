@@ -4,7 +4,12 @@ import { AbstractControl, ValidationErrors } from '@angular/forms';
 
 // Third party imports
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { Column, MfeInfo } from '@onecx/portal-integration-angular';
+import {
+  Column,
+  MfeInfo,
+  UserService,
+} from '@onecx/portal-integration-angular';
+import { environment } from 'src/environments/environment';
 
 /**
  * @param url
@@ -35,7 +40,7 @@ export function createTranslateLoader(http: HttpClient, mfeInfo: MfeInfo) {
 }
 
 export const basePathProvider = (mfeInfo: MfeInfo) => {
-  console.log(`Base path provider ${mfeInfo?.remoteBaseUrl}`);
+  console.log(`Base path provider ${environment?.API_BASE_PATH}`);
   return mfeInfo
     ? mfeInfo.remoteBaseUrl + 'onecx-document-management-api'
     : '.onecx-document-management-api';

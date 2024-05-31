@@ -11,7 +11,7 @@ export const environment = {
   DISABLE_PERMISSION_CHECK: 'true',
   TKIT_PORTAL_ID: 'ADMIN',
   KEYCLOAK_CLIENT_ID: 'onecx-document-management-ui',
-  API_BASE_PATH: './api/event',
+  API_BASE_PATH: './onecx-document-management-api',
   skipRemoteConfigLoad: true,
   portal: 'portal',
   TKIT_PORTAL_THEME_SERVER_URL:

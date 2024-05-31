@@ -1,8 +1,11 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Pipe, PipeTransform } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  PortalMessageServiceMock,
+  providePortalMessageServiceMock,
+} from '@onecx/portal-integration-angular/mocks';
 import { TranslateService } from '@ngx-translate/core';
-import { MessageService } from 'primeng/api';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 import { RouterTestingModule } from '@angular/router/testing';
 import {
@@ -12,7 +15,6 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { DocumentCreateComponent } from './document-create.component';
-import { MFE_INFO } from '@onecx/portal-integration-angular';
 import { Router } from '@angular/router';
 import { AttachmentUploadService } from '../attachment-upload.service';
 import { of } from 'rxjs';
@@ -21,6 +23,7 @@ describe('DocumentCreateComponent', () => {
   let component: DocumentCreateComponent;
   let fixture: ComponentFixture<DocumentCreateComponent>;
   let router: Router;
+  let portalMessageServiceMock: PortalMessageServiceMock;
   @Pipe({ name: 'translate' })
   class TranslatePipeMock implements PipeTransform {
     transform(value: string): string {
@@ -37,10 +40,10 @@ describe('DocumentCreateComponent', () => {
       declarations: [DocumentCreateComponent, TranslatePipeMock],
       providers: [
         { provide: TranslateService, useClass: TranslateServiceMock },
-        { provide: MessageService, useClass: MessageService },
-        { provide: MFE_INFO, useValue: {} },
+        providePortalMessageServiceMock(),
       ],
     }).compileComponents();
+    portalMessageServiceMock = TestBed.inject(PortalMessageServiceMock);
   });
 
   beforeEach(() => {
@@ -300,19 +303,15 @@ describe('DocumentCreateComponent', () => {
     spyOn(attachmentUploadService, 'uploadAttachment').and.returnValue(
       of(mockAttachmentResponse)
     );
-    const messageService = TestBed.inject(MessageService);
-    spyOn(messageService, 'add');
     component.callUploadAttachmentsApi(documentId);
     expect(attachmentUploadService.uploadAttachment).toHaveBeenCalledWith(
       documentId,
       jasmine.any(Array)
     );
-    expect(messageService.add).not.toHaveBeenCalledWith(
-      jasmine.objectContaining({
-        severity: 'error',
-        summary: jasmine.any(String),
-      })
-    );
+    expect(portalMessageServiceMock.lastMessages[0]).toEqual({
+      type: 'success',
+      value: { summaryKey: jasmine.any(String) },
+    });
   });
 
   it('should handle failed attachments and export them', () => {
@@ -328,8 +327,6 @@ describe('DocumentCreateComponent', () => {
       of(mockAttachmentResponse)
     );
     spyOn(attachmentUploadService, 'exportAllFailedAttachments');
-    const messageService = TestBed.inject(MessageService);
-    spyOn(messageService, 'add');
     component.callUploadAttachmentsApi(documentId);
     expect(
       attachmentUploadService.exportAllFailedAttachments

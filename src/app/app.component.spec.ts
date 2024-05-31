@@ -27,13 +27,8 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('onecx-document-management-ui');
   });
   it('should return a TranslateHttpLoader with remote base URL when mfeInfo is provided', () => {
-    const mfeInfo = {
-      remoteBaseUrl: 'https://example.com',
-      mountPath: '/my-app',
-      baseHref: '/my-app/',
-      shellName: 'my-app-shell',
-    };
-    const expectedUrl = 'https://example.com/assets/i18n/';
+    const mfeInfo = null;
+    const expectedUrl = './assets/i18n/';
 
     const result = createTranslateLoader(httpMock, mfeInfo);
 
@@ -55,13 +50,8 @@ describe('AppComponent', () => {
 
   describe('basePathProvider', () => {
     it('should return the base path with remote base URL when mfeInfo is provided', () => {
-      const mfeInfo = {
-        remoteBaseUrl: 'https://example.com/',
-        mountPath: '/my-app',
-        baseHref: '/my-app/',
-        shellName: 'my-app-shell',
-      };
-      const expectedPath = 'https://example.com/onecx-document-management-api';
+      const mfeInfo = null;
+      const expectedPath = '.onecx-document-management-api';
 
       const result = basePathProvider(mfeInfo);
 

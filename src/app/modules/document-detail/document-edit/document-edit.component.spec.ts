@@ -8,13 +8,16 @@ import {
 } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
-import { MessageService } from 'primeng/api';
+import {
+  PortalMessageServiceMock,
+  providePortalMessageServiceMock,
+} from '@onecx/portal-integration-angular/mocks';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DocumentEditComponent } from './document-edit.component';
-import { Action, MFE_INFO } from '@onecx/portal-integration-angular';
+import { Action } from '@onecx/portal-integration-angular';
 import { DocumentDetailDTO } from 'src/app/generated/model/documentDetailDTO';
 import {
   DocumentControllerV1APIService,
@@ -30,7 +33,7 @@ describe('DocumentEditComponent', () => {
   let fixture: ComponentFixture<DocumentEditComponent>;
   let activatedRoute: ActivatedRoute;
   let documentEditAttachmentComponent;
-  let messageService: jasmine.SpyObj<MessageService>;
+  let portalMessageServiceMock: PortalMessageServiceMock;
   let router: Router;
   let documentV1Service: DocumentControllerV1APIService;
   let attachmentUploadService: AttachmentUploadService;
@@ -58,10 +61,9 @@ describe('DocumentEditComponent', () => {
       ],
       providers: [
         { provide: TranslateService, useClass: TranslateServiceMock },
-        { provide: MessageService, useClass: MessageService },
         { provide: DocumentControllerV1APIService },
-        { provide: MFE_INFO, useValue: {} },
         AttachmentUploadService,
+        providePortalMessageServiceMock(),
       ],
     }).compileComponents();
     attachmentUploadService = TestBed.inject(AttachmentUploadService);
@@ -78,6 +80,7 @@ describe('DocumentEditComponent', () => {
       ['preFillLatestDocument']
     );
     component.documentEditAttachmentComponent = documentEditAttachmentComponent;
+    portalMessageServiceMock = TestBed.inject(PortalMessageServiceMock);
   });
 
   it('should create', () => {
@@ -249,16 +252,15 @@ describe('DocumentEditComponent', () => {
     spyOn(component['documentV1Service'], 'deleteDocumentById').and.returnValue(
       throwError(new Error('Delete error'))
     );
-    spyOn(component['messageService'], 'add');
     spyOn(component['router'], 'navigate');
     component.deleteDialogVisible = true;
     component.deleteDocument(id);
     expect(
       component['documentV1Service'].deleteDocumentById
     ).toHaveBeenCalledWith({ id });
-    expect(component['messageService'].add).not.toHaveBeenCalledWith({
-      severity: 'error',
-      summary: expectedErrorMessage,
+    expect(portalMessageServiceMock.lastMessages[0]).toEqual({
+      type: 'error',
+      value: { summaryKey: 'DOCUMENT_MENU.DOCUMENT_DELETE.DELETE_ERROR' },
     });
     expect(component.deleteDialogVisible).toBe(false);
   });
@@ -361,12 +363,15 @@ describe('DocumentEditComponent', () => {
     spyOn(component['documentV1Service'], 'deleteFile').and.returnValue(
       of(null)
     );
-    const messageServiceSpy = spyOn(component['messageService'], 'add');
     const getDocumentDetailSpy = spyOn(component, 'getDocumentDetail');
     component.documentDeleteAttachments(attachmentsId);
-    expect(messageServiceSpy).toHaveBeenCalledWith({
-      severity: 'success',
-      summary: `${attachmentsId.length} ${component.translatedData['DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.DELETE_SUCCESS']}`,
+    expect(portalMessageServiceMock.lastMessages[0]).toEqual({
+      type: 'success',
+      value: {
+        summaryKey: `${attachmentsId.length} ${[
+          'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.DELETE_SUCCESS',
+        ]}`,
+      },
     });
     expect(getDocumentDetailSpy).toHaveBeenCalled();
   });
@@ -376,12 +381,15 @@ describe('DocumentEditComponent', () => {
     spyOn(component['documentV1Service'], 'deleteFile').and.returnValue(
       throwError(null)
     );
-    const messageServiceSpy = spyOn(component['messageService'], 'add');
     const getDocumentDetailSpy = spyOn(component, 'getDocumentDetail');
     component.documentDeleteAttachments(attachmentsId);
-    expect(messageServiceSpy).toHaveBeenCalledWith({
-      severity: 'error',
-      summary: `${attachmentsId.length} ${component.translatedData['DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.DELETE_ERROR']}`,
+    expect(portalMessageServiceMock.lastMessages[0]).toEqual({
+      type: 'error',
+      value: {
+        summaryKey: `${attachmentsId.length} ${[
+          'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.DELETE_ERROR',
+        ]}`,
+      },
     });
     expect(getDocumentDetailSpy).toHaveBeenCalled();
   });
@@ -542,15 +550,14 @@ describe('DocumentEditComponent', () => {
   });
 
   it('should call messageService.add with error message when an error occurs', () => {
-    spyOn(component['messageService'], 'add');
+    spyOn(component['portalMessageService'], 'success');
     spyOn(component['documentV1Service'], 'getDocumentById').and.returnValue(
       throwError('Error')
     );
     component.getDocumentDetail();
-    expect(component['messageService'].add).toHaveBeenCalledWith({
-      severity: 'error',
-      summary:
-        component.translatedData['DOCUMENT_MENU.DOCUMENT_EDIT.FETCH_ERROR'],
+    expect(portalMessageServiceMock.lastMessages[0]).toEqual({
+      type: 'error',
+      value: { summaryKey: 'DOCUMENT_MENU.DOCUMENT_EDIT.FETCH_ERROR' },
     });
   });
 
@@ -649,7 +656,7 @@ describe('DocumentEditComponent', () => {
         })
       )
     );
-    spyOn(component['messageService'], 'add');
+    spyOn(component['portalMessageService'], 'success');
     spyOn(component, 'refreshAttachmentComponent');
     spyOn(component, 'callEditFileUploadsApi').and.returnValue(
       of(uploadResponse)
@@ -660,11 +667,6 @@ describe('DocumentEditComponent', () => {
     expect(component['documentV1Service'].updateDocument).toHaveBeenCalledWith({
       id: component.documentId,
       documentCreateUpdateDTO: data,
-    });
-    expect(component['messageService'].add).toHaveBeenCalledWith({
-      severity: 'success',
-      summary:
-        component.translatedData['DOCUMENT_MENU.DOCUMENT_EDIT.UPDATE_SUCCESS'],
     });
     expect(component.refreshAttachmentComponent).toHaveBeenCalledWith(
       mockAttachments

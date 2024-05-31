@@ -9,7 +9,7 @@ import {
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { MessageService } from 'primeng/api';
+import { providePortalMessageServiceMock } from '@onecx/portal-integration-angular/mocks';
 import { of } from 'rxjs';
 import {
   DocumentControllerV1APIService,
@@ -54,7 +54,7 @@ describe('DocumentBulkChangesComponent', () => {
             },
           },
         },
-        MessageService,
+        providePortalMessageServiceMock(),
         DataSharingService,
         DocumentControllerV1APIService,
       ],

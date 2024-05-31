@@ -9,8 +9,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 // Third party imports
 import { TranslateService } from '@ngx-translate/core';
-import { BreadcrumbService } from '@onecx/portal-integration-angular';
-import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
+import {
+  BreadcrumbService,
+  PortalMessageService,
+} from '@onecx/portal-integration-angular';
+import { ConfirmationService, MenuItem } from 'primeng/api';
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -55,7 +58,7 @@ export class DocumentCreateComponent implements OnInit {
     private readonly translateService: TranslateService,
     private readonly breadcrumbService: BreadcrumbService,
     private readonly documentV1Service: DocumentControllerV1APIService,
-    private readonly messageService: MessageService,
+    private readonly portalMessageService: PortalMessageService,
     private readonly attachmentUploadService: AttachmentUploadService,
     private readonly router: Router,
     private readonly activeRoute: ActivatedRoute,
@@ -249,10 +252,8 @@ export class DocumentCreateComponent implements OnInit {
       .createDocument({ documentCreateUpdateDTO: documentCreateUpdateDTO })
       .pipe(
         catchError((err) => {
-          this.messageService.add({
-            severity: 'error',
-            summary:
-              this.translatedData['DOCUMENT_MENU.DOCUMENT_CREATE.CREATE_ERROR'],
+          this.portalMessageService.error({
+            summaryKey: 'DOCUMENT_MENU.DOCUMENT_CREATE.CREATE_ERROR',
           });
           this.router.navigate(['../../search'], {
             relativeTo: this.activeRoute,
@@ -261,10 +262,8 @@ export class DocumentCreateComponent implements OnInit {
         })
       )
       .subscribe((res) => {
-        this.messageService.add({
-          severity: 'success',
-          summary:
-            this.translatedData['DOCUMENT_MENU.DOCUMENT_CREATE.CREATE_SUCCESS'],
+        this.portalMessageService.success({
+          summaryKey: 'DOCUMENT_MENU.DOCUMENT_CREATE.CREATE_SUCCESS',
         });
         if (this.mapUploads().length) {
           this.callUploadAttachmentsApi(res.id);
@@ -299,16 +298,16 @@ export class DocumentCreateComponent implements OnInit {
             }
           });
           if (successFiles > 0) {
-            this.messageService.add({
-              severity: 'success',
-              summary: `${successFiles} ${this.translatedData['DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_SUCCESS']}`,
+            this.portalMessageService.success({
+              summaryKey: `${successFiles} ${[
+                'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_SUCCESS',
+              ]}`,
             });
           }
           if (failedFiles > 0) {
-            this.messageService.add({
-              severity: 'error',
+            this.portalMessageService.error({
+              summaryKey: `${failedFiles} ${this.translatedData['DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_ERROR']}`,
               life: 5000,
-              summary: `${failedFiles} ${this.translatedData['DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_ERROR']}`,
             });
             this.attachmentUploadService.exportAllFailedAttachments(documentId);
           }

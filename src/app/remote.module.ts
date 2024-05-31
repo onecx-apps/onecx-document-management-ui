@@ -5,47 +5,33 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import {
   createTranslateLoader,
-  MFE_INFO,
+  AppStateService,
+  ConfigurationService,
   PortalCoreModule,
   PortalDialogService,
   PortalMessageService,
+  addInitializeModuleGuard,
+  InitializeModuleGuard,
+  PortalApiConfiguration,
 } from '@onecx/portal-integration-angular';
-import { MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
-import { BASE_PATH } from './generated';
+import { BASE_PATH, Configuration } from './generated';
 import { DocumentSearchModule } from './modules/document-search/document-search.module';
-import { CanActivateGuard } from './shared/can-active-guard.service';
 import { SharedModule } from './shared/shared.module';
-import { basePathProvider } from './utils';
+import { environment } from 'src/environments/environment';
+import { routes } from './app-routing.module';
 
-const routes: Routes = [
-  {
-    path: '',
-    redirectTo: 'search',
-    pathMatch: 'full',
-  },
-  {
-    path: 'search',
-    canActivate: [CanActivateGuard],
-    loadChildren: () => DocumentSearchModule,
-  },
-  {
-    path: 'detail',
-    canActivate: [CanActivateGuard],
-    loadChildren: () =>
-      import('src/app/modules/document-detail/document-detail.module').then(
-        (m) => m.DocumentDetailModule
-      ),
-  },
-  {
-    path: 'more',
-    canActivate: [CanActivateGuard],
-    loadChildren: () =>
-      import('src/app/modules/document-more/document-more.module').then(
-        (m) => m.DocumentMoreModule
-      ),
-  },
-];
+export function apiConfigProvider(
+  configService: ConfigurationService,
+  appStateService: AppStateService
+) {
+  return new PortalApiConfiguration(
+    Configuration,
+    environment.API_BASE_PATH,
+    configService,
+    appStateService
+  );
+}
 @NgModule({
   imports: [
     CommonModule,
@@ -56,20 +42,19 @@ const routes: Routes = [
       loader: {
         provide: TranslateLoader,
         useFactory: createTranslateLoader,
-        deps: [HttpClient, MFE_INFO],
+        deps: [HttpClient, AppStateService],
       },
     }),
     PortalCoreModule.forMicroFrontend(),
-    RouterModule.forChild(routes),
+    RouterModule.forChild(addInitializeModuleGuard(routes)),
   ],
   exports: [],
   providers: [
-    { provide: MessageService, useExisting: PortalMessageService },
     { provide: DialogService, useClass: PortalDialogService },
     {
-      provide: BASE_PATH,
-      useFactory: basePathProvider,
-      deps: [MFE_INFO],
+      provide: Configuration,
+      useFactory: apiConfigProvider,
+      deps: [ConfigurationService, AppStateService],
     },
   ],
 })

@@ -11,7 +11,7 @@ import {
 import { RouterTestingModule } from '@angular/router/testing';
 import { DocumentEditCharacteristicsComponent } from './document-edit-characteristics.component';
 import { TranslateService } from '@ngx-translate/core';
-import { MessageService } from 'primeng/api';
+import { providePortalMessageServiceMock } from '@onecx/portal-integration-angular/mocks';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 
 describe('DocumentEditCharacteristicsComponent', () => {
@@ -34,7 +34,7 @@ describe('DocumentEditCharacteristicsComponent', () => {
       declarations: [DocumentEditCharacteristicsComponent, TranslatePipeMock],
       providers: [
         { provide: TranslateService, useClass: TranslateServiceMock },
-        { provide: MessageService, useClass: MessageService },
+        providePortalMessageServiceMock(),
       ],
     }).compileComponents();
 
