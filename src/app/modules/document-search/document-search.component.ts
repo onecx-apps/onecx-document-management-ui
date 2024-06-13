@@ -195,14 +195,18 @@ export class DocumentSearchComponent
         next: (data) => {
           if (data.length === 0) {
             this.portalMessageService.success({
-              summaryKey: this.translatedData['DOCUMENT_SEARCH.MSG_NO_RESULTS'],
+              summaryKey: this.translateService.instant(
+                'DOCUMENT_SEARCH.MSG_NO_RESULTS'
+              ),
             });
             this.isLoadMoreVisible = false;
           }
         },
         error: (error) => {
           this.portalMessageService.error({
-            summaryKey: this.translatedData['DOCUMENT_SEARCH.MSG_NO_RESULTS'],
+            summaryKey: this.translateService.instant(
+              'DOCUMENT_SEARCH.MSG_NO_RESULTS'
+            ),
           });
         },
       })
@@ -314,8 +318,9 @@ export class DocumentSearchComponent
     this.documentV1Service.deleteDocumentById({ id }).subscribe({
       next: () => {
         this.portalMessageService.success({
-          summaryKey:
-            this.translatedData['DOCUMENT_MENU.DOCUMENT_DELETE.DELETE_SUCCESS'],
+          summaryKey: this.translateService.instant(
+            'DOCUMENT_MENU.DOCUMENT_DELETE.DELETE_SUCCESS'
+          ),
         });
         this.search(this.mode || 'basic', true).subscribe({
           next: (data) => {
@@ -329,8 +334,9 @@ export class DocumentSearchComponent
       },
       error: () => {
         this.portalMessageService.error({
-          summaryKey:
-            this.translatedData['DOCUMENT_MENU.DOCUMENT_DELETE.DELETE_ERROR'],
+          summaryKey: this.translateService.instant(
+            'DOCUMENT_MENU.DOCUMENT_DELETE.DELETE_ERROR'
+          ),
         });
       },
     });
@@ -347,7 +353,9 @@ export class DocumentSearchComponent
         actionCallback: () => {
           if (this.results.length == 0) {
             this.portalMessageService.success({
-              summaryKey: this.translatedData['GENERAL.NO_RECORDS_TO_EXPORT'],
+              summaryKey: this.translateService.instant(
+                'GENERAL.NO_RECORDS_TO_EXPORT'
+              ),
             });
           }
           if (this.isExportDocEnable == true) {
@@ -372,7 +380,9 @@ export class DocumentSearchComponent
         actionCallback: () => {
           if (this.results.length == 0) {
             this.portalMessageService.success({
-              summaryKey: this.translatedData['GENERAL.NO_RECORDS_FOR_CHANGES'],
+              summaryKey: this.translateService.instant(
+                'GENERAL.NO_RECORDS_FOR_CHANGES'
+              ),
             });
           }
           if (this.isBulkEnable == true) {
