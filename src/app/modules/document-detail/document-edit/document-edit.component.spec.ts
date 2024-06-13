@@ -7,7 +7,11 @@ import {
   tick,
 } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { TranslateService } from '@ngx-translate/core';
+import {
+  TranslateLoader,
+  TranslateModule,
+  TranslateService,
+} from '@ngx-translate/core';
 import {
   PortalMessageServiceMock,
   providePortalMessageServiceMock,
@@ -17,14 +21,18 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DocumentEditComponent } from './document-edit.component';
-import { Action } from '@onecx/portal-integration-angular';
+import {
+  Action,
+  AppStateService,
+  createTranslateLoader,
+} from '@onecx/portal-integration-angular';
 import { DocumentDetailDTO } from 'src/app/generated/model/documentDetailDTO';
 import {
   DocumentControllerV1APIService,
   DocumentCreateUpdateDTO,
 } from 'src/app/generated';
 import { of, throwError } from 'rxjs';
-import { HttpEvent, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpResponse } from '@angular/common/http';
 import { saveAs } from 'file-saver';
 import { AttachmentUploadService } from '../attachment-upload.service';
 
@@ -58,9 +66,16 @@ describe('DocumentEditComponent', () => {
         BrowserModule,
         ReactiveFormsModule,
         FormsModule,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: createTranslateLoader,
+            deps: [HttpClient, AppStateService],
+          },
+        }),
       ],
       providers: [
-        { provide: TranslateService, useClass: TranslateServiceMock },
+        TranslateService,
         { provide: DocumentControllerV1APIService },
         AttachmentUploadService,
         providePortalMessageServiceMock(),
@@ -198,10 +213,10 @@ describe('DocumentEditComponent', () => {
     component.attachmentFormValidation(formFieldArray);
     expect(
       formFieldArray.has('DOCUMENT_MENU.DOCUMENT_EDIT.ATTACHMENT_NAME_MISSING')
-    ).toBe(false);
+    ).toBe(true);
     expect(
       formFieldArray.has('DOCUMENT_MENU.DOCUMENT_EDIT.ATTACHMENT_FILE_MISSING')
-    ).toBe(false);
+    ).toBe(true);
   });
 
   it('should map attachmentArray to fileUploads', () => {
@@ -569,24 +584,12 @@ describe('DocumentEditComponent', () => {
     spyOn(component, 'downloadZip');
     component.setHeaderButtonsWrapper({} as DocumentDetailDTO);
     expect(component.headerActions.length).toBe(6);
-    expect(component.headerActions[0].label).toEqual(
-      component.translatedData['GENERAL.CLOSE']
-    );
-    expect(component.headerActions[1].label).toEqual(
-      component.translatedData['GENERAL.EDIT']
-    );
-    expect(component.headerActions[2].label).toEqual(
-      component.translatedData['GENERAL.CANCEL']
-    );
-    expect(component.headerActions[3].label).toEqual(
-      component.translatedData['GENERAL.SAVE']
-    );
-    expect(component.headerActions[4].label).toEqual(
-      component.translatedData['GENERAL.DOWNLOAD_ZIP']
-    );
-    expect(component.headerActions[5].label).toEqual(
-      component.translatedData['GENERAL.DELETE']
-    );
+    expect(component.headerActions[0].label).toEqual('GENERAL.CLOSE');
+    expect(component.headerActions[1].label).toEqual('GENERAL.EDIT');
+    expect(component.headerActions[2].label).toEqual('GENERAL.CANCEL');
+    expect(component.headerActions[3].label).toEqual('GENERAL.SAVE');
+    expect(component.headerActions[4].label).toEqual('GENERAL.DOWNLOAD_ZIP');
+    expect(component.headerActions[5].label).toEqual('GENERAL.DELETE');
     component.headerActions[0].actionCallback();
     expect(component.onClose).toHaveBeenCalled();
     component.headerActions[1].actionCallback();

@@ -1,9 +1,18 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateService } from '@ngx-translate/core';
+import {
+  TranslateLoader,
+  TranslateModule,
+  TranslateService,
+} from '@ngx-translate/core';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 import { DocumentsDeleteComponent } from './documents-delete.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpClient } from '@angular/common/http';
+import {
+  createTranslateLoader,
+  AppStateService,
+} from '@onecx/portal-integration-angular';
 
 describe('DocumentsDeleteComponent', () => {
   let component: DocumentsDeleteComponent;
@@ -17,11 +26,18 @@ describe('DocumentsDeleteComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      declarations: [DocumentsDeleteComponent, TranslatePipeMock],
-      providers: [
-        { provide: TranslateService, useClass: TranslateServiceMock },
+      imports: [
+        HttpClientTestingModule,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: createTranslateLoader,
+            deps: [HttpClient, AppStateService],
+          },
+        }),
       ],
+      declarations: [DocumentsDeleteComponent, TranslatePipeMock],
+      providers: [TranslateService],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DocumentsDeleteComponent);

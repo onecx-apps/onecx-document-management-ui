@@ -24,7 +24,11 @@ import { DataView } from 'primeng/dataview';
 // Application imports
 import { AttachmentUploadService } from '../../document-detail/attachment-upload.service';
 import { DocumentDetailDTO } from 'src/app/generated';
-import { generateFilteredColumns, initFilteredColumns } from 'src/app/utils';
+import {
+  generateFilteredColumns,
+  getBestMatchLanguage,
+  initFilteredColumns,
+} from 'src/app/utils';
 
 enum SortOrder {
   ASCENDING,
@@ -154,6 +158,7 @@ export class ResultsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.translateService.use(getBestMatchLanguage(this.userService));
     this.getTranslatedData();
     this.filteredColumns = initFilteredColumns(this.columns);
   }

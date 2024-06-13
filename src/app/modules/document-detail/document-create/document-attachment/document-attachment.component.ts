@@ -9,6 +9,7 @@ import {
 
 // Third party imports
 import { TranslateService } from '@ngx-translate/core';
+import { UserService } from '@onecx/portal-integration-angular';
 import { SelectItem } from 'primeng/api';
 
 // Application imports
@@ -17,7 +18,11 @@ import {
   SupportedMimeTypeDTO,
 } from 'src/app/generated';
 import { DataSharingService } from 'src/app/shared/data-sharing.service';
-import { noSpecialCharacters, trimSpaces } from 'src/app/utils';
+import {
+  getBestMatchLanguage,
+  noSpecialCharacters,
+  trimSpaces,
+} from 'src/app/utils';
 
 @Component({
   selector: 'app-document-attachment',
@@ -50,10 +55,12 @@ export class DocumentAttachmentComponent implements OnInit {
   constructor(
     private readonly translateService: TranslateService,
     private readonly supportedMimeTypeV1Service: SupportedMimeTypeControllerV1APIService,
-    private readonly dataSharingService: DataSharingService
+    private readonly dataSharingService: DataSharingService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
+    this.translateService.use(getBestMatchLanguage(this.userService));
     this.specialChar = this.dataSharingService.specialChar;
     this.showAttachment = false;
     this.attachmentFieldsForm = new FormGroup({

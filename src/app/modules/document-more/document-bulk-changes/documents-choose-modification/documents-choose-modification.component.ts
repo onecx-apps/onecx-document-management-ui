@@ -2,8 +2,12 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
+// Third party imports
+import { UserService } from '@onecx/portal-integration-angular';
+
 // Application imports
 import { DataSharingService } from 'src/app/shared/data-sharing.service';
+import { getBestMatchLanguage } from 'src/app/utils';
 
 @Component({
   selector: 'app-documents-choose-modification',
@@ -31,10 +35,12 @@ export class DocumentsChooseModificationComponent implements OnInit {
 
   constructor(
     private readonly translateService: TranslateService,
+    private userService: UserService,
     private readonly dataSharingService: DataSharingService
   ) {}
 
   ngOnInit(): void {
+    this.translateService.use(getBestMatchLanguage(this.userService));
     this.getTranslatedData();
     this.selectedOperation = this.dataSharingService.getModification();
     this.selectedValue = this.chooseModification.find(

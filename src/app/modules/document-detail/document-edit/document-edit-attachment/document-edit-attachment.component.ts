@@ -10,6 +10,7 @@ import {
 
 // Third party imports
 import { TranslateService } from '@ngx-translate/core';
+import { UserService } from '@onecx/portal-integration-angular';
 import { SelectItem } from 'primeng/api';
 import { catchError } from 'rxjs/operators';
 
@@ -20,7 +21,11 @@ import {
   SupportedMimeTypeControllerV1APIService,
   SupportedMimeTypeDTO,
 } from 'src/app/generated';
-import { noSpecialCharacters, trimSpaces } from 'src/app/utils';
+import {
+  getBestMatchLanguage,
+  noSpecialCharacters,
+  trimSpaces,
+} from 'src/app/utils';
 import { DataSharingService } from 'src/app/shared/data-sharing.service';
 
 @Component({
@@ -56,10 +61,12 @@ export class DocumentEditAttachmentComponent implements OnInit {
     private readonly translateService: TranslateService,
     private readonly supportedMimeTypeV1Service: SupportedMimeTypeControllerV1APIService,
     private readonly attachmentUploadService: AttachmentUploadService,
-    private readonly dataSharingService: DataSharingService
+    private readonly dataSharingService: DataSharingService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
+    this.translateService.use(getBestMatchLanguage(this.userService));
     this.specialChar = this.dataSharingService.specialChar;
     this.showAttachment = false;
     this.attachmentFieldsForm = new FormGroup({

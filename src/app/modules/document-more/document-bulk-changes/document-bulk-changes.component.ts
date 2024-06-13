@@ -8,6 +8,7 @@ import {
   Action,
   BreadcrumbService,
   PortalMessageService,
+  UserService,
 } from '@onecx/portal-integration-angular';
 import { TranslateService } from '@ngx-translate/core';
 import { MenuItem, MessageService, SelectItem } from 'primeng/api';
@@ -25,6 +26,7 @@ import { DocumentsUpdateComponent } from './documents-update/documents-update.co
 import { DocumentsChooseModificationComponent } from './documents-choose-modification/documents-choose-modification.component';
 import { DataSharingService } from 'src/app/shared/data-sharing.service';
 import { UserDetailsService } from 'src/app/generated/api/user-details.service';
+import { getBestMatchLanguage } from 'src/app/utils';
 
 @Component({
   selector: 'app-document-bulk-changes',
@@ -66,6 +68,7 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
   constructor(
     private readonly documentV1Service: DocumentControllerV1APIService,
     private readonly translateService: TranslateService,
+    private userService: UserService,
     private readonly breadcrumbService: BreadcrumbService,
     private readonly formBuilder: UntypedFormBuilder,
     private readonly router: Router,
@@ -77,6 +80,7 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.translateService.use(getBestMatchLanguage(this.userService));
     this.getTranslatedData();
     this.getLoggedInUserData();
     this.getSearchResult();
@@ -622,9 +626,7 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
     this.documentV1Service.bulkUpdateDocument(params).subscribe({
       next: () => {
         this.portalMessageService.success({
-          summaryKey: `${data.length} ${[
-            'DOCUMENT_MENU.DOCUMENT_MORE.SELECTED_DOCUMENTS.UPDATE_SUCCESS',
-          ]}`,
+          summaryKey: `${data.length} ${this.translatedData['DOCUMENT_MENU.DOCUMENT_MORE.SELECTED_DOCUMENTS.UPDATE_SUCCESS']}`,
         });
         this.documentBulkForm.enable();
         this.isSubmitting = false;
@@ -675,9 +677,7 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
       .subscribe({
         next: () => {
           this.portalMessageService.success({
-            summaryKey: `${checkedDocumentIds.length} ${[
-              'DOCUMENT_MENU.DOCUMENT_MORE.SELECTED_DOCUMENTS.DELETE_SUCCESS',
-            ]}`,
+            summaryKey: `${checkedDocumentIds.length} ${this.translatedData['DOCUMENT_MENU.DOCUMENT_MORE.SELECTED_DOCUMENTS.DELETE_SUCCESS']}`,
           });
           this.router.navigate(['../../search'], {
             relativeTo: this.activeRoute,

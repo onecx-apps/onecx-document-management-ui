@@ -75,8 +75,6 @@ function initializer(
   ],
   providers: [
     { provide: APP_CONFIG, useValue: environment },
-    //{ provide: BASE_PATH, useValue: 'onecx-document-management-api' },
-    //{ provide: MessageService, useExisting: PortalMessageService },
     { provide: BASE_PATH, useValue: environment.API_BASE_PATH },
     {
       provide: APP_INITIALIZER,

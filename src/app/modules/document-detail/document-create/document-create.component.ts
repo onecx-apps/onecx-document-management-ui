@@ -12,6 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 import {
   BreadcrumbService,
   PortalMessageService,
+  UserService,
 } from '@onecx/portal-integration-angular';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import { throwError } from 'rxjs';
@@ -26,7 +27,7 @@ import {
   DocumentCreateUpdateDTO,
   DocumentControllerV1APIService,
 } from 'src/app/generated';
-import { noSpecialCharacters } from 'src/app/utils';
+import { getBestMatchLanguage, noSpecialCharacters } from '../../../utils';
 
 @Component({
   selector: 'app-document-create',
@@ -60,12 +61,14 @@ export class DocumentCreateComponent implements OnInit {
     private readonly documentV1Service: DocumentControllerV1APIService,
     private readonly portalMessageService: PortalMessageService,
     private readonly attachmentUploadService: AttachmentUploadService,
+    private userService: UserService,
     private readonly router: Router,
     private readonly activeRoute: ActivatedRoute,
     private readonly formBuilder: UntypedFormBuilder
   ) {}
 
   ngOnInit(): void {
+    this.translateService.use(getBestMatchLanguage(this.userService));
     this.getTranslatedData();
     // Form Validations
     this.documentCreateForm = this.formBuilder.group({
@@ -299,14 +302,12 @@ export class DocumentCreateComponent implements OnInit {
           });
           if (successFiles > 0) {
             this.portalMessageService.success({
-              summaryKey: `${successFiles} ${[
-                'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_SUCCESS',
-              ]}`,
+              summaryKey: `${successFiles} ${this.translateService.instant['DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_SUCCESS']}`,
             });
           }
           if (failedFiles > 0) {
             this.portalMessageService.error({
-              summaryKey: `${failedFiles} ${this.translatedData['DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_ERROR']}`,
+              summaryKey: `${failedFiles} ${this.translateService.instant['DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_ERROR']}`,
               life: 5000,
             });
             this.attachmentUploadService.exportAllFailedAttachments(documentId);

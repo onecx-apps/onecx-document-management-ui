@@ -15,6 +15,7 @@ import { catchError, Subscription, throwError, timer } from 'rxjs';
 import {
   BreadcrumbService,
   PortalMessageService,
+  UserService,
 } from '@onecx/portal-integration-angular';
 
 // Application imports
@@ -27,6 +28,7 @@ import {
   DocumentTypeDTO,
   SupportedMimeTypeDTO,
 } from 'src/app/generated';
+import { getBestMatchLanguage } from 'src/app/utils';
 
 enum SortOrder {
   ASCENDING,
@@ -85,10 +87,12 @@ export class DocumentQuickUploadComponent implements OnInit {
     private readonly router: Router,
     private readonly activeRoute: ActivatedRoute,
     private readonly breadcrumbService: BreadcrumbService,
-    private readonly translateService: TranslateService
+    private readonly translateService: TranslateService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
+    this.translateService.use(getBestMatchLanguage(this.userService));
     this.getTranslatedData();
     this.documentQuickUploadForm = new FormGroup({
       documentName: new FormControl('', [Validators.required]),
@@ -359,16 +363,12 @@ export class DocumentQuickUploadComponent implements OnInit {
           });
           if (successFiles > 0) {
             this.portalMessageService.success({
-              summaryKey: `${successFiles} ${[
-                'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_SUCCESS',
-              ]}`,
+              summaryKey: `${successFiles} ${this.translatedData['DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_SUCCESS']}`,
             });
           }
           if (failedFiles > 0) {
             this.portalMessageService.error({
-              summaryKey: `${failedFiles} ${[
-                'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_ERROR',
-              ]}`,
+              summaryKey: `${failedFiles} ${this.translatedData['DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_ERROR']}`,
               life: 5000,
             });
             this.attachmentUploadService.exportAllFailedAttachments(documentId);

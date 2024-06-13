@@ -8,7 +8,11 @@ import {
 } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import {
+  TranslateLoader,
+  TranslateModule,
+  TranslateService,
+} from '@ngx-translate/core';
 import { providePortalMessageServiceMock } from '@onecx/portal-integration-angular/mocks';
 import { of } from 'rxjs';
 import {
@@ -20,6 +24,11 @@ import { DataSharingService } from 'src/app/shared/data-sharing.service';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 import { DocumentBulkChangesComponent } from './document-bulk-changes.component';
 import { UserDetailsService } from 'src/app/generated/api/user-details.service';
+import { HttpClient } from '@angular/common/http';
+import {
+  createTranslateLoader,
+  AppStateService,
+} from '@onecx/portal-integration-angular';
 
 describe('DocumentBulkChangesComponent', () => {
   let component: DocumentBulkChangesComponent;
@@ -40,10 +49,20 @@ describe('DocumentBulkChangesComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DocumentBulkChangesComponent, TranslatePipeMock],
-      imports: [ReactiveFormsModule, HttpClientTestingModule],
+      imports: [
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: createTranslateLoader,
+            deps: [HttpClient, AppStateService],
+          },
+        }),
+      ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
-        { provide: TranslateService, useClass: TranslateServiceMock },
+        TranslateService,
         {
           provide: ActivatedRoute,
           useValue: {

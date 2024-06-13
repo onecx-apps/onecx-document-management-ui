@@ -3,8 +3,16 @@ import { CUSTOM_ELEMENTS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { BreadcrumbService } from '@onecx/portal-integration-angular';
+import {
+  TranslateLoader,
+  TranslateModule,
+  TranslateService,
+} from '@ngx-translate/core';
+import {
+  AppStateService,
+  BreadcrumbService,
+  createTranslateLoader,
+} from '@onecx/portal-integration-angular';
 import {
   PortalMessageServiceMock,
   providePortalMessageServiceMock,
@@ -13,6 +21,7 @@ import { AttachmentUploadService } from 'src/app/modules/document-detail/attachm
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 
 import { DocumentsChooseComponent } from './documents-choose.component';
+import { HttpClient } from '@angular/common/http';
 
 describe('DocumentsChooseComponent', () => {
   let component: DocumentsChooseComponent;
@@ -29,10 +38,20 @@ describe('DocumentsChooseComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DocumentsChooseComponent, TranslatePipeMock],
-      imports: [ReactiveFormsModule, HttpClientTestingModule],
+      imports: [
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: createTranslateLoader,
+            deps: [HttpClient, AppStateService],
+          },
+        }),
+      ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
-        { provide: TranslateService, useClass: TranslateServiceMock },
+        TranslateService,
         {
           provide: ActivatedRoute,
           useValue: {

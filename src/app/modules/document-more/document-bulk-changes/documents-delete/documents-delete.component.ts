@@ -3,10 +3,12 @@ import { Component, Input, OnInit } from '@angular/core';
 
 // Third party imports
 import { TranslateService } from '@ngx-translate/core';
+import { UserService } from '@onecx/portal-integration-angular';
 
 // Application imports
 import { DocumentDetailDTO } from 'src/app/generated';
 import { AttachmentUploadService } from '../../../document-detail/attachment-upload.service';
+import { getBestMatchLanguage } from 'src/app/utils';
 
 @Component({
   selector: 'app-documents-delete',
@@ -21,10 +23,12 @@ export class DocumentsDeleteComponent implements OnInit {
 
   constructor(
     private readonly translateService: TranslateService,
+    private userService: UserService,
     private readonly attachmentUploadService: AttachmentUploadService
   ) {}
 
   ngOnInit(): void {
+    this.translateService.use(getBestMatchLanguage(this.userService));
     this.getTranslatedData();
   }
   /**

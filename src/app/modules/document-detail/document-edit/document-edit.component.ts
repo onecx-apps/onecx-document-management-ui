@@ -17,6 +17,7 @@ import {
   BreadcrumbService,
   ObjectDetailItem,
   PortalMessageService,
+  UserService,
 } from '@onecx/portal-integration-angular';
 import { saveAs } from 'file-saver';
 import { MessageService } from 'primeng/api';
@@ -36,7 +37,11 @@ import {
   UpdateDocumentRequestParams,
 } from 'src/app/generated';
 import { DocumentTabStateService } from 'src/app/shared/document-tab-state.service';
-import { convertToCSV, noSpecialCharacters } from 'src/app/utils';
+import {
+  convertToCSV,
+  getBestMatchLanguage,
+  noSpecialCharacters,
+} from 'src/app/utils';
 import { DataSharingService } from 'src/app/shared/data-sharing.service';
 
 @Component({
@@ -87,10 +92,12 @@ export class DocumentEditComponent implements OnInit {
     private readonly router: Router,
     public documentTabStateService: DocumentTabStateService,
     private readonly dataSharingService: DataSharingService,
+    private userService: UserService,
     private readonly datepipe: DatePipe
   ) {}
 
   public ngOnInit(): void {
+    this.translateService.use(getBestMatchLanguage(this.userService));
     this.specialChar = this.dataSharingService.specialChar;
     this.getTranslatedData();
     const tabQuery = +this.activeRoute.snapshot.queryParamMap.get('tab');
@@ -252,7 +259,7 @@ export class DocumentEditComponent implements OnInit {
   private setHeaderButtons(document: DocumentDetailDTO) {
     this.headerActions = [
       {
-        label: this.translatedData['GENERAL.CLOSE'],
+        label: this.translateService?.instant('GENERAL.CLOSE'),
         title: this.translateService.instant('GENERAL.CLOSE'),
         show: 'always',
         icon: 'pi pi-arrow-left',
@@ -263,7 +270,7 @@ export class DocumentEditComponent implements OnInit {
       },
       {
         permission: 'DOCUMENT_MGMT#DOCUMENT_EDIT',
-        label: this.translatedData['GENERAL.EDIT'],
+        label: this.translateService.instant('GENERAL.EDIT'),
         title: this.translateService.instant('GENERAL.EDIT'),
         show: 'always',
         icon: 'pi pi-pencil',
@@ -273,7 +280,7 @@ export class DocumentEditComponent implements OnInit {
         },
       },
       {
-        label: this.translatedData['GENERAL.CANCEL'],
+        label: this.translateService.instant('GENERAL.CANCEL'),
         title: this.translateService.instant('GENERAL.CANCEL'),
         show: 'always',
         icon: 'pi pi-times',
@@ -284,7 +291,7 @@ export class DocumentEditComponent implements OnInit {
         },
       },
       {
-        label: this.translatedData['GENERAL.SAVE'],
+        label: this.translateService.instant('GENERAL.SAVE'),
         show: 'always',
         title: this.translateService.instant('GENERAL.SAVE'),
         icon: 'pi pi-save',
@@ -296,7 +303,7 @@ export class DocumentEditComponent implements OnInit {
       },
       {
         permission: 'DOCUMENT_MGMT#DOCUMENT_DOWNLOAD',
-        label: this.translatedData['GENERAL.DOWNLOAD_ZIP'],
+        label: this.translateService.instant('GENERAL.DOWNLOAD_ZIP'),
         title: this.translateService.instant('GENERAL.DOWNLOAD_ZIP'),
         show: 'always',
         icon: 'pi pi-download',
@@ -306,7 +313,7 @@ export class DocumentEditComponent implements OnInit {
         },
       },
       {
-        label: this.translatedData['GENERAL.DELETE'],
+        label: this.translateService.instant('GENERAL.DELETE'),
         title: this.translateService.instant('GENERAL.DELETE'),
         icon: 'pi pi-trash',
         show: 'asOverflow',
@@ -458,16 +465,16 @@ export class DocumentEditComponent implements OnInit {
             switch (data) {
               case 'name':
                 formFieldArray.add(
-                  this.translatedData[
+                  this.translateService.instant(
                     'DOCUMENT_MENU.DOCUMENT_EDIT.ATTACHMENT_NAME_MISSING'
-                  ]
+                  )
                 );
                 break;
               case 'fileData':
                 formFieldArray.add(
-                  this.translatedData[
+                  this.translateService.instant(
                     'DOCUMENT_MENU.DOCUMENT_EDIT.ATTACHMENT_FILE_MISSING'
-                  ]
+                  )
                 );
                 break;
             }
@@ -693,16 +700,12 @@ export class DocumentEditComponent implements OnInit {
             });
             if (successFiles > 0) {
               this.portalMessageService.success({
-                summaryKey: `${successFiles} ${[
-                  'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_SUCCESS',
-                ]}`,
+                summaryKey: `${successFiles} ${this.translatedData['DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_SUCCESS']}`,
               });
             }
             if (failedFiles > 0) {
               this.portalMessageService.error({
-                summaryKey: `${failedFiles} ${[
-                  'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_ERROR',
-                ]}`,
+                summaryKey: `${failedFiles} ${this.translatedData['DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_ERROR']}`,
                 life: 5000,
               });
               this.attachmentUploadService.exportAllFailedAttachments(

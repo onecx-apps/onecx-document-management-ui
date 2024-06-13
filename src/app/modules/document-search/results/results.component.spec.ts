@@ -1,15 +1,19 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateService } from '@ngx-translate/core';
+import {
+  TranslateLoader,
+  TranslateModule,
+  TranslateService,
+} from '@ngx-translate/core';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 import { ResultsComponent } from './results.component';
-import { IAuthMockService } from 'src/app/test/mocks/IAuthMockService';
-import { AUTH_SERVICE } from '@onecx/portal-integration-angular';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DocumentDetailDTO, LifeCycleState } from 'src/app/generated';
-import { generateFilteredColumns } from 'src/app/utils';
+import { createTranslateLoader, generateFilteredColumns } from 'src/app/utils';
 import { AttachmentUploadService } from '../../document-detail/attachment-upload.service';
+import { HttpClient } from '@angular/common/http';
+import { AppStateService } from '@onecx/portal-integration-angular';
 
 describe('ResultsComponent', () => {
   let component: ResultsComponent;
@@ -70,13 +74,19 @@ describe('ResultsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule],
-      declarations: [ResultsComponent, TranslatePipeMock],
-      providers: [
-        AttachmentUploadService,
-        { provide: TranslateService, useClass: TranslateServiceMock },
-        { provide: AUTH_SERVICE, useClass: IAuthMockService },
+      imports: [
+        RouterTestingModule,
+        HttpClientTestingModule,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: createTranslateLoader,
+            deps: [HttpClient, AppStateService],
+          },
+        }),
       ],
+      declarations: [ResultsComponent, TranslatePipeMock],
+      providers: [AttachmentUploadService, TranslateService],
     }).compileComponents();
   });
 

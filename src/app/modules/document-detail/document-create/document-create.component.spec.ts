@@ -1,11 +1,20 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Pipe, PipeTransform } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClient } from '@angular/common/http';
+import {
+  createTranslateLoader,
+  AppStateService,
+} from '@onecx/portal-integration-angular';
 import {
   PortalMessageServiceMock,
   providePortalMessageServiceMock,
 } from '@onecx/portal-integration-angular/mocks';
-import { TranslateService } from '@ngx-translate/core';
+import {
+  TranslateLoader,
+  TranslateModule,
+  TranslateService,
+} from '@ngx-translate/core';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 import { RouterTestingModule } from '@angular/router/testing';
 import {
@@ -36,12 +45,16 @@ describe('DocumentCreateComponent', () => {
         HttpClientTestingModule,
         RouterTestingModule,
         ReactiveFormsModule,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: createTranslateLoader,
+            deps: [HttpClient, AppStateService],
+          },
+        }),
       ],
       declarations: [DocumentCreateComponent, TranslatePipeMock],
-      providers: [
-        { provide: TranslateService, useClass: TranslateServiceMock },
-        providePortalMessageServiceMock(),
-      ],
+      providers: [providePortalMessageServiceMock(), TranslateService],
     }).compileComponents();
     portalMessageServiceMock = TestBed.inject(PortalMessageServiceMock);
   });

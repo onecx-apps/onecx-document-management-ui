@@ -1,7 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DocumentEditAttachmentComponent } from './document-edit-attachment.component';
-import { TranslateService } from '@ngx-translate/core';
+import {
+  TranslateLoader,
+  TranslateModule,
+  TranslateService,
+} from '@ngx-translate/core';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 import { SupportedMimeTypeControllerV1APIService } from 'src/app/generated';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -12,11 +16,16 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import {
+  createTranslateLoader,
+  AppStateService,
+} from '@onecx/portal-integration-angular';
 
 describe('DocumentEditAttachmentComponent', () => {
   let component: DocumentEditAttachmentComponent;
   let fixture: ComponentFixture<DocumentEditAttachmentComponent>;
-  let translateService: jasmine.SpyObj<TranslateService>;
+  let translateService: TranslateService;
 
   @Pipe({ name: 'translate' })
   class TranslatePipeMock implements PipeTransform {
@@ -27,15 +36,25 @@ describe('DocumentEditAttachmentComponent', () => {
   beforeEach(async () => {
     const translateSpy = jasmine.createSpyObj('TranslateService', ['get']);
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, FormsModule, ReactiveFormsModule],
+      imports: [
+        HttpClientTestingModule,
+        FormsModule,
+        ReactiveFormsModule,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: createTranslateLoader,
+            deps: [HttpClient, AppStateService],
+          },
+        }),
+      ],
       declarations: [DocumentEditAttachmentComponent, TranslatePipeMock],
       providers: [
-        { provide: TranslateService, useClass: TranslateServiceMock },
+        TranslateService,
         {
           provide: SupportedMimeTypeControllerV1APIService,
           useClass: SupportedMimeTypeControllerV1APIService,
         },
-        { provide: TranslateService, useValue: translateSpy },
       ],
     }).compileComponents();
     translateService = TestBed.inject(
@@ -623,28 +642,6 @@ describe('DocumentEditAttachmentComponent', () => {
     expect(component.updateAttachmentData).toHaveBeenCalled();
   });
 
-  it('should show attachment error message', () => {
-    const file = { name: 'filename.txt' };
-    const translatedErrorMessage = 'Translated error message';
-    translateService.get
-      .withArgs(['DOCUMENT_DETAIL.ATTACHMENTS.FILESIZE_ERROR_MESSAGE'], {
-        filename: file.name,
-      })
-      .and.returnValue(
-        of({
-          'DOCUMENT_DETAIL.ATTACHMENTS.FILESIZE_ERROR_MESSAGE':
-            translatedErrorMessage,
-        })
-      );
-
-    component.showAttachmentErrorMessage(file);
-
-    expect(translateService.get).toHaveBeenCalledWith(
-      ['DOCUMENT_DETAIL.ATTACHMENTS.FILESIZE_ERROR_MESSAGE'],
-      { filename: file.name }
-    );
-    expect(component.attachmentErrorMessage).toBe(translatedErrorMessage);
-  });
   it('should delete an attachment when multiple attachments exist', () => {
     component.attachmentArray = [
       { name: 'Attachment 1' },

@@ -9,10 +9,19 @@ import {
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { TranslateService } from '@ngx-translate/core';
+import {
+  TranslateLoader,
+  TranslateModule,
+  TranslateService,
+} from '@ngx-translate/core';
 import { providePortalMessageServiceMock } from '@onecx/portal-integration-angular/mocks';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 import { DocumentQuickUploadFormComponent } from './document-quick-upload-form.component';
+import { HttpClient } from '@angular/common/http';
+import {
+  createTranslateLoader,
+  AppStateService,
+} from '@onecx/portal-integration-angular';
 
 describe('DocumentQuickUploadFormComponent', () => {
   let component: DocumentQuickUploadFormComponent;
@@ -33,11 +42,15 @@ describe('DocumentQuickUploadFormComponent', () => {
         BrowserModule,
         ReactiveFormsModule,
         FormsModule,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: createTranslateLoader,
+            deps: [HttpClient, AppStateService],
+          },
+        }),
       ],
-      providers: [
-        { provide: TranslateService, useClass: TranslateServiceMock },
-        providePortalMessageServiceMock(),
-      ],
+      providers: [TranslateService, providePortalMessageServiceMock()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DocumentQuickUploadFormComponent);

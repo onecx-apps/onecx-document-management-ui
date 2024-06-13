@@ -9,7 +9,12 @@ import {
 import { ReactiveFormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
+import {
+  TranslateLoader,
+  TranslateModule,
+  TranslateService,
+} from '@ngx-translate/core';
 import {
   PortalMessageServiceMock,
   providePortalMessageServiceMock,
@@ -17,6 +22,10 @@ import {
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
+import {
+  createTranslateLoader,
+  AppStateService,
+} from '@onecx/portal-integration-angular';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 import { CriteriaComponent } from './criteria/criteria.component';
@@ -57,6 +66,13 @@ describe('DocumentSearchComponent', () => {
         DropdownModule,
         AutoCompleteModule,
         SharedModule,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: createTranslateLoader,
+            deps: [HttpClient, AppStateService],
+          },
+        }),
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
@@ -228,17 +244,23 @@ describe('DocumentSearchComponent', () => {
     component.setFilterActions();
     expect(component.items).toBeTruthy();
     expect(component.items.length).toBe(3);
-    expect(component.items[0].label).toBe(undefined);
+    expect(component.items[0].label).toBe(
+      'DOCUMENT_SEARCH.FILTER.CREATED_BY_ME'
+    );
     expect(component.items[0].command).toBeDefined();
     spyOn(component, 'getFilteredCreatedByMe');
     component.items[0].command();
     expect(component.getFilteredCreatedByMe).toHaveBeenCalled();
-    expect(component.items[1].label).toBe(undefined);
+    expect(component.items[1].label).toBe(
+      'DOCUMENT_SEARCH.FILTER.RECENTLY_UPDATED'
+    );
     expect(component.items[1].command).toBeDefined();
     spyOn(component, 'getFilteredRecentlyUpdated');
     component.items[1].command();
     expect(component.getFilteredRecentlyUpdated).toHaveBeenCalled();
-    expect(component.items[2].label).toBe(undefined);
+    expect(component.items[2].label).toBe(
+      'DOCUMENT_SEARCH.FILTER.CLEAR_FILTER'
+    );
     expect(component.items[2].command).toBeDefined();
     spyOn(component, 'clearFilter');
     component.items[2].command();
