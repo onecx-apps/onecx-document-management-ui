@@ -5,7 +5,6 @@ import { UntypedFormGroup } from '@angular/forms';
 @Component({
   selector: 'app-document-edit-related-objects',
   templateUrl: './document-edit-related-objects.component.html',
-  styleUrls: ['./document-edit-related-objects.component.scss'],
 })
 export class DocumentEditRelatedObjectsComponent {
   @Input() documentDescriptionForm: UntypedFormGroup;

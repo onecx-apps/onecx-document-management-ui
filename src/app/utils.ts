@@ -23,7 +23,7 @@ export function createTranslateLoader(http: HttpClient, mfeInfo: MfeInfo) {
     `******************** cofiguring translate loader ${mfeInfo?.remoteBaseUrl}`
   );
   //TODO notes: this way you can load the data from remote server
-  if (mfeInfo && mfeInfo.remoteBaseUrl) {
+  if (mfeInfo?.remoteBaseUrl) {
     return new TranslateHttpLoader(
       http,
       toSafeUrl(`${mfeInfo.remoteBaseUrl}/assets/i18n/`),
@@ -98,6 +98,50 @@ export function generateFilteredColumns(
     filteredColumns,
   };
 }
+
+/**
+ *
+ * @param line
+ * @param headerList
+ * @param element
+ * convert the data to lines
+ */
+function convertToLines(headerList, element) {
+  let line = '';
+  for (let index in headerList) {
+    let head = headerList[index];
+    if (typeof element[head] === 'string') {
+      if (element[head].includes('\n'))
+        element[head] = element[head].replaceAll('\n', ' ');
+      if (element[head].includes('"'))
+        element[head] = element[head].replaceAll('"', "'");
+      element[head] = JSON.stringify(element[head]);
+    }
+    line += element[head] + ',';
+  }
+  return line;
+}
+/**
+ * subfunction for the convertToCSV
+ */
+function convertToCSVArray(obj, str, headerList) {
+  for (const element of obj) {
+    let line = convertToLines(headerList, element);
+    str += line + '\r\n';
+  }
+  return str;
+}
+/**
+ * subfunction for the convertToCSV
+ */
+function convertToCSVObject(array, obj, headerList, str) {
+  array.push(obj);
+  for (const element of array) {
+    let line = convertToLines(headerList, element);
+    str += line + '\r\n';
+  }
+  return str;
+}
 /**
  * @param obj
  * @param headerList
@@ -117,41 +161,9 @@ export function convertToCSV(obj, headerList) {
   str += row + '\r\n';
 
   if (obj.length >= 1) {
-    for (let i = 0; i < obj.length; i++) {
-      let line = '';
-      for (let index in headerList) {
-        let head = headerList[index];
-        if (typeof obj[i][head] === 'string') {
-          if (obj[i][head].includes('\n'))
-            obj[i][head] = obj[i][head].replaceAll('\n', ' ');
-          if (obj[i][head].includes('"'))
-            obj[i][head] = obj[i][head].replaceAll('"', "'");
-          obj[i][head] = JSON.stringify(obj[i][head]);
-        }
-        line += obj[i][head] + ',';
-      }
-      str += line + '\r\n';
-    }
-    return str;
+    return convertToCSVArray(obj, str, headerList);
   } else {
-    array.push(obj);
-    for (let i = 0; i < array.length; i++) {
-      let line = '';
-      for (let index in headerList) {
-        let head = headerList[index];
-
-        if (typeof array[i][head] === 'string') {
-          if (array[i][head].includes('\n'))
-            array[i][head] = array[i][head].replaceAll('\n', ' ');
-          if (array[i][head].includes('"'))
-            array[i][head] = array[i][head].replaceAll('"', "'");
-          array[i][head] = JSON.stringify(array[i][head]);
-        }
-        line += array[i][head] + ',';
-      }
-      str += line + '\r\n';
-    }
-    return str;
+    return convertToCSVObject(array, obj, headerList, str);
   }
 }
 /**

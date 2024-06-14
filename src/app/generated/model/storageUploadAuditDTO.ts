@@ -1,4 +1,4 @@
-export interface storageUploadAuditDTO {
+export interface StorageUploadAuditDTO {
   attachmentDescription?: string;
   attachmentId?: string;
   channelId?: string;

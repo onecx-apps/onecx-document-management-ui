@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 // Application imports
 import { Configuration } from 'src/app/generated/configuration';
 import { CustomHttpParameterCodec } from 'src/app/generated/encoder';
-import { storageUploadAuditDTO } from 'src/app/generated/model/storageUploadAuditDTO';
+import { StorageUploadAuditDTO } from 'src/app/generated/model/storageUploadAuditDTO';
 import { BASE_PATH } from 'src/app/generated/variables';
 import { convertToCSV } from 'src/app/utils';
 
@@ -84,8 +84,8 @@ export class AttachmentUploadService {
   */
   public getFailedAttachmentRecords(
     documentId: string
-  ): Observable<storageUploadAuditDTO[]> {
-    return this.http.get<storageUploadAuditDTO[]>(
+  ): Observable<StorageUploadAuditDTO[]> {
+    return this.http.get<StorageUploadAuditDTO[]>(
       `${this.configuration.basePath}/v1/document/files/upload/failed/${documentId}`
     );
   }
@@ -165,7 +165,7 @@ export class AttachmentUploadService {
    * striping /organization-management-api/ from this.configuration.basePath
    */
   removeLastDirectoryPartOf(the_url: string) {
-    var the_arr = the_url.split('/');
+    const the_arr = the_url.split('/');
     the_arr.pop();
     return the_arr.join('/');
   }
