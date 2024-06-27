@@ -2,6 +2,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+// Third party imports
+import {  addInitializeModuleGuard } from '@onecx/angular-integration-interface'
+
 // Application imports
 import { DocumentCreateComponent } from './document-create/document-create.component';
 import { DocumentEditComponent } from './document-edit/document-edit.component';
@@ -23,7 +26,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(addInitializeModuleGuard(routes))],
   exports: [RouterModule],
 })
 export class DocumentDetailRoutingModule {}

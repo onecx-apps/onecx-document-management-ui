@@ -22,12 +22,10 @@ import {
   SupportedMimeTypeDTO,
 } from 'src/app/generated';
 import {
-  getBestMatchLanguage,
   noSpecialCharacters,
   trimSpaces,
 } from 'src/app/utils';
 import { DataSharingService } from 'src/app/shared/data-sharing.service';
-import { UserService } from '@onecx/portal-integration-angular';
 
 @Component({
   selector: 'app-document-quick-upload-form',
@@ -65,12 +63,10 @@ export class DocumentQuickUploadFormComponent implements OnInit {
     private readonly documentTypeV1Service: DocumentTypeControllerV1APIService,
     private readonly supportedMimeTypeV1Service: SupportedMimeTypeControllerV1APIService,
     private readonly translateService: TranslateService,
-    private userService: UserService,
     private readonly dataSharingService: DataSharingService
   ) {}
 
   ngOnInit(): void {
-    this.translateService.use(getBestMatchLanguage(this.userService));
     this.getTranslatedData();
     this.specialChar = this.dataSharingService.specialChar;
     this.documentQuickUploadForm = new FormGroup({

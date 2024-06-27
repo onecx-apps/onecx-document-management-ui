@@ -2,9 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DocumentEditAttachmentComponent } from './document-edit-attachment.component';
 import {
-  TranslateLoader,
-  TranslateModule,
-  TranslateService,
+  TranslateService
 } from '@ngx-translate/core';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 import { SupportedMimeTypeControllerV1APIService } from 'src/app/generated';
@@ -15,12 +13,6 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { of } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import {
-  createTranslateLoader,
-  AppStateService,
-} from '@onecx/portal-integration-angular';
 
 describe('DocumentEditAttachmentComponent', () => {
   let component: DocumentEditAttachmentComponent;
@@ -39,18 +31,14 @@ describe('DocumentEditAttachmentComponent', () => {
       imports: [
         HttpClientTestingModule,
         FormsModule,
-        ReactiveFormsModule,
-        TranslateModule.forRoot({
-          loader: {
-            provide: TranslateLoader,
-            useFactory: createTranslateLoader,
-            deps: [HttpClient, AppStateService],
-          },
-        }),
+        ReactiveFormsModule
       ],
       declarations: [DocumentEditAttachmentComponent, TranslatePipeMock],
       providers: [
-        TranslateService,
+        {
+          provide: TranslateService,
+          useClass: TranslateServiceMock,
+        },
         {
           provide: SupportedMimeTypeControllerV1APIService,
           useClass: SupportedMimeTypeControllerV1APIService,

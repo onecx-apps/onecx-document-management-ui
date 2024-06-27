@@ -24,11 +24,6 @@ import { DataSharingService } from 'src/app/shared/data-sharing.service';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 import { DocumentBulkChangesComponent } from './document-bulk-changes.component';
 import { UserDetailsService } from 'src/app/generated/api/user-details.service';
-import { HttpClient } from '@angular/common/http';
-import {
-  createTranslateLoader,
-  AppStateService,
-} from '@onecx/portal-integration-angular';
 
 describe('DocumentBulkChangesComponent', () => {
   let component: DocumentBulkChangesComponent;
@@ -52,17 +47,13 @@ describe('DocumentBulkChangesComponent', () => {
       imports: [
         ReactiveFormsModule,
         HttpClientTestingModule,
-        TranslateModule.forRoot({
-          loader: {
-            provide: TranslateLoader,
-            useFactory: createTranslateLoader,
-            deps: [HttpClient, AppStateService],
-          },
-        }),
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
-        TranslateService,
+        {
+          provide: TranslateService,
+          useClass: TranslateServiceMock,
+        },
         {
           provide: ActivatedRoute,
           useValue: {

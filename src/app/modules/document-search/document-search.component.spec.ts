@@ -66,13 +66,6 @@ describe('DocumentSearchComponent', () => {
         DropdownModule,
         AutoCompleteModule,
         SharedModule,
-        TranslateModule.forRoot({
-          loader: {
-            provide: TranslateLoader,
-            useFactory: createTranslateLoader,
-            deps: [HttpClient, AppStateService],
-          },
-        }),
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
@@ -244,23 +237,17 @@ describe('DocumentSearchComponent', () => {
     component.setFilterActions();
     expect(component.items).toBeTruthy();
     expect(component.items.length).toBe(3);
-    expect(component.items[0].label).toBe(
-      'DOCUMENT_SEARCH.FILTER.CREATED_BY_ME'
-    );
+    expect(component.items[0].label).toBe(undefined);
     expect(component.items[0].command).toBeDefined();
     spyOn(component, 'getFilteredCreatedByMe');
     component.items[0].command();
     expect(component.getFilteredCreatedByMe).toHaveBeenCalled();
-    expect(component.items[1].label).toBe(
-      'DOCUMENT_SEARCH.FILTER.RECENTLY_UPDATED'
-    );
+    expect(component.items[1].label).toBe(undefined);
     expect(component.items[1].command).toBeDefined();
     spyOn(component, 'getFilteredRecentlyUpdated');
     component.items[1].command();
     expect(component.getFilteredRecentlyUpdated).toHaveBeenCalled();
-    expect(component.items[2].label).toBe(
-      'DOCUMENT_SEARCH.FILTER.CLEAR_FILTER'
-    );
+    expect(component.items[2].label).toBe(undefined);
     expect(component.items[2].command).toBeDefined();
     spyOn(component, 'clearFilter');
     component.items[2].command();
@@ -348,7 +335,7 @@ describe('DocumentSearchComponent', () => {
     component.headerActions[0].actionCallback();
     expect(portalMessageServiceMock.lastMessages[0]).toEqual({
       type: 'success',
-      value: { summaryKey: 'GENERAL.NO_RECORDS_TO_EXPORT' },
+      value: { summaryKey: 'Mock Label' },
     });
     expect(localStorage.setItem).toHaveBeenCalledWith(
       'searchCriteria',

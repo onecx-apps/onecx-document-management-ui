@@ -12,11 +12,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 // Third party imports
 import { TranslateService } from '@ngx-translate/core';
 import {
-  AUTH_SERVICE,
   Column,
   ColumnViewTemplate,
-  IAuthService,
-  UserService,
+  UserService
 } from '@onecx/portal-integration-angular';
 import { MenuItem, SelectItem } from 'primeng/api';
 import { DataView } from 'primeng/dataview';
@@ -26,7 +24,6 @@ import { AttachmentUploadService } from '../../document-detail/attachment-upload
 import { DocumentDetailDTO } from 'src/app/generated';
 import {
   generateFilteredColumns,
-  getBestMatchLanguage,
   initFilteredColumns,
 } from 'src/app/utils';
 
@@ -158,7 +155,6 @@ export class ResultsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.translateService.use(getBestMatchLanguage(this.userService));
     this.getTranslatedData();
     this.filteredColumns = initFilteredColumns(this.columns);
   }

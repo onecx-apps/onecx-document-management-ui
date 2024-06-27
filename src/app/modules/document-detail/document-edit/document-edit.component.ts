@@ -16,8 +16,7 @@ import {
   Action,
   BreadcrumbService,
   ObjectDetailItem,
-  PortalMessageService,
-  UserService,
+  PortalMessageService
 } from '@onecx/portal-integration-angular';
 import { saveAs } from 'file-saver';
 import { MessageService } from 'primeng/api';
@@ -39,7 +38,6 @@ import {
 import { DocumentTabStateService } from 'src/app/shared/document-tab-state.service';
 import {
   convertToCSV,
-  getBestMatchLanguage,
   noSpecialCharacters,
 } from 'src/app/utils';
 import { DataSharingService } from 'src/app/shared/data-sharing.service';
@@ -92,12 +90,10 @@ export class DocumentEditComponent implements OnInit {
     private readonly router: Router,
     public documentTabStateService: DocumentTabStateService,
     private readonly dataSharingService: DataSharingService,
-    private userService: UserService,
     private readonly datepipe: DatePipe
   ) {}
 
   public ngOnInit(): void {
-    this.translateService.use(getBestMatchLanguage(this.userService));
     this.specialChar = this.dataSharingService.specialChar;
     this.getTranslatedData();
     const tabQuery = +this.activeRoute.snapshot.queryParamMap.get('tab');
@@ -259,8 +255,8 @@ export class DocumentEditComponent implements OnInit {
   private setHeaderButtons(document: DocumentDetailDTO) {
     this.headerActions = [
       {
-        label: this.translateService?.instant('GENERAL.CLOSE'),
-        title: this.translateService.instant('GENERAL.CLOSE'),
+        label: this.translatedData['GENERAL.CLOSE'],
+        title:this.translatedData['GENERAL.CLOSE'],
         show: 'always',
         icon: 'pi pi-arrow-left',
 
@@ -270,8 +266,8 @@ export class DocumentEditComponent implements OnInit {
       },
       {
         permission: 'DOCUMENT_MGMT#DOCUMENT_EDIT',
-        label: this.translateService.instant('GENERAL.EDIT'),
-        title: this.translateService.instant('GENERAL.EDIT'),
+        label: this.translatedData['GENERAL.EDIT'],
+        title: this.translatedData['GENERAL.EDIT'],
         show: 'always',
         icon: 'pi pi-pencil',
 
@@ -280,8 +276,8 @@ export class DocumentEditComponent implements OnInit {
         },
       },
       {
-        label: this.translateService.instant('GENERAL.CANCEL'),
-        title: this.translateService.instant('GENERAL.CANCEL'),
+        label: this.translatedData['GENERAL.CANCEL'],
+        title: this.translatedData['GENERAL.CANCEL'],
         show: 'always',
         icon: 'pi pi-times',
         conditional: true,
@@ -291,9 +287,9 @@ export class DocumentEditComponent implements OnInit {
         },
       },
       {
-        label: this.translateService.instant('GENERAL.SAVE'),
+        label: this.translatedData['GENERAL.SAVE'],
         show: 'always',
-        title: this.translateService.instant('GENERAL.SAVE'),
+        title: this.translatedData['GENERAL.SAVE'],
         icon: 'pi pi-save',
         conditional: true,
         showCondition: false,
@@ -303,8 +299,8 @@ export class DocumentEditComponent implements OnInit {
       },
       {
         permission: 'DOCUMENT_MGMT#DOCUMENT_DOWNLOAD',
-        label: this.translateService.instant('GENERAL.DOWNLOAD_ZIP'),
-        title: this.translateService.instant('GENERAL.DOWNLOAD_ZIP'),
+        label: this.translatedData['GENERAL.DOWNLOAD_ZIP'],
+        title: this.translatedData['GENERAL.DOWNLOAD_ZIP'],
         show: 'always',
         icon: 'pi pi-download',
 
@@ -313,8 +309,8 @@ export class DocumentEditComponent implements OnInit {
         },
       },
       {
-        label: this.translateService.instant('GENERAL.DELETE'),
-        title: this.translateService.instant('GENERAL.DELETE'),
+        label: this.translatedData['GENERAL.DELETE'],
+        title: this.translatedData['GENERAL.DELETE'],
         icon: 'pi pi-trash',
         show: 'asOverflow',
         actionCallback: () => {
@@ -465,16 +461,16 @@ export class DocumentEditComponent implements OnInit {
             switch (data) {
               case 'name':
                 formFieldArray.add(
-                  this.translateService.instant(
+                  this.translatedData[
                     'DOCUMENT_MENU.DOCUMENT_EDIT.ATTACHMENT_NAME_MISSING'
-                  )
+                  ]
                 );
                 break;
               case 'fileData':
                 formFieldArray.add(
-                  this.translateService.instant(
+                  this.translatedData[
                     'DOCUMENT_MENU.DOCUMENT_EDIT.ATTACHMENT_FILE_MISSING'
-                  )
+                  ]
                 );
                 break;
             }

@@ -33,18 +33,14 @@ describe('DocumentAttachmentComponent', () => {
     const translateSpy = jasmine.createSpyObj('TranslateService', ['get']);
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule,
-        TranslateModule.forRoot({
-          loader: {
-            provide: TranslateLoader,
-            useFactory: createTranslateLoader,
-            deps: [HttpClient, AppStateService],
-          },
-        }),
+        HttpClientTestingModule
       ],
       declarations: [DocumentAttachmentComponent, TranslatePipeMock],
       providers: [
-        TranslateService,
+        {
+          provide: TranslateService,
+          useClass: TranslateServiceMock,
+        },
         {
           provide: SupportedMimeTypeControllerV1APIService,
           useClass: SupportedMimeTypeControllerV1APIService,

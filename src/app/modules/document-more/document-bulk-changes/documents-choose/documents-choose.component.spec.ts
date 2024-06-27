@@ -4,14 +4,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
-  TranslateLoader,
-  TranslateModule,
-  TranslateService,
+  TranslateService
 } from '@ngx-translate/core';
 import {
-  AppStateService,
   BreadcrumbService,
-  createTranslateLoader,
 } from '@onecx/portal-integration-angular';
 import {
   PortalMessageServiceMock,
@@ -41,17 +37,13 @@ describe('DocumentsChooseComponent', () => {
       imports: [
         ReactiveFormsModule,
         HttpClientTestingModule,
-        TranslateModule.forRoot({
-          loader: {
-            provide: TranslateLoader,
-            useFactory: createTranslateLoader,
-            deps: [HttpClient, AppStateService],
-          },
-        }),
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
-        TranslateService,
+        {
+          provide: TranslateService,
+          useClass: TranslateServiceMock,
+        },
         {
           provide: ActivatedRoute,
           useValue: {

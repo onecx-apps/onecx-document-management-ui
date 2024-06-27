@@ -1,18 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
-  TranslateLoader,
-  TranslateModule,
-  TranslateService,
+  TranslateService
 } from '@ngx-translate/core';
 import { TranslateServiceMock } from '../../../../test/TranslateServiceMock';
 
 import { DocumentsChooseModificationComponent } from './documents-choose-modification.component';
-import { HttpClient } from '@angular/common/http';
-import {
-  createTranslateLoader,
-  AppStateService,
-} from '@onecx/portal-integration-angular';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('DocumentsChooseModificationComponent', () => {
@@ -29,16 +22,9 @@ describe('DocumentsChooseModificationComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
-        TranslateModule.forRoot({
-          loader: {
-            provide: TranslateLoader,
-            useFactory: createTranslateLoader,
-            deps: [HttpClient, AppStateService],
-          },
-        }),
       ],
       declarations: [DocumentsChooseModificationComponent, TranslatePipeMock],
-      providers: [TranslateService],
+      providers: [ { provide: TranslateService, useClass: TranslateServiceMock}],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DocumentsChooseModificationComponent);

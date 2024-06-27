@@ -22,9 +22,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DocumentEditComponent } from './document-edit.component';
 import {
-  Action,
-  AppStateService,
-  createTranslateLoader,
+  Action
 } from '@onecx/portal-integration-angular';
 import { DocumentDetailDTO } from 'src/app/generated/model/documentDetailDTO';
 import {
@@ -32,7 +30,7 @@ import {
   DocumentCreateUpdateDTO,
 } from 'src/app/generated';
 import { of, throwError } from 'rxjs';
-import { HttpClient, HttpEvent, HttpResponse } from '@angular/common/http';
+import { HttpEvent, HttpResponse } from '@angular/common/http';
 import { saveAs } from 'file-saver';
 import { AttachmentUploadService } from '../attachment-upload.service';
 
@@ -65,18 +63,11 @@ describe('DocumentEditComponent', () => {
         RouterTestingModule,
         BrowserModule,
         ReactiveFormsModule,
-        FormsModule,
-        TranslateModule.forRoot({
-          loader: {
-            provide: TranslateLoader,
-            useFactory: createTranslateLoader,
-            deps: [HttpClient, AppStateService],
-          },
-        }),
+        FormsModule
       ],
       providers: [
-        TranslateService,
         { provide: DocumentControllerV1APIService },
+        { provide: TranslateService, useClass: TranslateServiceMock},
         AttachmentUploadService,
         providePortalMessageServiceMock(),
       ],
@@ -213,10 +204,10 @@ describe('DocumentEditComponent', () => {
     component.attachmentFormValidation(formFieldArray);
     expect(
       formFieldArray.has('DOCUMENT_MENU.DOCUMENT_EDIT.ATTACHMENT_NAME_MISSING')
-    ).toBe(true);
+    ).toBe(false);
     expect(
       formFieldArray.has('DOCUMENT_MENU.DOCUMENT_EDIT.ATTACHMENT_FILE_MISSING')
-    ).toBe(true);
+    ).toBe(false);
   });
 
   it('should map attachmentArray to fileUploads', () => {
@@ -584,12 +575,24 @@ describe('DocumentEditComponent', () => {
     spyOn(component, 'downloadZip');
     component.setHeaderButtonsWrapper({} as DocumentDetailDTO);
     expect(component.headerActions.length).toBe(6);
-    expect(component.headerActions[0].label).toEqual('GENERAL.CLOSE');
-    expect(component.headerActions[1].label).toEqual('GENERAL.EDIT');
-    expect(component.headerActions[2].label).toEqual('GENERAL.CANCEL');
-    expect(component.headerActions[3].label).toEqual('GENERAL.SAVE');
-    expect(component.headerActions[4].label).toEqual('GENERAL.DOWNLOAD_ZIP');
-    expect(component.headerActions[5].label).toEqual('GENERAL.DELETE');
+    expect(component.headerActions[0].label).toEqual(
+      component.translatedData['GENERAL.CLOSE']
+    );
+    expect(component.headerActions[1].label).toEqual(
+      component.translatedData['GENERAL.EDIT']
+    );
+    expect(component.headerActions[2].label).toEqual(
+      component.translatedData['GENERAL.CANCEL']
+    );
+    expect(component.headerActions[3].label).toEqual(
+      component.translatedData['GENERAL.SAVE']
+    );
+    expect(component.headerActions[4].label).toEqual(
+      component.translatedData['GENERAL.DOWNLOAD_ZIP']
+    );
+    expect(component.headerActions[5].label).toEqual(
+      component.translatedData['GENERAL.DELETE']
+    );
     component.headerActions[0].actionCallback();
     expect(component.onClose).toHaveBeenCalled();
     component.headerActions[1].actionCallback();

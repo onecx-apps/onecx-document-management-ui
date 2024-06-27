@@ -10,13 +10,12 @@ import {
   PortalCoreModule,
   PortalDialogService,
   PortalMessageService,
-  addInitializeModuleGuard,
-  InitializeModuleGuard,
   PortalApiConfiguration,
 } from '@onecx/portal-integration-angular';
+import {  addInitializeModuleGuard,
+  InitializeModuleGuard} from '@onecx/angular-integration-interface'
 import { DialogService } from 'primeng/dynamicdialog';
-import { BASE_PATH, Configuration } from './generated';
-import { DocumentSearchModule } from './modules/document-search/document-search.module';
+import { Configuration } from './generated';
 import { SharedModule } from './shared/shared.module';
 import { environment } from 'src/environments/environment';
 import { routes } from './app-routing.module';
@@ -50,6 +49,7 @@ export function apiConfigProvider(
   ],
   exports: [],
   providers: [
+   InitializeModuleGuard,
     { provide: DialogService, useClass: PortalDialogService },
     {
       provide: Configuration,

@@ -44,17 +44,11 @@ describe('DocumentCreateComponent', () => {
       imports: [
         HttpClientTestingModule,
         RouterTestingModule,
-        ReactiveFormsModule,
-        TranslateModule.forRoot({
-          loader: {
-            provide: TranslateLoader,
-            useFactory: createTranslateLoader,
-            deps: [HttpClient, AppStateService],
-          },
-        }),
+        ReactiveFormsModule
       ],
       declarations: [DocumentCreateComponent, TranslatePipeMock],
-      providers: [providePortalMessageServiceMock(), TranslateService],
+      providers: [providePortalMessageServiceMock(),
+        { provide: TranslateService, useClass: TranslateServiceMock}],
     }).compileComponents();
     portalMessageServiceMock = TestBed.inject(PortalMessageServiceMock);
   });

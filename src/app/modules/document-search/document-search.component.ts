@@ -9,7 +9,6 @@ import {
   Action,
   PortalMessageService,
   PortalSearchPage,
-  UserService,
   provideParent,
 } from '@onecx/portal-integration-angular';
 import { MenuItem } from 'primeng/api';
@@ -25,7 +24,7 @@ import {
   GetDocumentByCriteriaRequestParams,
 } from 'src/app/generated';
 import { DataSharingService } from 'src/app/shared/data-sharing.service';
-import { convertToCSV, getBestMatchLanguage } from 'src/app/utils';
+import { convertToCSV } from 'src/app/utils';
 import { UserDetailsService } from 'src/app/generated/api/user-details.service';
 
 @Component({
@@ -34,8 +33,7 @@ import { UserDetailsService } from 'src/app/generated/api/user-details.service';
   styleUrls: ['./document-search.component.scss'],
   providers: [
     provideParent(DocumentSearchComponent),
-    DatePipe,
-    TranslateService,
+    DatePipe
   ],
 })
 export class DocumentSearchComponent
@@ -75,7 +73,6 @@ export class DocumentSearchComponent
 
   constructor(
     private readonly translateService: TranslateService,
-    private userService: UserService,
     private readonly documentV1Service: DocumentControllerV1APIService,
     private readonly portalMessageService: PortalMessageService,
     private readonly router: Router,
@@ -88,7 +85,6 @@ export class DocumentSearchComponent
   }
 
   public ngOnInit(): void {
-    this.translateService.use(getBestMatchLanguage(this.userService));
     this.getLoggedInUserData();
     this.getTranslatedData();
     this.setHeaderActions();
@@ -218,27 +214,27 @@ export class DocumentSearchComponent
   setFilterActions() {
     this.items = [
       {
-        label: this.translateService?.instant(
+        label: this.translatedData[
           'DOCUMENT_SEARCH.FILTER.CREATED_BY_ME'
-        ),
+        ],
         styleClass: this.isFiltered === 'A' ? 'bg-primary' : '',
         command: () => {
           this.getFilteredCreatedByMe();
         },
       },
       {
-        label: this.translateService?.instant(
+        label: this.translatedData[
           'DOCUMENT_SEARCH.FILTER.RECENTLY_UPDATED'
-        ),
+        ],
         styleClass: this.isFiltered === 'B' ? 'bg-primary' : '',
         command: () => {
           this.getFilteredRecentlyUpdated();
         },
       },
       {
-        label: this.translateService?.instant(
+        label: this.translatedData[
           'DOCUMENT_SEARCH.FILTER.CLEAR_FILTER'
-        ),
+        ],
         disabled: !this.isFilterClick,
         command: () => {
           this.clearFilter();

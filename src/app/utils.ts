@@ -195,19 +195,3 @@ export function noSpecialCharacters(
   const pattern = /[\\/:*?<>|"]/;
   if (pattern.test(control.value)) return { hasSpecialChars: true };
 }
-
-/**
- * @param userService - The `UserService` instance that provides the user's language preference observable (`lang$`).
- * @returns A promise that resolves to the best matching language as a string, which will be either 'en', 'de', or the default 'en'.
- */
-export function getBestMatchLanguage(userService: UserService): string {
-  let langMatched: string;
-  userService.lang$.subscribe((lang) => {
-    if (lang === 'en' || lang === 'de') {
-      langMatched = lang;
-    } else {
-      langMatched = 'en';
-    }
-  });
-  return langMatched;
-}

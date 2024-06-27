@@ -11,8 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import {
   BreadcrumbService,
-  PortalMessageService,
-  UserService,
+  PortalMessageService
 } from '@onecx/portal-integration-angular';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import { throwError } from 'rxjs';
@@ -27,7 +26,7 @@ import {
   DocumentCreateUpdateDTO,
   DocumentControllerV1APIService,
 } from 'src/app/generated';
-import { getBestMatchLanguage, noSpecialCharacters } from '../../../utils';
+import { noSpecialCharacters } from '../../../utils';
 
 @Component({
   selector: 'app-document-create',
@@ -61,14 +60,12 @@ export class DocumentCreateComponent implements OnInit {
     private readonly documentV1Service: DocumentControllerV1APIService,
     private readonly portalMessageService: PortalMessageService,
     private readonly attachmentUploadService: AttachmentUploadService,
-    private userService: UserService,
     private readonly router: Router,
     private readonly activeRoute: ActivatedRoute,
     private readonly formBuilder: UntypedFormBuilder
   ) {}
 
   ngOnInit(): void {
-    this.translateService.use(getBestMatchLanguage(this.userService));
     this.getTranslatedData();
     // Form Validations
     this.documentCreateForm = this.formBuilder.group({

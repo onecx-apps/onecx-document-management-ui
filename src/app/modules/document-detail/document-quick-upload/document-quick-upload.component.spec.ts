@@ -19,11 +19,7 @@ import {
 } from '@ngx-translate/core';
 import { AttachmentUploadService } from '../attachment-upload.service';
 import { DocumentQuickUploadComponent } from './document-quick-upload.component';
-import { HttpClient } from '@angular/common/http';
-import {
-  createTranslateLoader,
-  AppStateService,
-} from '@onecx/portal-integration-angular';
+import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 
 describe('DocumentQuickUploadComponent', () => {
   let component: DocumentQuickUploadComponent;
@@ -45,17 +41,13 @@ describe('DocumentQuickUploadComponent', () => {
         BrowserModule,
         ReactiveFormsModule,
         FormsModule,
-        TranslateModule.forRoot({
-          loader: {
-            provide: TranslateLoader,
-            useFactory: createTranslateLoader,
-            deps: [HttpClient, AppStateService],
-          },
-        }),
         RouterTestingModule.withRoutes([]),
       ],
       providers: [
-        TranslateService,
+        {
+          provide: TranslateService,
+          useClass: TranslateServiceMock,
+        },
         { provide: AttachmentUploadService },
         providePortalMessageServiceMock(),
       ],

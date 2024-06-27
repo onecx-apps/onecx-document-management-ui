@@ -7,11 +7,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   Action,
   BreadcrumbService,
-  PortalMessageService,
-  UserService,
+  PortalMessageService
 } from '@onecx/portal-integration-angular';
 import { TranslateService } from '@ngx-translate/core';
-import { MenuItem, MessageService, SelectItem } from 'primeng/api';
+import { MenuItem, SelectItem } from 'primeng/api';
 
 // Application imports
 import {
@@ -26,7 +25,6 @@ import { DocumentsUpdateComponent } from './documents-update/documents-update.co
 import { DocumentsChooseModificationComponent } from './documents-choose-modification/documents-choose-modification.component';
 import { DataSharingService } from 'src/app/shared/data-sharing.service';
 import { UserDetailsService } from 'src/app/generated/api/user-details.service';
-import { getBestMatchLanguage } from 'src/app/utils';
 
 @Component({
   selector: 'app-document-bulk-changes',
@@ -68,7 +66,6 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
   constructor(
     private readonly documentV1Service: DocumentControllerV1APIService,
     private readonly translateService: TranslateService,
-    private userService: UserService,
     private readonly breadcrumbService: BreadcrumbService,
     private readonly formBuilder: UntypedFormBuilder,
     private readonly router: Router,
@@ -80,7 +77,6 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.translateService.use(getBestMatchLanguage(this.userService));
     this.getTranslatedData();
     this.getLoggedInUserData();
     this.getSearchResult();

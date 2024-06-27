@@ -8,8 +8,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { DocumentDetailDTO } from 'src/app/generated';
 import { DataSharingService } from 'src/app/shared/data-sharing.service';
 import { AttachmentUploadService } from '../../../document-detail/attachment-upload.service';
-import { getBestMatchLanguage } from 'src/app/utils';
-import { UserService } from '@onecx/portal-integration-angular';
 
 @Component({
   selector: 'app-documents-choose',
@@ -30,7 +28,6 @@ export class DocumentsChooseComponent implements OnInit {
 
   constructor(
     private readonly translateService: TranslateService,
-    private userService: UserService,
     private readonly dataSharingService: DataSharingService,
     private readonly attachmentUploadService: AttachmentUploadService
   ) {
@@ -38,7 +35,6 @@ export class DocumentsChooseComponent implements OnInit {
     this.onRowClick();
   }
   ngOnInit(): void {
-    this.translateService.use(getBestMatchLanguage(this.userService));
     this.getTranslatedData();
   }
   /**

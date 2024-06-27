@@ -14,8 +14,7 @@ import { ConfirmationService, SelectItem } from 'primeng/api';
 import { catchError, Subscription, throwError, timer } from 'rxjs';
 import {
   BreadcrumbService,
-  PortalMessageService,
-  UserService,
+  PortalMessageService
 } from '@onecx/portal-integration-angular';
 
 // Application imports
@@ -28,7 +27,6 @@ import {
   DocumentTypeDTO,
   SupportedMimeTypeDTO,
 } from 'src/app/generated';
-import { getBestMatchLanguage } from 'src/app/utils';
 
 enum SortOrder {
   ASCENDING,
@@ -88,11 +86,9 @@ export class DocumentQuickUploadComponent implements OnInit {
     private readonly activeRoute: ActivatedRoute,
     private readonly breadcrumbService: BreadcrumbService,
     private readonly translateService: TranslateService,
-    private userService: UserService
   ) {}
 
   ngOnInit(): void {
-    this.translateService.use(getBestMatchLanguage(this.userService));
     this.getTranslatedData();
     this.documentQuickUploadForm = new FormGroup({
       documentName: new FormControl('', [Validators.required]),

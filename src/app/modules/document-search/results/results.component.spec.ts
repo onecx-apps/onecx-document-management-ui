@@ -12,8 +12,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DocumentDetailDTO, LifeCycleState } from 'src/app/generated';
 import { createTranslateLoader, generateFilteredColumns } from 'src/app/utils';
 import { AttachmentUploadService } from '../../document-detail/attachment-upload.service';
-import { HttpClient } from '@angular/common/http';
-import { AppStateService } from '@onecx/portal-integration-angular';
 
 describe('ResultsComponent', () => {
   let component: ResultsComponent;
@@ -77,16 +75,12 @@ describe('ResultsComponent', () => {
       imports: [
         RouterTestingModule,
         HttpClientTestingModule,
-        TranslateModule.forRoot({
-          loader: {
-            provide: TranslateLoader,
-            useFactory: createTranslateLoader,
-            deps: [HttpClient, AppStateService],
-          },
-        }),
       ],
       declarations: [ResultsComponent, TranslatePipeMock],
-      providers: [AttachmentUploadService, TranslateService],
+      providers: [AttachmentUploadService, {
+        provide: TranslateService,
+        useClass: TranslateServiceMock,
+      },],
     }).compileComponents();
   });
 
