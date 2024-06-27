@@ -7,6 +7,7 @@ import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 import { SupportedMimeTypeControllerV1APIService } from 'src/app/generated';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormControl, FormGroup } from '@angular/forms';
+import { of } from 'rxjs';
 
 describe('DocumentAttachmentComponent', () => {
   let component: DocumentAttachmentComponent;
@@ -25,11 +26,15 @@ describe('DocumentAttachmentComponent', () => {
       imports: [HttpClientTestingModule],
       declarations: [DocumentAttachmentComponent, TranslatePipeMock],
       providers: [
-        { provide: TranslateService, useClass: TranslateServiceMock },
+        {
+          provide: TranslateService,
+          useClass: TranslateServiceMock,
+        },
         {
           provide: SupportedMimeTypeControllerV1APIService,
           useClass: SupportedMimeTypeControllerV1APIService,
         },
+        { provide: TranslateService, useValue: translateSpy },
       ],
     }).compileComponents();
     translateService = TestBed.inject(
@@ -302,6 +307,27 @@ describe('DocumentAttachmentComponent', () => {
     expect(component.attachmentFieldsForm.get('name')?.value).toBe(
       'Example Value'
     );
+  });
+
+  it('should show attachment error message', () => {
+    const file = { name: 'filename.txt' };
+    const translatedErrorMessage = 'Translated error message';
+    translateService.get
+      .withArgs(['DOCUMENT_DETAIL.ATTACHMENTS.FILESIZE_ERROR_MESSAGE'], {
+        filename: file.name,
+      })
+      .and.returnValue(
+        of({
+          'DOCUMENT_DETAIL.ATTACHMENTS.FILESIZE_ERROR_MESSAGE':
+            translatedErrorMessage,
+        })
+      );
+    component.showAttachmentErrorMessage(file);
+    expect(translateService.get).toHaveBeenCalledWith(
+      ['DOCUMENT_DETAIL.ATTACHMENTS.FILESIZE_ERROR_MESSAGE'],
+      { filename: file.name }
+    );
+    expect(component.attachmentErrorMessage).toBe(translatedErrorMessage);
   });
 
   it('should delete attachment and update form data', () => {

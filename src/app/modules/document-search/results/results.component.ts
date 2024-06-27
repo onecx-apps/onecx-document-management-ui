@@ -22,10 +22,7 @@ import { DataView } from 'primeng/dataview';
 // Application imports
 import { AttachmentUploadService } from '../../document-detail/attachment-upload.service';
 import { DocumentDetailDTO } from 'src/app/generated';
-import {
-  generateFilteredColumns,
-  initFilteredColumns,
-} from 'src/app/utils';
+import { generateFilteredColumns, initFilteredColumns } from 'src/app/utils';
 
 enum SortOrder {
   ASCENDING,

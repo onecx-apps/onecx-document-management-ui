@@ -20,10 +20,7 @@ import {
   SupportedMimeTypeControllerV1APIService,
   SupportedMimeTypeDTO,
 } from 'src/app/generated';
-import {
-  noSpecialCharacters,
-  trimSpaces,
-} from 'src/app/utils';
+import { noSpecialCharacters, trimSpaces } from 'src/app/utils';
 import { DataSharingService } from 'src/app/shared/data-sharing.service';
 
 @Component({

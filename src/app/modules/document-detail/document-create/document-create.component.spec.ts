@@ -35,7 +35,7 @@ describe('DocumentCreateComponent', () => {
       imports: [
         HttpClientTestingModule,
         RouterTestingModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
       ],
       declarations: [DocumentCreateComponent, TranslatePipeMock],
       providers: [providePortalMessageServiceMock(),

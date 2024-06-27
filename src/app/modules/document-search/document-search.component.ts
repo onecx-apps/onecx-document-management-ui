@@ -31,10 +31,7 @@ import { UserDetailsService } from 'src/app/generated/api/user-details.service';
   selector: 'app-document-search',
   templateUrl: './document-search.component.html',
   styleUrls: ['./document-search.component.scss'],
-  providers: [
-    provideParent(DocumentSearchComponent),
-    DatePipe
-  ],
+  providers: [provideParent(DocumentSearchComponent), DatePipe],
 })
 export class DocumentSearchComponent
   extends PortalSearchPage<DocumentDetailDTO>

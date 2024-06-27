@@ -19,7 +19,6 @@ import {
   PortalMessageService
 } from '@onecx/portal-integration-angular';
 import { saveAs } from 'file-saver';
-import { MessageService } from 'primeng/api';
 import { throwError, forkJoin, of } from 'rxjs';
 import { catchError, defaultIfEmpty, tap, map, mergeMap } from 'rxjs/operators';
 
@@ -36,10 +35,7 @@ import {
   UpdateDocumentRequestParams,
 } from 'src/app/generated';
 import { DocumentTabStateService } from 'src/app/shared/document-tab-state.service';
-import {
-  convertToCSV,
-  noSpecialCharacters,
-} from 'src/app/utils';
+import { convertToCSV, noSpecialCharacters } from 'src/app/utils';
 import { DataSharingService } from 'src/app/shared/data-sharing.service';
 
 @Component({
@@ -256,7 +252,7 @@ export class DocumentEditComponent implements OnInit {
     this.headerActions = [
       {
         label: this.translatedData['GENERAL.CLOSE'],
-        title:this.translatedData['GENERAL.CLOSE'],
+        title: this.translateService.instant('GENERAL.CLOSE'),
         show: 'always',
         icon: 'pi pi-arrow-left',
 
@@ -267,7 +263,7 @@ export class DocumentEditComponent implements OnInit {
       {
         permission: 'DOCUMENT_MGMT#DOCUMENT_EDIT',
         label: this.translatedData['GENERAL.EDIT'],
-        title: this.translatedData['GENERAL.EDIT'],
+        title: this.translateService.instant('GENERAL.EDIT'),
         show: 'always',
         icon: 'pi pi-pencil',
 

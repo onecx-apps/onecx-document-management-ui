@@ -19,14 +19,11 @@ describe('DocumentsDeleteComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-      ],
+      imports: [HttpClientTestingModule],
       declarations: [DocumentsDeleteComponent, TranslatePipeMock],
-      providers: [{
-        provide: TranslateService,
-        useClass: TranslateServiceMock,
-      },],
+      providers: [
+        { provide: TranslateService, useClass: TranslateServiceMock },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DocumentsDeleteComponent);

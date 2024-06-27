@@ -32,7 +32,7 @@ describe('DocumentQuickUploadFormComponent', () => {
         RouterTestingModule,
         BrowserModule,
         ReactiveFormsModule,
-        FormsModule
+        FormsModule,
       ],
       providers: [{ provide: TranslateService, useClass: TranslateServiceMock }, providePortalMessageServiceMock()],
     }).compileComponents();

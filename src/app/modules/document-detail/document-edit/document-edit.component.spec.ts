@@ -656,7 +656,7 @@ describe('DocumentEditComponent', () => {
         })
       )
     );
-    spyOn(component['portalMessageService'], 'success');
+    spyOn(component['portalMessageService'], 'error');
     spyOn(component, 'refreshAttachmentComponent');
     spyOn(component, 'callEditFileUploadsApi').and.returnValue(
       of(uploadResponse)
@@ -667,6 +667,10 @@ describe('DocumentEditComponent', () => {
     expect(component['documentV1Service'].updateDocument).toHaveBeenCalledWith({
       id: component.documentId,
       documentCreateUpdateDTO: data,
+    });
+    expect(portalMessageServiceMock.lastMessages[0]).toEqual({
+      type: 'success',
+      value: { summaryKey: 'DOCUMENT_MENU.DOCUMENT_EDIT.UPDATE_SUCCESS' },
     });
     expect(component.refreshAttachmentComponent).toHaveBeenCalledWith(
       mockAttachments
