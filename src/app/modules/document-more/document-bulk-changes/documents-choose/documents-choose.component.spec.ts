@@ -40,10 +40,7 @@ describe('DocumentsChooseComponent', () => {
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
-        {
-          provide: TranslateService,
-          useClass: TranslateServiceMock,
-        },
+        { provide: TranslateService, useClass: TranslateServiceMock },
         {
           provide: ActivatedRoute,
           useValue: {

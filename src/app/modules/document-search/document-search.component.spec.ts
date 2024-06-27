@@ -9,12 +9,7 @@ import {
 import { ReactiveFormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import {
-  TranslateLoader,
-  TranslateModule,
-  TranslateService,
-} from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
   PortalMessageServiceMock,
   providePortalMessageServiceMock,
@@ -22,10 +17,6 @@ import {
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
-import {
-  createTranslateLoader,
-  AppStateService,
-} from '@onecx/portal-integration-angular';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 import { CriteriaComponent } from './criteria/criteria.component';

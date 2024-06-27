@@ -2,21 +2,11 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DocumentAttachmentComponent } from './document-attachment.component';
-import {
-  TranslateLoader,
-  TranslateModule,
-  TranslateService,
-} from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 import { SupportedMimeTypeControllerV1APIService } from 'src/app/generated';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormControl, FormGroup } from '@angular/forms';
-import { of } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import {
-  createTranslateLoader,
-  AppStateService,
-} from '@onecx/portal-integration-angular';
 
 describe('DocumentAttachmentComponent', () => {
   let component: DocumentAttachmentComponent;
@@ -32,15 +22,10 @@ describe('DocumentAttachmentComponent', () => {
   beforeEach(async () => {
     const translateSpy = jasmine.createSpyObj('TranslateService', ['get']);
     await TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule
-      ],
+      imports: [HttpClientTestingModule],
       declarations: [DocumentAttachmentComponent, TranslatePipeMock],
       providers: [
-        {
-          provide: TranslateService,
-          useClass: TranslateServiceMock,
-        },
+        { provide: TranslateService, useClass: TranslateServiceMock },
         {
           provide: SupportedMimeTypeControllerV1APIService,
           useClass: SupportedMimeTypeControllerV1APIService,

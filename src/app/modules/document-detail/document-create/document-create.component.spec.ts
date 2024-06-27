@@ -1,20 +1,11 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Pipe, PipeTransform } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClient } from '@angular/common/http';
-import {
-  createTranslateLoader,
-  AppStateService,
-} from '@onecx/portal-integration-angular';
 import {
   PortalMessageServiceMock,
   providePortalMessageServiceMock,
 } from '@onecx/portal-integration-angular/mocks';
-import {
-  TranslateLoader,
-  TranslateModule,
-  TranslateService,
-} from '@ngx-translate/core';
+import {TranslateService} from '@ngx-translate/core';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 import { RouterTestingModule } from '@angular/router/testing';
 import {

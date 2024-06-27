@@ -277,7 +277,7 @@ export class DocumentEditComponent implements OnInit {
       },
       {
         label: this.translatedData['GENERAL.CANCEL'],
-        title: this.translatedData['GENERAL.CANCEL'],
+        title: this.translateService.instant('GENERAL.CANCEL'),
         show: 'always',
         icon: 'pi pi-times',
         conditional: true,
@@ -289,7 +289,7 @@ export class DocumentEditComponent implements OnInit {
       {
         label: this.translatedData['GENERAL.SAVE'],
         show: 'always',
-        title: this.translatedData['GENERAL.SAVE'],
+        title: this.translateService.instant('GENERAL.SAVE'),
         icon: 'pi pi-save',
         conditional: true,
         showCondition: false,
@@ -300,7 +300,7 @@ export class DocumentEditComponent implements OnInit {
       {
         permission: 'DOCUMENT_MGMT#DOCUMENT_DOWNLOAD',
         label: this.translatedData['GENERAL.DOWNLOAD_ZIP'],
-        title: this.translatedData['GENERAL.DOWNLOAD_ZIP'],
+        title: this.translateService.instant('GENERAL.DOWNLOAD_ZIP'),
         show: 'always',
         icon: 'pi pi-download',
 
@@ -310,7 +310,7 @@ export class DocumentEditComponent implements OnInit {
       },
       {
         label: this.translatedData['GENERAL.DELETE'],
-        title: this.translatedData['GENERAL.DELETE'],
+        title: this.translateService.instant('GENERAL.DELETE'),
         icon: 'pi pi-trash',
         show: 'asOverflow',
         actionCallback: () => {

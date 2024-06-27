@@ -7,11 +7,7 @@ import {
   tick,
 } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import {
-  TranslateLoader,
-  TranslateModule,
-  TranslateService,
-} from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
   PortalMessageServiceMock,
   providePortalMessageServiceMock,
@@ -21,9 +17,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DocumentEditComponent } from './document-edit.component';
-import {
-  Action
-} from '@onecx/portal-integration-angular';
+import { Action } from '@onecx/portal-integration-angular';
 import { DocumentDetailDTO } from 'src/app/generated/model/documentDetailDTO';
 import {
   DocumentControllerV1APIService,

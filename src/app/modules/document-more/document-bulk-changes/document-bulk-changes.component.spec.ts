@@ -8,11 +8,7 @@ import {
 } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  TranslateLoader,
-  TranslateModule,
-  TranslateService,
-} from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { providePortalMessageServiceMock } from '@onecx/portal-integration-angular/mocks';
 import { of } from 'rxjs';
 import {
@@ -50,10 +46,7 @@ describe('DocumentBulkChangesComponent', () => {
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
-        {
-          provide: TranslateService,
-          useClass: TranslateServiceMock,
-        },
+        { provide: TranslateService, useClass: TranslateServiceMock },
         {
           provide: ActivatedRoute,
           useValue: {

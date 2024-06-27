@@ -1,16 +1,12 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  TranslateLoader,
-  TranslateModule,
-  TranslateService,
-} from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 import { ResultsComponent } from './results.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DocumentDetailDTO, LifeCycleState } from 'src/app/generated';
-import { createTranslateLoader, generateFilteredColumns } from 'src/app/utils';
+import { generateFilteredColumns } from 'src/app/utils';
 import { AttachmentUploadService } from '../../document-detail/attachment-upload.service';
 
 describe('ResultsComponent', () => {
