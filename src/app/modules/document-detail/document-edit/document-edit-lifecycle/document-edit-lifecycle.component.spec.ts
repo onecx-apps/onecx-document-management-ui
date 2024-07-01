@@ -3,7 +3,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
-import { MessageService } from 'primeng/api';
+import {
+  PortalMessageServiceMock,
+  providePortalMessageServiceMock,
+} from '@onecx/portal-integration-angular/mocks';
 import {
   LifeCycleState,
   DocumentControllerV1APIService,
@@ -16,7 +19,7 @@ describe('DocumentEditLifecycleComponent', () => {
   let component: DocumentEditLifecycleComponent;
   let fixture: ComponentFixture<DocumentEditLifecycleComponent>;
   let documentV1Service: DocumentControllerV1APIService;
-  let messageService: MessageService;
+  let portalMessageServiceMock: PortalMessageServiceMock;
   @Pipe({ name: 'translate' })
   class TranslatePipeMock implements PipeTransform {
     transform(value: string): string {
@@ -30,7 +33,7 @@ describe('DocumentEditLifecycleComponent', () => {
       providers: [
         DocumentControllerV1APIService,
         { provide: TranslateService, useClass: TranslateServiceMock },
-        { provide: MessageService, useClass: MessageService },
+        providePortalMessageServiceMock(),
       ],
     }).compileComponents();
 
@@ -39,7 +42,7 @@ describe('DocumentEditLifecycleComponent', () => {
     component.documentId = '1';
     fixture.detectChanges();
     documentV1Service = TestBed.inject(DocumentControllerV1APIService);
-    messageService = TestBed.inject(MessageService);
+    portalMessageServiceMock = TestBed.inject(PortalMessageServiceMock);
     component.translatedData = {
       'DOCUMENT_MENU.DOCUMENT_EDIT.UPDATE_ERROR': 'Update error message',
     };
@@ -67,7 +70,7 @@ describe('DocumentEditLifecycleComponent', () => {
     spyOn(documentV1Service, 'getDocumentById').and.returnValue(
       of(mockData) as any
     );
-    spyOn(messageService, 'add');
+    spyOn(portalMessageServiceMock, 'success');
     component.documentId = 'someId';
     component.refreshTimeline();
     expect(documentV1Service.getDocumentById).toHaveBeenCalledWith({
@@ -75,21 +78,21 @@ describe('DocumentEditLifecycleComponent', () => {
     });
     expect(component.timeLineEntries).toEqual(mockData);
     expect(component.documentStatus).toEqual(mockData.lifeCycleState);
-    expect(messageService.add).not.toHaveBeenCalled();
+    expect(portalMessageServiceMock.success).not.toHaveBeenCalled();
   });
 
   it('should show error message on API error', () => {
     spyOn(documentV1Service, 'getDocumentById').and.returnValue(
       throwError(() => new Error('API error'))
     );
-    spyOn(messageService, 'add');
+    spyOn(portalMessageServiceMock, 'success');
     component.refreshTimeline();
     expect(documentV1Service.getDocumentById).toHaveBeenCalled();
     expect(component.timeLineEntries).toBeUndefined();
     expect(component.documentStatus).toBeUndefined();
-    expect(messageService.add).toHaveBeenCalledWith({
-      severity: 'error',
-      summary: 'Update error message',
+    expect(portalMessageServiceMock.lastMessages[0]).toEqual({
+      type: 'error',
+      value: { summaryKey: 'DOCUMENT_MENU.DOCUMENT_EDIT.UPDATE_ERROR' },
     });
   });
 });

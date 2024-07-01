@@ -10,6 +10,11 @@ import {
   PortalCoreModule,
   APP_CONFIG,
   PortalMessageService,
+  AppStateService,
+  UserService,
+  TranslateCombinedLoader,
+  createTranslateLoader,
+  translateServiceInitializer,
 } from '@onecx/portal-integration-angular';
 import {
   TranslateModule,
@@ -26,7 +31,7 @@ import { MessageService } from 'primeng/api';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { environment } from 'src/environments/environment';
-import { BASE_PATH } from './generated';
+import { BASE_PATH } from './generated/index';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -62,21 +67,20 @@ function initializer(
       extend: true,
       loader: {
         provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient],
+        useFactory: createTranslateLoader,
+        deps: [HttpClient, AppStateService],
       },
     }),
     TooltipModule,
   ],
   providers: [
     { provide: APP_CONFIG, useValue: environment },
-    { provide: BASE_PATH, useValue: 'onecx-document-management-api' },
-    { provide: MessageService, useExisting: PortalMessageService },
+    { provide: BASE_PATH, useValue: environment.API_BASE_PATH },
     {
       provide: APP_INITIALIZER,
-      useFactory: initializer,
+      useFactory: translateServiceInitializer,
       multi: true,
-      deps: [TranslateService],
+      deps: [UserService, TranslateService],
     },
   ],
   bootstrap: [AppComponent],

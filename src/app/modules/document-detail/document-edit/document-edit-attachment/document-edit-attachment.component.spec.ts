@@ -645,6 +645,7 @@ describe('DocumentEditAttachmentComponent', () => {
     );
     expect(component.attachmentErrorMessage).toBe(translatedErrorMessage);
   });
+
   it('should delete an attachment when multiple attachments exist', () => {
     component.attachmentArray = [
       { name: 'Attachment 1' },

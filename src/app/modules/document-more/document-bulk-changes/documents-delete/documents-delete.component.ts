@@ -3,6 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 // Third party imports
 import { TranslateService } from '@ngx-translate/core';
+import { UserService } from '@onecx/portal-integration-angular';
 
 // Application imports
 import { DocumentDetailDTO } from 'src/app/generated';

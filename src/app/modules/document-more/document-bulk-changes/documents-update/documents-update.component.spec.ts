@@ -10,7 +10,7 @@ import {
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
-import { MessageService } from 'primeng/api';
+import { providePortalMessageServiceMock } from '@onecx/portal-integration-angular/mocks';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 
 import { DocumentsUpdateComponent } from './documents-update.component';
@@ -41,8 +41,8 @@ describe('DocumentsUpdateComponent', () => {
       ],
       providers: [
         { provide: TranslateService, useClass: TranslateServiceMock },
-        { provide: MessageService, useClass: MessageService },
         { provide: DataSharingService },
+        providePortalMessageServiceMock(),
       ],
     }).compileComponents();
 

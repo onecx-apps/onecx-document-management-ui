@@ -8,7 +8,7 @@ import {
 } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
-import { MessageService } from 'primeng/api';
+import { providePortalMessageServiceMock } from '@onecx/portal-integration-angular/mocks';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 import { FormControl, FormGroup } from '@angular/forms';
 import { DataSharingService } from 'src/app/shared/data-sharing.service';
@@ -33,8 +33,8 @@ describe('DocumentDescriptionComponent', () => {
       declarations: [DocumentDescriptionComponent, TranslatePipeMock],
       providers: [
         { provide: TranslateService, useClass: TranslateServiceMock },
-        { provide: MessageService, useClass: MessageService },
         { provide: DataSharingService },
+        providePortalMessageServiceMock(),
       ],
     }).compileComponents();
   });

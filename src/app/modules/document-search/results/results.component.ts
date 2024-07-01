@@ -12,10 +12,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 // Third party imports
 import { TranslateService } from '@ngx-translate/core';
 import {
-  AUTH_SERVICE,
   Column,
   ColumnViewTemplate,
-  IAuthService,
+  UserService,
 } from '@onecx/portal-integration-angular';
 import { MenuItem, SelectItem } from 'primeng/api';
 import { DataView } from 'primeng/dataview';
@@ -36,6 +35,7 @@ enum SortOrder {
   styleUrls: ['./results.component.scss'],
 })
 export class ResultsComponent implements OnInit {
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('results') set resultsArray(value: DocumentDetailDTO[]) {
     this.results = value;
     this.showPageReport = this.results?.length > 0;
@@ -144,7 +144,7 @@ export class ResultsComponent implements OnInit {
   translatedData: object;
 
   constructor(
-    @Inject(AUTH_SERVICE) private readonly authService: IAuthService,
+    private userService: UserService,
     private readonly router: Router,
     private readonly translateService: TranslateService,
     private readonly activeRoute: ActivatedRoute,
@@ -263,7 +263,7 @@ export class ResultsComponent implements OnInit {
     for (const entry of items) {
       if (
         entry.permission
-          ? this.authService.hasPermission(entry.permission)
+          ? this.userService.hasPermission(entry.permission)
           : true
       ) {
         this.items.push(entry.object);

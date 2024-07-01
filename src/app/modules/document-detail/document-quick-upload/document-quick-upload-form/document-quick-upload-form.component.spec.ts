@@ -10,7 +10,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
-import { MessageService } from 'primeng/api';
+import { providePortalMessageServiceMock } from '@onecx/portal-integration-angular/mocks';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 import { DocumentQuickUploadFormComponent } from './document-quick-upload-form.component';
 
@@ -36,7 +36,7 @@ describe('DocumentQuickUploadFormComponent', () => {
       ],
       providers: [
         { provide: TranslateService, useClass: TranslateServiceMock },
-        { provide: MessageService, useClass: MessageService },
+        providePortalMessageServiceMock(),
       ],
     }).compileComponents();
 

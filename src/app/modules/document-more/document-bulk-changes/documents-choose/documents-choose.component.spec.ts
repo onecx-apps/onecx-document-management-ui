@@ -5,7 +5,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BreadcrumbService } from '@onecx/portal-integration-angular';
-import { MessageService } from 'primeng/api';
+import {
+  PortalMessageServiceMock,
+  providePortalMessageServiceMock,
+} from '@onecx/portal-integration-angular/mocks';
 import { AttachmentUploadService } from 'src/app/modules/document-detail/attachment-upload.service';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 
@@ -40,7 +43,7 @@ describe('DocumentsChooseComponent', () => {
             },
           },
         },
-        MessageService,
+        providePortalMessageServiceMock(),
       ],
     }).compileComponents();
     fixture = TestBed.createComponent(DocumentsChooseComponent);

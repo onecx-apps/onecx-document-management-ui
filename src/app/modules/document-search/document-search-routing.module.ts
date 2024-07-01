@@ -2,20 +2,21 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+// Third party imports
+import { addInitializeModuleGuard } from '@onecx/angular-integration-interface';
+
 // Application imports
 import { DocumentSearchComponent } from './document-search.component';
-import { CanActivateGuard } from 'src/app/shared/can-active-guard.service';
 
 const routes: Routes = [
   {
     path: '',
     component: DocumentSearchComponent,
-    canActivate: [CanActivateGuard],
   },
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(addInitializeModuleGuard(routes))],
   exports: [RouterModule],
 })
 export class DocumentSearchRoutingModule {}

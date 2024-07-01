@@ -34,7 +34,7 @@
           [pTooltip]="attachmentArray[attachmentArray.length - 1 - i].name"
         >
           <!-- {{ result.type }} -->{{
-            attachmentArray[attachmentArray.length - 1 - i].name | trim: 30
+            attachmentArray[attachmentArray.length - 1 - i].name | trim : 30
           }}
         </div>
         <div
@@ -55,7 +55,7 @@
             "
             >{{
               attachmentArray[attachmentArray.length - 1 - i].fileData.name
-                | trim: 30
+                | trim : 30
             }}</span
           >
 
@@ -132,7 +132,7 @@
               pInputText
               formControlName="mimeType"
               pTooltip="{{ tooltipmimeType }}"
-              [value]="attachmentFieldsForm.get('mimeType').value | trim: 25"
+              [value]="attachmentFieldsForm.get('mimeType').value | trim : 25"
               readonly
             />
 
