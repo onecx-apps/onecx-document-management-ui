@@ -56,7 +56,7 @@ export class DocumentEditAttachmentComponent implements OnInit {
     private readonly translateService: TranslateService,
     private readonly supportedMimeTypeV1Service: SupportedMimeTypeControllerV1APIService,
     private readonly attachmentUploadService: AttachmentUploadService,
-    private readonly dataSharingService: DataSharingService,
+    private readonly dataSharingService: DataSharingService
   ) {}
 
   ngOnInit(): void {

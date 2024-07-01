@@ -68,15 +68,15 @@ describe('ResultsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        HttpClientTestingModule,
-      ],
+      imports: [RouterTestingModule, HttpClientTestingModule],
       declarations: [ResultsComponent, TranslatePipeMock],
-      providers: [AttachmentUploadService, {
-        provide: TranslateService,
-        useClass: TranslateServiceMock,
-      },],
+      providers: [
+        AttachmentUploadService,
+        {
+          provide: TranslateService,
+          useClass: TranslateServiceMock,
+        },
+      ],
     }).compileComponents();
   });
 

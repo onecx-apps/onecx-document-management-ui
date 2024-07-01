@@ -12,8 +12,10 @@ import {
   PortalMessageService,
   PortalApiConfiguration,
 } from '@onecx/portal-integration-angular';
-import {  addInitializeModuleGuard,
-  InitializeModuleGuard} from '@onecx/angular-integration-interface'
+import {
+  addInitializeModuleGuard,
+  InitializeModuleGuard,
+} from '@onecx/angular-integration-interface';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Configuration } from './generated';
 import { SharedModule } from './shared/shared.module';
@@ -49,7 +51,7 @@ export function apiConfigProvider(
   ],
   exports: [],
   providers: [
-   InitializeModuleGuard,
+    InitializeModuleGuard,
     { provide: DialogService, useClass: PortalDialogService },
     {
       provide: Configuration,

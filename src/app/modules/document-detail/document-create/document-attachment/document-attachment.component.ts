@@ -17,10 +17,7 @@ import {
   SupportedMimeTypeDTO,
 } from 'src/app/generated';
 import { DataSharingService } from 'src/app/shared/data-sharing.service';
-import {
-  noSpecialCharacters,
-  trimSpaces,
-} from 'src/app/utils';
+import { noSpecialCharacters, trimSpaces } from 'src/app/utils';
 
 @Component({
   selector: 'app-document-attachment',

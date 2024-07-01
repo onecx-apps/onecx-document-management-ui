@@ -34,7 +34,10 @@ describe('DocumentQuickUploadFormComponent', () => {
         ReactiveFormsModule,
         FormsModule,
       ],
-      providers: [{ provide: TranslateService, useClass: TranslateServiceMock }, providePortalMessageServiceMock()],
+      providers: [
+        { provide: TranslateService, useClass: TranslateServiceMock },
+        providePortalMessageServiceMock(),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DocumentQuickUploadFormComponent);

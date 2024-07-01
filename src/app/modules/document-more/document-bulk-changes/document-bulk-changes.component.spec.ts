@@ -20,6 +20,7 @@ import { DataSharingService } from 'src/app/shared/data-sharing.service';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 import { DocumentBulkChangesComponent } from './document-bulk-changes.component';
 import { UserDetailsService } from 'src/app/generated/api/user-details.service';
+import { BreadcrumbService } from '@onecx/portal-integration-angular';
 
 describe('DocumentBulkChangesComponent', () => {
   let component: DocumentBulkChangesComponent;
@@ -38,15 +39,16 @@ describe('DocumentBulkChangesComponent', () => {
   }
 
   beforeEach(async () => {
+    const breadcrumbServiceSpy = {
+      setItems: jasmine.createSpy('setItems'),
+    };
     await TestBed.configureTestingModule({
       declarations: [DocumentBulkChangesComponent, TranslatePipeMock],
-      imports: [
-        ReactiveFormsModule,
-        HttpClientTestingModule,
-      ],
+      imports: [ReactiveFormsModule, HttpClientTestingModule],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         { provide: TranslateService, useClass: TranslateServiceMock },
+        { provide: BreadcrumbService, useValue: breadcrumbServiceSpy },
         {
           provide: ActivatedRoute,
           useValue: {

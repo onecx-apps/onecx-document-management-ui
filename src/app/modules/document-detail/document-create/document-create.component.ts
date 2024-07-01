@@ -11,7 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import {
   BreadcrumbService,
-  PortalMessageService
+  PortalMessageService,
 } from '@onecx/portal-integration-angular';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import { throwError } from 'rxjs';

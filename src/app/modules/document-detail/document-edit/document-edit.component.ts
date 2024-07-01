@@ -16,7 +16,7 @@ import {
   Action,
   BreadcrumbService,
   ObjectDetailItem,
-  PortalMessageService
+  PortalMessageService,
 } from '@onecx/portal-integration-angular';
 import { saveAs } from 'file-saver';
 import { throwError, forkJoin, of } from 'rxjs';

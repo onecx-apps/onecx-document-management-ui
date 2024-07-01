@@ -57,11 +57,11 @@ describe('DocumentEditComponent', () => {
         RouterTestingModule,
         BrowserModule,
         ReactiveFormsModule,
-        FormsModule
+        FormsModule,
       ],
       providers: [
         { provide: DocumentControllerV1APIService },
-        { provide: TranslateService, useClass: TranslateServiceMock},
+        { provide: TranslateService, useClass: TranslateServiceMock },
         AttachmentUploadService,
         providePortalMessageServiceMock(),
       ],

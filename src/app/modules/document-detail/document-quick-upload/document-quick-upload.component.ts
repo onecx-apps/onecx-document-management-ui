@@ -14,7 +14,7 @@ import { ConfirmationService, SelectItem } from 'primeng/api';
 import { catchError, Subscription, throwError, timer } from 'rxjs';
 import {
   BreadcrumbService,
-  PortalMessageService
+  PortalMessageService,
 } from '@onecx/portal-integration-angular';
 
 // Application imports
@@ -85,7 +85,7 @@ export class DocumentQuickUploadComponent implements OnInit {
     private readonly router: Router,
     private readonly activeRoute: ActivatedRoute,
     private readonly breadcrumbService: BreadcrumbService,
-    private readonly translateService: TranslateService,
+    private readonly translateService: TranslateService
   ) {}
 
   ngOnInit(): void {

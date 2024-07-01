@@ -27,11 +27,7 @@ describe('DocumentEditAttachmentComponent', () => {
   beforeEach(async () => {
     const translateSpy = jasmine.createSpyObj('TranslateService', ['get']);
     await TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        FormsModule,
-        ReactiveFormsModule
-      ],
+      imports: [HttpClientTestingModule, FormsModule, ReactiveFormsModule],
       declarations: [DocumentEditAttachmentComponent, TranslatePipeMock],
       providers: [
         { provide: TranslateService, useClass: TranslateServiceMock },
@@ -649,7 +645,7 @@ describe('DocumentEditAttachmentComponent', () => {
     );
     expect(component.attachmentErrorMessage).toBe(translatedErrorMessage);
   });
-  
+
   it('should delete an attachment when multiple attachments exist', () => {
     component.attachmentArray = [
       { name: 'Attachment 1' },

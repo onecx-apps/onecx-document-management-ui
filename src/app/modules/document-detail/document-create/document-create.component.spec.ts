@@ -5,7 +5,7 @@ import {
   PortalMessageServiceMock,
   providePortalMessageServiceMock,
 } from '@onecx/portal-integration-angular/mocks';
-import {TranslateService} from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 import { RouterTestingModule } from '@angular/router/testing';
 import {
@@ -38,8 +38,10 @@ describe('DocumentCreateComponent', () => {
         ReactiveFormsModule,
       ],
       declarations: [DocumentCreateComponent, TranslatePipeMock],
-      providers: [providePortalMessageServiceMock(),
-        { provide: TranslateService, useClass: TranslateServiceMock}],
+      providers: [
+        providePortalMessageServiceMock(),
+        { provide: TranslateService, useClass: TranslateServiceMock },
+      ],
     }).compileComponents();
     portalMessageServiceMock = TestBed.inject(PortalMessageServiceMock);
   });

@@ -14,7 +14,7 @@ import { TranslateService } from '@ngx-translate/core';
 import {
   Column,
   ColumnViewTemplate,
-  UserService
+  UserService,
 } from '@onecx/portal-integration-angular';
 import { MenuItem, SelectItem } from 'primeng/api';
 import { DataView } from 'primeng/dataview';

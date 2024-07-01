@@ -211,27 +211,21 @@ export class DocumentSearchComponent
   setFilterActions() {
     this.items = [
       {
-        label: this.translatedData[
-          'DOCUMENT_SEARCH.FILTER.CREATED_BY_ME'
-        ],
+        label: this.translatedData['DOCUMENT_SEARCH.FILTER.CREATED_BY_ME'],
         styleClass: this.isFiltered === 'A' ? 'bg-primary' : '',
         command: () => {
           this.getFilteredCreatedByMe();
         },
       },
       {
-        label: this.translatedData[
-          'DOCUMENT_SEARCH.FILTER.RECENTLY_UPDATED'
-        ],
+        label: this.translatedData['DOCUMENT_SEARCH.FILTER.RECENTLY_UPDATED'],
         styleClass: this.isFiltered === 'B' ? 'bg-primary' : '',
         command: () => {
           this.getFilteredRecentlyUpdated();
         },
       },
       {
-        label: this.translatedData[
-          'DOCUMENT_SEARCH.FILTER.CLEAR_FILTER'
-        ],
+        label: this.translatedData['DOCUMENT_SEARCH.FILTER.CLEAR_FILTER'],
         disabled: !this.isFilterClick,
         command: () => {
           this.clearFilter();

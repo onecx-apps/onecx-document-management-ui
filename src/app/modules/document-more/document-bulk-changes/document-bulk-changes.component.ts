@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   Action,
   BreadcrumbService,
-  PortalMessageService
+  PortalMessageService,
 } from '@onecx/portal-integration-angular';
 import { TranslateService } from '@ngx-translate/core';
 import { MenuItem, SelectItem } from 'primeng/api';

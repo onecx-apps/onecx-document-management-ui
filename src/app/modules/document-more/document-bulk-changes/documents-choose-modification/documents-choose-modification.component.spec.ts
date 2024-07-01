@@ -1,8 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  TranslateService
-} from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { TranslateServiceMock } from '../../../../test/TranslateServiceMock';
 
 import { DocumentsChooseModificationComponent } from './documents-choose-modification.component';
@@ -20,11 +18,11 @@ describe('DocumentsChooseModificationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-      ],
+      imports: [HttpClientTestingModule],
       declarations: [DocumentsChooseModificationComponent, TranslatePipeMock],
-      providers: [ { provide: TranslateService, useClass: TranslateServiceMock}],
+      providers: [
+        { provide: TranslateService, useClass: TranslateServiceMock },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DocumentsChooseModificationComponent);
