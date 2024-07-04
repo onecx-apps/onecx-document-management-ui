@@ -299,12 +299,14 @@ export class DocumentCreateComponent implements OnInit {
           });
           if (successFiles > 0) {
             this.portalMessageService.success({
-              summaryKey: `${successFiles} ${this.translateService.instant['DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_SUCCESS']}`,
+              summaryParameters: { successFiles: successFiles },
+              summaryKey: 'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_SUCCESS',
             });
           }
           if (failedFiles > 0) {
             this.portalMessageService.error({
-              summaryKey: `${failedFiles} ${this.translateService.instant['DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_ERROR']}`,
+              summaryParameters: { failedFiles: successFiles },
+              summaryKey: 'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_ERROR',
               life: 5000,
             });
             this.attachmentUploadService.exportAllFailedAttachments(documentId);

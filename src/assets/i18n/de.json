@@ -64,8 +64,8 @@
         "DELETE_CHARACTERISTICS_DESC": "Löschen Sie ein oder mehrere Merkmale aus den vorhandenen Merkmalen von Dokumenten"
       },
       "SELECTED_DOCUMENTS": {
-        "UPDATE_SUCCESS": "Ausgewählte(s) Dokument(e) erfolgreich aktualisiert",
-        "DELETE_SUCCESS": "Ausgewählte(s) Dokument(e) erfolgreich gelöscht",
+        "UPDATE_SUCCESS": "{{checkedDocuments}} Ausgewählte(s) Dokument(e) erfolgreich aktualisiert",
+        "DELETE_SUCCESS": "{{checkedDocuments}} Ausgewählte(s) Dokument(e) erfolgreich gelöscht",
         "BULK_ERROR": "Massenänderungen fehlgeschlagen"
       }
     },
@@ -214,10 +214,10 @@
       "VALUE": "Wert"
     },
     "MULTIPLE_ATTACHMENTS": {
-      "UPLOAD_SUCCESS": "Datei(en) erfolgreich hochgeladen",
-      "UPLOAD_ERROR": "Datei(en) konnte nicht hochgeladen werden",
-      "DELETE_SUCCESS": "Datei(en) erfolgreich gelöscht",
-      "DELETE_ERROR": "Datei(en) konnte nicht gelöscht werden",
+      "UPLOAD_SUCCESS": "{{successFiles}} Datei(en) erfolgreich hochgeladen",
+      "UPLOAD_ERROR": "{{failedFiles}} Datei(en) konnte nicht hochgeladen werden",
+      "DELETE_SUCCESS": "{{attachmentslength}} Datei(en) erfolgreich gelöscht",
+      "DELETE_ERROR": "{{attachmentslength}} Datei(en) konnte nicht gelöscht werden",
       "NO_DATA": "Keine Dateien hochgeladen"
     }
   },

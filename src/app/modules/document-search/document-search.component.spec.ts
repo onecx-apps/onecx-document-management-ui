@@ -326,7 +326,7 @@ describe('DocumentSearchComponent', () => {
     component.headerActions[0].actionCallback();
     expect(portalMessageServiceMock.lastMessages[0]).toEqual({
       type: 'success',
-      value: { summaryKey: 'Mock Label' },
+      value: { summaryKey: 'GENERAL.NO_RECORDS_TO_EXPORT' },
     });
     expect(localStorage.setItem).toHaveBeenCalledWith(
       'searchCriteria',

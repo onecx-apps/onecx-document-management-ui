@@ -40,7 +40,7 @@ export function createTranslateLoader(http: HttpClient, mfeInfo: MfeInfo) {
 }
 
 export const basePathProvider = (mfeInfo: MfeInfo) => {
-  console.log(`Base path provider ${environment?.API_BASE_PATH}`);
+  console.log(`Base path provider ${mfeInfo?.remoteBaseUrl}`);
   return mfeInfo
     ? mfeInfo.remoteBaseUrl + 'onecx-document-management-api'
     : '.onecx-document-management-api';

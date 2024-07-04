@@ -642,17 +642,15 @@ export class DocumentEditComponent implements OnInit {
     this.documentV1Service.deleteFile(params).subscribe({
       next: () => {
         this.portalMessageService.success({
-          summaryKey: `${attachmentsId.length} ${[
-            'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.DELETE_SUCCESS',
-          ]}`,
+          summaryParameters: { attachmentslength: attachmentsId.length },
+          summaryKey: 'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.DELETE_SUCCESS',
         });
         this.getDocumentDetail();
       },
       error: () => {
         this.portalMessageService.error({
-          summaryKey: `${attachmentsId.length} ${[
-            'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.DELETE_ERROR',
-          ]}`,
+          summaryParameters: { attachmentslength: attachmentsId.length },
+          summaryKey: 'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.DELETE_ERROR',
         });
         this.getDocumentDetail();
       },
@@ -692,12 +690,15 @@ export class DocumentEditComponent implements OnInit {
             });
             if (successFiles > 0) {
               this.portalMessageService.success({
-                summaryKey: `${successFiles} ${this.translatedData['DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_SUCCESS']}`,
+                summaryParameters: { successFiles: successFiles },
+                summaryKey:
+                  'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_SUCCESS',
               });
             }
             if (failedFiles > 0) {
               this.portalMessageService.error({
-                summaryKey: `${failedFiles} ${this.translatedData['DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_ERROR']}`,
+                summaryParameters: { failedFiles: failedFiles },
+                summaryKey: 'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_ERROR',
                 life: 5000,
               });
               this.attachmentUploadService.exportAllFailedAttachments(

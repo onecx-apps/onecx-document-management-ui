@@ -622,7 +622,9 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
     this.documentV1Service.bulkUpdateDocument(params).subscribe({
       next: () => {
         this.portalMessageService.success({
-          summaryKey: `${data.length} ${this.translatedData['DOCUMENT_MENU.DOCUMENT_MORE.SELECTED_DOCUMENTS.UPDATE_SUCCESS']}`,
+          summaryParameters: { datalength: data.length },
+          summaryKey:
+            'DOCUMENT_MENU.DOCUMENT_MORE.SELECTED_DOCUMENTS.UPDATE_SUCCESS',
         });
         this.documentBulkForm.enable();
         this.isSubmitting = false;
@@ -673,7 +675,11 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
       .subscribe({
         next: () => {
           this.portalMessageService.success({
-            summaryKey: `${checkedDocumentIds.length} ${this.translatedData['DOCUMENT_MENU.DOCUMENT_MORE.SELECTED_DOCUMENTS.DELETE_SUCCESS']}`,
+            summaryParameters: {
+              checkedDocuments: checkedDocumentIds.length,
+            },
+            summaryKey:
+              'DOCUMENT_MENU.DOCUMENT_MORE.SELECTED_DOCUMENTS.DELETE_SUCCESS',
           });
           this.router.navigate(['../../search'], {
             relativeTo: this.activeRoute,

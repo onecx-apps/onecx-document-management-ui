@@ -368,9 +368,8 @@ describe('DocumentEditComponent', () => {
     expect(portalMessageServiceMock.lastMessages[0]).toEqual({
       type: 'success',
       value: {
-        summaryKey: `${attachmentsId.length} ${[
-          'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.DELETE_SUCCESS',
-        ]}`,
+        summaryParameters: { attachmentslength: attachmentsId.length },
+        summaryKey: 'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.DELETE_SUCCESS',
       },
     });
     expect(getDocumentDetailSpy).toHaveBeenCalled();
@@ -386,9 +385,8 @@ describe('DocumentEditComponent', () => {
     expect(portalMessageServiceMock.lastMessages[0]).toEqual({
       type: 'error',
       value: {
-        summaryKey: `${attachmentsId.length} ${[
-          'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.DELETE_ERROR',
-        ]}`,
+        summaryParameters: { attachmentslength: attachmentsId.length },
+        summaryKey: 'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.DELETE_ERROR',
       },
     });
     expect(getDocumentDetailSpy).toHaveBeenCalled();

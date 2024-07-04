@@ -293,6 +293,7 @@ describe('DocumentCreateComponent', () => {
 
   it('should upload attachments successfully', () => {
     const documentId = '123';
+    const successFiles = 2;
     const mockAttachmentResponse = {
       attachmentResponse: {
         'file1.txt': 201,
@@ -310,7 +311,10 @@ describe('DocumentCreateComponent', () => {
     );
     expect(portalMessageServiceMock.lastMessages[0]).toEqual({
       type: 'success',
-      value: { summaryKey: jasmine.any(String) },
+      value: {
+        summaryParameters: { successFiles: successFiles },
+        summaryKey: jasmine.any(String),
+      },
     });
   });
 

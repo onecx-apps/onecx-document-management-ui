@@ -65,8 +65,8 @@
         "DELETE_CHARACTERISTICS_DESC": "Delete one or more Characteristics from the existing Characteristics of documents"
       },
       "SELECTED_DOCUMENTS": {
-        "UPDATE_SUCCESS": "Selected Document(s) successfully Updated",
-        "DELETE_SUCCESS": "Selected Document(s) successfully deleted",
+        "UPDATE_SUCCESS": "{{datalength}} Selected Document(s) successfully Updated",
+        "DELETE_SUCCESS": "{{checkedDocuments}} Selected Document(s) successfully deleted",
         "BULK_ERROR": "Bulk Changes failed"
       }
     },
@@ -208,10 +208,10 @@
       "VALUE": "Value"
     },
     "MULTIPLE_ATTACHMENTS": {
-      "UPLOAD_SUCCESS": "File(s) successfully uploaded",
-      "UPLOAD_ERROR": "File(s) failed to upload ",
-      "DELETE_SUCCESS": "File(s) successfully deleted",
-      "DELETE_ERROR": "File(s) failed to delete",
+      "UPLOAD_SUCCESS": "{{successFiles}} File(s) successfully uploaded",
+      "UPLOAD_ERROR": "{{failedFiles}} File(s) failed to upload ",
+      "DELETE_SUCCESS": "{{attachmentslength}} File(s) successfully deleted",
+      "DELETE_ERROR": "{{attachmentslength}} File(s) failed to delete",
       "NO_DATA": "No files uploaded"
     }
   },

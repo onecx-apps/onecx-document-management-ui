@@ -359,12 +359,14 @@ export class DocumentQuickUploadComponent implements OnInit {
           });
           if (successFiles > 0) {
             this.portalMessageService.success({
-              summaryKey: `${successFiles} ${this.translatedData['DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_SUCCESS']}`,
+              summaryParameters: { successFiles: successFiles },
+              summaryKey: 'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_SUCCESS',
             });
           }
           if (failedFiles > 0) {
             this.portalMessageService.error({
-              summaryKey: `${failedFiles} ${this.translatedData['DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_ERROR']}`,
+              summaryParameters: { failedFiles: failedFiles },
+              summaryKey: 'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_ERROR',
               life: 5000,
             });
             this.attachmentUploadService.exportAllFailedAttachments(documentId);
