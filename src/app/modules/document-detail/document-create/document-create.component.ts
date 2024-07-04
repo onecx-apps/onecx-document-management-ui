@@ -305,7 +305,7 @@ export class DocumentCreateComponent implements OnInit {
           }
           if (failedFiles > 0) {
             this.portalMessageService.error({
-              summaryParameters: { failedFiles: successFiles },
+              summaryParameters: { failedFiles: failedFiles },
               summaryKey: 'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_ERROR',
               life: 5000,
             });
