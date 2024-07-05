@@ -4,9 +4,13 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 // Third party imports
-import { Action, BreadcrumbService } from '@onecx/portal-integration-angular';
+import {
+  Action,
+  BreadcrumbService,
+  PortalMessageService,
+} from '@onecx/portal-integration-angular';
 import { TranslateService } from '@ngx-translate/core';
-import { MenuItem, MessageService, SelectItem } from 'primeng/api';
+import { MenuItem, SelectItem } from 'primeng/api';
 
 // Application imports
 import {
@@ -66,7 +70,7 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
     private readonly formBuilder: UntypedFormBuilder,
     private readonly router: Router,
     private readonly activeRoute: ActivatedRoute,
-    private readonly messageService: MessageService,
+    private readonly portalMessageService: PortalMessageService,
     private readonly userDetailsService: UserDetailsService,
     private readonly dataSharingService: DataSharingService,
     private readonly documentTypeV1Service: DocumentTypeControllerV1APIService
@@ -349,16 +353,14 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
           }
 
           if (data.stream.length === 0) {
-            this.messageService.add({
-              severity: 'success',
-              summary: this.translatedData['DOCUMENT_SEARCH.MSG_NO_RESULTS'],
+            this.portalMessageService.success({
+              summaryKey: 'DOCUMENT_SEARCH.MSG_NO_RESULTS',
             });
           }
         },
         error: (error) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: this.translatedData['DOCUMENT_SEARCH.MSG_NO_RESULTS'],
+          this.portalMessageService.success({
+            summaryKey: 'DOCUMENT_SEARCH.MSG_NO_RESULTS',
           });
         },
       });
@@ -619,9 +621,10 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
 
     this.documentV1Service.bulkUpdateDocument(params).subscribe({
       next: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: `${data.length} ${this.translatedData['DOCUMENT_MENU.DOCUMENT_MORE.SELECTED_DOCUMENTS.UPDATE_SUCCESS']}`,
+        this.portalMessageService.success({
+          summaryParameters: { datalength: data.length },
+          summaryKey:
+            'DOCUMENT_MENU.DOCUMENT_MORE.SELECTED_DOCUMENTS.UPDATE_SUCCESS',
         });
         this.documentBulkForm.enable();
         this.isSubmitting = false;
@@ -630,9 +633,9 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
         });
       },
       error: () => {
-        this.messageService.add({
-          severity: 'error',
-          summary: `${this.translatedData['DOCUMENT_MENU.DOCUMENT_MORE.SELECTED_DOCUMENTS.BULK_ERROR']}`,
+        this.portalMessageService.error({
+          summaryKey:
+            'DOCUMENT_MENU.DOCUMENT_MORE.SELECTED_DOCUMENTS.BULK_ERROR',
         });
         this.documentBulkForm.enable();
         this.isSubmitting = false;
@@ -671,18 +674,21 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
       .deleteBulkDocumentByIds(checkedDocumentIds)
       .subscribe({
         next: () => {
-          this.messageService.add({
-            severity: 'success',
-            summary: `${checkedDocumentIds.length} ${this.translatedData['DOCUMENT_MENU.DOCUMENT_MORE.SELECTED_DOCUMENTS.DELETE_SUCCESS']}`,
+          this.portalMessageService.success({
+            summaryParameters: {
+              checkedDocuments: checkedDocumentIds.length,
+            },
+            summaryKey:
+              'DOCUMENT_MENU.DOCUMENT_MORE.SELECTED_DOCUMENTS.DELETE_SUCCESS',
           });
           this.router.navigate(['../../search'], {
             relativeTo: this.activeRoute,
           });
         },
         error: () => {
-          this.messageService.add({
-            severity: 'error',
-            summary: `${this.translatedData['DOCUMENT_MENU.DOCUMENT_MORE.SELECTED_DOCUMENTS.BULK_ERROR']}`,
+          this.portalMessageService.error({
+            summaryKey:
+              'DOCUMENT_MENU.DOCUMENT_MORE.SELECTED_DOCUMENTS.BULK_ERROR',
           });
           this.isSubmitting = false;
         },

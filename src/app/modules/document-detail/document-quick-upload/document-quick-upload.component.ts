@@ -10,9 +10,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 // Third party imports
 import { TranslateService } from '@ngx-translate/core';
-import { ConfirmationService, SelectItem, MessageService } from 'primeng/api';
+import { ConfirmationService, SelectItem } from 'primeng/api';
 import { catchError, Subscription, throwError, timer } from 'rxjs';
-import { BreadcrumbService } from '@onecx/portal-integration-angular';
+import {
+  BreadcrumbService,
+  PortalMessageService,
+} from '@onecx/portal-integration-angular';
 
 // Application imports
 import { AttachmentUploadService } from '../attachment-upload.service';
@@ -76,7 +79,7 @@ export class DocumentQuickUploadComponent implements OnInit {
   subscriptions = new Subscription();
 
   constructor(
-    private readonly messageService: MessageService,
+    private readonly portalMessageService: PortalMessageService,
     private readonly attachmentUploadService: AttachmentUploadService,
     private readonly documentV1Service: DocumentControllerV1APIService,
     private readonly router: Router,
@@ -306,10 +309,8 @@ export class DocumentQuickUploadComponent implements OnInit {
       .createDocument({ documentCreateUpdateDTO: documentCreateUpdateDTO })
       .pipe(
         catchError((err) => {
-          this.messageService.add({
-            severity: 'error',
-            summary:
-              this.translatedData['DOCUMENT_MENU.DOCUMENT_CREATE.CREATE_ERROR'],
+          this.portalMessageService.error({
+            summaryKey: 'DOCUMENT_MENU.DOCUMENT_CREATE.CREATE_ERROR',
           });
           this.router.navigate(['../../search'], {
             relativeTo: this.activeRoute,
@@ -318,11 +319,10 @@ export class DocumentQuickUploadComponent implements OnInit {
         })
       )
       .subscribe((res) => {
-        this.messageService.add({
-          severity: 'success',
-          summary:
-            this.translatedData['DOCUMENT_MENU.DOCUMENT_CREATE.CREATE_SUCCESS'],
+        this.portalMessageService.success({
+          summaryKey: 'DOCUMENT_MENU.DOCUMENT_CREATE.CREATE_SUCCESS',
         });
+
         this.callUploadAttachmentsApi(res.id);
         this.isSubmitted = false;
         this.documentQuickUploadForm.enable();
@@ -358,16 +358,16 @@ export class DocumentQuickUploadComponent implements OnInit {
             }
           });
           if (successFiles > 0) {
-            this.messageService.add({
-              severity: 'success',
-              summary: `${successFiles} ${this.translatedData['DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_SUCCESS']}`,
+            this.portalMessageService.success({
+              summaryParameters: { successFiles: successFiles },
+              summaryKey: 'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_SUCCESS',
             });
           }
           if (failedFiles > 0) {
-            this.messageService.add({
-              severity: 'error',
+            this.portalMessageService.error({
+              summaryParameters: { failedFiles: failedFiles },
+              summaryKey: 'DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_ERROR',
               life: 5000,
-              summary: `${failedFiles} ${this.translatedData['DOCUMENT_DETAIL.MULTIPLE_ATTACHMENTS.UPLOAD_ERROR']}`,
             });
             this.attachmentUploadService.exportAllFailedAttachments(documentId);
           }

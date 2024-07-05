@@ -10,13 +10,12 @@ import {
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { providePortalMessageServiceMock } from '@onecx/portal-integration-angular/mocks';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
-import { MFE_INFO } from '@onecx/portal-integration-angular';
-import { MessageService } from 'primeng/api';
-import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 import { AttachmentUploadService } from '../attachment-upload.service';
 import { DocumentQuickUploadComponent } from './document-quick-upload.component';
+import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 
 describe('DocumentQuickUploadComponent', () => {
   let component: DocumentQuickUploadComponent;
@@ -42,9 +41,8 @@ describe('DocumentQuickUploadComponent', () => {
       ],
       providers: [
         { provide: TranslateService, useClass: TranslateServiceMock },
-        { provide: MessageService, useClass: MessageService },
         { provide: AttachmentUploadService },
-        { provide: MFE_INFO, useValue: {} },
+        providePortalMessageServiceMock(),
       ],
     }).compileComponents();
   });

@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { TranslateServiceMock } from '../../../../test/TranslateServiceMock';
 
 import { DocumentsChooseModificationComponent } from './documents-choose-modification.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('DocumentsChooseModificationComponent', () => {
   let component: DocumentsChooseModificationComponent;
@@ -17,6 +18,7 @@ describe('DocumentsChooseModificationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
       declarations: [DocumentsChooseModificationComponent, TranslatePipeMock],
       providers: [
         { provide: TranslateService, useClass: TranslateServiceMock },

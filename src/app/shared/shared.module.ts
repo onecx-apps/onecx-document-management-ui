@@ -38,7 +38,6 @@ import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { RadioButtonModule } from 'primeng/radiobutton';
 
 // Application imports
-import { CanActivateGuard } from './can-active-guard.service';
 import { RelativeDatePipe } from './relative-date.pipe';
 import { TrimPipe } from './trim.pipe';
 @NgModule({
@@ -118,6 +117,5 @@ import { TrimPipe } from './trim.pipe';
     TrimPipe,
     RadioButtonModule,
   ],
-  providers: [CanActivateGuard],
 })
 export class SharedModule {}

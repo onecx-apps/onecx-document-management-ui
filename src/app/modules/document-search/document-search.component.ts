@@ -7,10 +7,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import {
   Action,
+  PortalMessageService,
   PortalSearchPage,
   provideParent,
 } from '@onecx/portal-integration-angular';
-import { MenuItem, MessageService } from 'primeng/api';
+import { MenuItem } from 'primeng/api';
 import { Observable, timer } from 'rxjs';
 import { finalize, map, tap } from 'rxjs/operators';
 
@@ -70,7 +71,7 @@ export class DocumentSearchComponent
   constructor(
     private readonly translateService: TranslateService,
     private readonly documentV1Service: DocumentControllerV1APIService,
-    private readonly messageService: MessageService,
+    private readonly portalMessageService: PortalMessageService,
     private readonly router: Router,
     private readonly activeRoute: ActivatedRoute,
     private readonly datepipe: DatePipe,
@@ -186,17 +187,15 @@ export class DocumentSearchComponent
       tap({
         next: (data) => {
           if (data.length === 0) {
-            this.messageService.add({
-              severity: 'success',
-              summary: this.translatedData['DOCUMENT_SEARCH.MSG_NO_RESULTS'],
+            this.portalMessageService.success({
+              summaryKey: 'DOCUMENT_SEARCH.MSG_NO_RESULTS',
             });
             this.isLoadMoreVisible = false;
           }
         },
         error: (error) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: this.translatedData['DOCUMENT_SEARCH.MSG_NO_RESULTS'],
+          this.portalMessageService.error({
+            summaryKey: 'DOCUMENT_SEARCH.MSG_NO_RESULTS',
           });
         },
       })
@@ -301,10 +300,8 @@ export class DocumentSearchComponent
   public deleteDocument(id: string): void {
     this.documentV1Service.deleteDocumentById({ id }).subscribe({
       next: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary:
-            this.translatedData['DOCUMENT_MENU.DOCUMENT_DELETE.DELETE_SUCCESS'],
+        this.portalMessageService.success({
+          summaryKey: 'DOCUMENT_MENU.DOCUMENT_DELETE.DELETE_SUCCESS',
         });
         this.search(this.mode || 'basic', true).subscribe({
           next: (data) => {
@@ -317,10 +314,8 @@ export class DocumentSearchComponent
         this.clearFilter();
       },
       error: () => {
-        this.messageService.add({
-          severity: 'error',
-          summary:
-            this.translatedData['DOCUMENT_MENU.DOCUMENT_DELETE.DELETE_ERROR'],
+        this.portalMessageService.error({
+          summaryKey: 'DOCUMENT_MENU.DOCUMENT_DELETE.DELETE_ERROR',
         });
       },
     });
@@ -336,9 +331,8 @@ export class DocumentSearchComponent
         show: 'asOverflow',
         actionCallback: () => {
           if (this.results.length == 0) {
-            this.messageService.add({
-              severity: 'success',
-              summary: this.translatedData['GENERAL.NO_RECORDS_TO_EXPORT'],
+            this.portalMessageService.success({
+              summaryKey: 'GENERAL.NO_RECORDS_TO_EXPORT',
             });
           }
           if (this.isExportDocEnable == true) {
@@ -362,9 +356,8 @@ export class DocumentSearchComponent
         show: 'asOverflow',
         actionCallback: () => {
           if (this.results.length == 0) {
-            this.messageService.add({
-              severity: 'success',
-              summary: this.translatedData['GENERAL.NO_RECORDS_FOR_CHANGES'],
+            this.portalMessageService.success({
+              summaryKey: 'GENERAL.NO_RECORDS_FOR_CHANGES',
             });
           }
           if (this.isBulkEnable == true) {

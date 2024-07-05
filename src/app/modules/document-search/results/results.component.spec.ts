@@ -3,8 +3,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 import { ResultsComponent } from './results.component';
-import { IAuthMockService } from 'src/app/test/mocks/IAuthMockService';
-import { AUTH_SERVICE } from '@onecx/portal-integration-angular';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DocumentDetailDTO, LifeCycleState } from 'src/app/generated';
@@ -74,8 +72,10 @@ describe('ResultsComponent', () => {
       declarations: [ResultsComponent, TranslatePipeMock],
       providers: [
         AttachmentUploadService,
-        { provide: TranslateService, useClass: TranslateServiceMock },
-        { provide: AUTH_SERVICE, useClass: IAuthMockService },
+        {
+          provide: TranslateService,
+          useClass: TranslateServiceMock,
+        },
       ],
     }).compileComponents();
   });

@@ -38,22 +38,28 @@ const config = withModuleFederationPlugin({
       requiredVersion: 'auto',
     },
     '@onecx/portal-integration-angular': {
-      singleton: true,
-      strictVersion: false,
       requiredVersion: 'auto',
       includeSecondaries: true,
     },
     '@onecx/keycloak-auth': {
-      singleton: true,
-      strictVersion: false,
       requiredVersion: 'auto',
       includeSecondaries: true,
     },
     '@ngx-translate/core': {
       singleton: true,
       strictVersion: false,
+      requiredVersion: '^14.0.0'
     },
+    '@onecx/accelerator': {
+      requiredVersion: 'auto',
+      includeSecondaries: true,
+  },
+  '@onecx/integration-interface': {
+      requiredVersion: 'auto',
+      includeSecondaries: true,
+  },
     // ...sharedMappings.getDescriptors(),
   }),
+  sharedMappings: ['@onecx/portal-integration-angular'],
 });
 module.exports = config;

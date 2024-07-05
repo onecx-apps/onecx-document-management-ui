@@ -2,7 +2,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 // Third party imports
-import { MessageService } from 'primeng/api';
+import { PortalMessageService } from '@onecx/portal-integration-angular';
 
 // Application imports
 import {
@@ -25,7 +25,7 @@ export class DocumentEditLifecycleComponent implements OnInit {
 
   constructor(
     private readonly documentV1Service: DocumentControllerV1APIService,
-    private readonly messageService: MessageService
+    private readonly portalMessageService: PortalMessageService
   ) {}
 
   ngOnInit(): void {
@@ -42,10 +42,8 @@ export class DocumentEditLifecycleComponent implements OnInit {
         this.documentStatus = data.lifeCycleState;
       },
       error: () => {
-        this.messageService.add({
-          severity: 'error',
-          summary:
-            this.translatedData['DOCUMENT_MENU.DOCUMENT_EDIT.UPDATE_ERROR'],
+        this.portalMessageService.error({
+          summaryKey: 'DOCUMENT_MENU.DOCUMENT_EDIT.UPDATE_ERROR',
         });
       },
     });

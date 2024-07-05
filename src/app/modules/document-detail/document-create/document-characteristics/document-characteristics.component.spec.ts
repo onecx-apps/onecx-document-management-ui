@@ -13,6 +13,7 @@ import { MessageService } from 'primeng/api';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
 import { DocumentCharacteristicsComponent } from './document-characteristics.component';
 import { RouterTestingModule } from '@angular/router/testing';
+import { providePortalMessageServiceMock } from '@onecx/portal-integration-angular/mocks';
 
 describe('DocumentCharacteristicsComponent', () => {
   let component: DocumentCharacteristicsComponent;
@@ -36,7 +37,7 @@ describe('DocumentCharacteristicsComponent', () => {
       declarations: [DocumentCharacteristicsComponent, TranslatePipeMock],
       providers: [
         { provide: TranslateService, useClass: TranslateServiceMock },
-        { provide: MessageService, useClass: MessageService },
+        providePortalMessageServiceMock(),
       ],
     }).compileComponents();
 

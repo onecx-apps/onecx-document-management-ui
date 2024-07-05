@@ -10,7 +10,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { MessageService } from 'primeng/api';
+import {
+  PortalMessageServiceMock,
+  providePortalMessageServiceMock,
+} from '@onecx/portal-integration-angular/mocks';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
@@ -27,7 +30,7 @@ describe('DocumentSearchComponent', () => {
   let fixture: ComponentFixture<DocumentSearchComponent>;
   let userDetailsService: UserDetailsService;
   let documentV1Service: DocumentControllerV1APIService;
-  let messageService: MessageService;
+  let portalMessageServiceMock: PortalMessageServiceMock;
   let translateService: TranslateService;
   let router: Router;
   let activatedRoute: ActivatedRoute;
@@ -68,7 +71,7 @@ describe('DocumentSearchComponent', () => {
             },
           },
         },
-        MessageService,
+        providePortalMessageServiceMock(),
       ],
     }).compileComponents();
   });
@@ -79,7 +82,7 @@ describe('DocumentSearchComponent', () => {
     fixture.detectChanges();
     userDetailsService = TestBed.inject(UserDetailsService);
     translateService = TestBed.inject(TranslateService);
-    messageService = TestBed.inject(MessageService);
+    portalMessageServiceMock = TestBed.inject(PortalMessageServiceMock);
     router = TestBed.inject(Router);
     activatedRoute = TestBed.inject(ActivatedRoute);
     documentV1Service = TestBed.inject(DocumentControllerV1APIService);
@@ -255,16 +258,11 @@ describe('DocumentSearchComponent', () => {
     const mockSearchResult = [];
     spyOn(documentV1Service, 'deleteDocumentById').and.returnValue(of(null));
     spyOn(component, 'search').and.returnValue(of(mockSearchResult));
-    spyOn(messageService, 'add');
     component.deleteDocument(id);
-    expect(messageService.add).toHaveBeenCalledWith({
-      severity: 'success',
-      summary:
-        component.translatedData[
-          'DOCUMENT_MENU.DOCUMENT_DELETE.DELETE_SUCCESS'
-        ],
+    expect(portalMessageServiceMock.lastMessages[0]).toEqual({
+      type: 'success',
+      value: { summaryKey: 'DOCUMENT_MENU.DOCUMENT_DELETE.DELETE_SUCCESS' },
     });
-
     expect(component.search).toHaveBeenCalledWith(
       component.mode || 'basic',
       true
@@ -278,13 +276,11 @@ describe('DocumentSearchComponent', () => {
     spyOn(documentV1Service, 'deleteDocumentById').and.returnValue(
       throwError(new Error())
     );
-    spyOn(messageService, 'add');
     component.deleteDocument(id);
 
-    expect(messageService.add).toHaveBeenCalledWith({
-      severity: 'error',
-      summary:
-        component.translatedData['DOCUMENT_MENU.DOCUMENT_DELETE.DELETE_ERROR'],
+    expect(portalMessageServiceMock.lastMessages[0]).toEqual({
+      type: 'error',
+      value: { summaryKey: 'DOCUMENT_MENU.DOCUMENT_DELETE.DELETE_ERROR' },
     });
 
     expect(documentV1Service.deleteDocumentById).toHaveBeenCalledWith({ id });
@@ -295,7 +291,6 @@ describe('DocumentSearchComponent', () => {
     component.isBulkEnable = true;
 
     spyOn(translateService, 'instant').and.returnValue('Mock Label');
-    spyOn(messageService, 'add');
     spyOn(localStorage, 'setItem');
     spyOn(router, 'navigate');
 
@@ -329,9 +324,9 @@ describe('DocumentSearchComponent', () => {
     ]);
 
     component.headerActions[0].actionCallback();
-    expect(messageService.add).toHaveBeenCalledWith({
-      severity: 'success',
-      summary: component.translatedData['GENERAL.NO_RECORDS_TO_EXPORT'],
+    expect(portalMessageServiceMock.lastMessages[0]).toEqual({
+      type: 'success',
+      value: { summaryKey: 'GENERAL.NO_RECORDS_TO_EXPORT' },
     });
     expect(localStorage.setItem).toHaveBeenCalledWith(
       'searchCriteria',
@@ -339,10 +334,6 @@ describe('DocumentSearchComponent', () => {
     );
 
     component.headerActions[1].actionCallback();
-    expect(messageService.add).toHaveBeenCalledWith({
-      severity: 'success',
-      summary: component.translatedData['GENERAL.NO_RECORDS_FOR_CHANGES'],
-    });
     expect(localStorage.setItem).toHaveBeenCalledWith(
       'searchCriteria',
       JSON.stringify(component.criteria)
