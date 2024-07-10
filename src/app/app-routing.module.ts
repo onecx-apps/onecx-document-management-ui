@@ -5,7 +5,7 @@ import { DocumentSearchModule } from './modules/document-search/document-search.
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/search',
+    redirectTo: 'search',
     pathMatch: 'full',
   },
   {
