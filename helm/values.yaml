@@ -14,4 +14,26 @@ app:
         enabled: true
         spec:
           kcConfig:
-            clientId: "onecx-document-management-ui"    
+            clientId: "onecx-document-management-ui"
+    microfrontend:
+      enabled: true
+      specs:
+        main:
+          exposedModule: ./DocumentManagementRemoteModule
+          description: OneCX Document-Management Module
+          note: OneCX Document-Management module auto import via MF operator
+          type: MODULE
+          productName: 'onecx-document-management'
+    microservice:
+      spec:
+        productName: 'onecx-document-management'
+
+product:
+  info:
+    data:
+      name: "onecx-document-management"
+      description: "OneCX Document Management"
+      imageUrl: ""
+      iconName: "pi-file-import"
+      displayName: "OneCX Document-Management"
+      basePath: "/documents"
