@@ -16,3 +16,7 @@ dependencies:
     alias: app
     version: ^0
     repository: oci://ghcr.io/onecx/charts  
+  - name: helm-product
+    version: ^0
+    repository: oci://ghcr.io/onecx/charts
+    alias: product
