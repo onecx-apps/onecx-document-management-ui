@@ -1,26 +1,23 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 import { DocumentSearchModule } from './modules/document-search/document-search.module';
+import { addInitializeModuleGuard } from '@onecx/angular-integration-interface';
+import { startsWith } from '@onecx/angular-webcomponents';
 
 export const routes: Routes = [
   {
-    path: '',
-    redirectTo: 'search',
-    pathMatch: 'full',
-  },
-  {
-    path: 'search',
+    matcher: startsWith('search'),
     loadChildren: () => DocumentSearchModule,
   },
   {
-    path: 'detail',
+    matcher: startsWith('detail'),
     loadChildren: () =>
       import('src/app/modules/document-detail/document-detail.module').then(
         (m) => m.DocumentDetailModule
       ),
   },
   {
-    path: 'more',
+    matcher: startsWith('more'),
     loadChildren: () =>
       import('src/app/modules/document-more/document-more.module').then(
         (m) => m.DocumentMoreModule

@@ -37,7 +37,7 @@
 							"node_modules/@onecx/portal-integration-angular/assets/output.css",
 							"node_modules/primeicons/primeicons.css"
 						],
-						"scripts": [],
+						"scripts": ["node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"],
 						"vendorChunk": true,
 						"extractLicenses": false,
 						"buildOptimizer": false,
