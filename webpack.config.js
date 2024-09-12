@@ -1,13 +1,14 @@
+const { ModifyEntryPlugin } = require('@angular-architects/module-federation/src/utils/modify-entry-plugin');
 const {
   share,
   withModuleFederationPlugin,
 } = require('@angular-architects/module-federation/webpack');
 const config = withModuleFederationPlugin({
   // For remotes (please adjust)
-  name: 'DocumentRemoteModule',
+  name: 'onecx-document-management-ui',
   filename: 'remoteEntry.js',
   exposes: {
-    './DocumentRemoteModule': './src/app/remote.module.ts',
+    './DocumentRemoteModule': 'src/bootstrap.ts',
   },
 
   // For hosts (please adjust)
@@ -18,24 +19,26 @@ const config = withModuleFederationPlugin({
 
   shared: share({
     '@angular/core': {
-      singleton: true,
-      strictVersion: false,
       requiredVersion: 'auto',
+      includeSecondaries: true,
     },
     '@angular/common': {
-      singleton: true,
-      strictVersion: false,
       requiredVersion: 'auto',
+      includeSecondaries: {
+         skip: ['@angular/common/http/testing']
+       },
     },
     '@angular/common/http': {
-      singleton: true,
-      strictVersion: false,
-      requiredVersion: 'auto',
+     requiredVersion: 'auto',
+     includeSecondaries: true
     },
     '@angular/router': {
-      singleton: true,
-      strictVersion: false,
       requiredVersion: 'auto',
+      includeSecondaries: true
+    },
+     rxjs: {
+      requiredVersion: 'auto',
+      includeSecondaries: true,
     },
     '@onecx/portal-integration-angular': {
       requiredVersion: 'auto',
@@ -46,9 +49,7 @@ const config = withModuleFederationPlugin({
       includeSecondaries: true,
     },
     '@ngx-translate/core': {
-      singleton: true,
-      strictVersion: false,
-      requiredVersion: '^14.0.0'
+      requiredVersion:' auto',
     },
     '@onecx/accelerator': {
       requiredVersion: 'auto',
@@ -58,8 +59,55 @@ const config = withModuleFederationPlugin({
       requiredVersion: 'auto',
       includeSecondaries: true,
   },
+   '@onecx/angular-auth': {
+      requiredVersion: 'auto',
+      includeSecondaries: true
+    },
+    '@onecx/angular-integration-interface': {
+      requiredVersion: 'auto',
+      includeSecondaries: true
+    },
+    '@onecx/angular-remote-components': {
+      requiredVersion: 'auto',
+      includeSecondaries: true
+    },
+    '@onecx/angular-testing': {
+      requiredVersion: 'auto',
+      includeSecondaries: true
+    },
+    '@onecx/angular-webcomponents': {
+        requiredVersion: 'auto',
+        includeSecondaries: true
+    },
+    '@onecx/portal-layout-styles': {
+        requiredVersion: 'auto',
+        includeSecondaries: true
+    },
+    '@angular/elements': {
+      requiredVersion: 'auto',
+      includeSecondaries: true
+    },
     // ...sharedMappings.getDescriptors(),
   }),
   sharedMappings: ['@onecx/portal-integration-angular'],
 });
-module.exports = config;
+config.devServer = {
+allowedHosts: 'all'
+}
+const plugins = config.plugins.filter((plugin) => !(plugin instanceof ModifyEntryPlugin))
+module.exports = {
+...config,
+plugins,
+output: {
+uniqueName: 'onecx-document-management-ui',
+publicPath: 'auto'
+},
+experiments: {
+...config.experiments,
+topLevelAwait: true
+},
+optimization: {
+runtimeChunk: false,
+splitChunks: false
+}
+}

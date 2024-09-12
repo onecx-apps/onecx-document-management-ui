@@ -32,6 +32,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { environment } from 'src/environments/environment';
 import { BASE_PATH } from './generated/index';
+import { CommonModule } from '@angular/common';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -52,9 +53,12 @@ function initializer(
     }
   };
 }
+
+export const commonImports = [CommonModule];
 @NgModule({
   declarations: [AppComponent],
   imports: [
+    ...commonImports,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,

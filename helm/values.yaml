@@ -4,14 +4,51 @@ app:
     tag: ${project.version}
   nameOverride: ${project.name}
   routing:
-    enabled: true 
+    enabled: true
   product: false
   operator:
     apm:
-      enabled: false 
+      enabled: false
     keycloak:
       client:
         enabled: true
         spec:
           kcConfig:
-            clientId: "onecx-document-management-ui"    
+            clientId: 'onecx-document-management-ui'
+    microfrontend:
+      enabled: true
+      specs:
+        main:
+          exposedModule: './DocumentRemoteModule'
+          description: 'OneCX Document-Management Module'
+          note: 'OneCX Document-Management module auto import via MF operator'
+          type: MODULE
+          technology: WEBCOMPONENTMODULE
+          remoteName: onecx-document
+          tagName: onecx-document-management-component
+          productName: 'onecx-document-management'
+    microservice:
+      spec:
+        productName: 'onecx-document-management'
+    permission:
+      enabled: true
+      spec:
+        permissions:
+          DOCUMENT_MGMT:
+            DOCUMENT_CREATE: Create Document
+            DOCUMENT_VIEW: View Document
+            DOCUMENT_Edit: Update Document
+            DOCUMENT_SEARCH: Search Document
+            DOCUMENT_UPLOAD: Upload Document
+            DOCUMENT_DOWNLOAD: Download Document
+            DOCUMENT_BULK: Upload bulks Document
+
+product:
+  info:
+    data:
+      name: 'onecx-document-management'
+      description: 'OneCX Document-Management'
+      imageUrl: ''
+      iconName: 'pi-building'
+      displayName: 'OneCX Document-Management'
+      basePath: '/document'
