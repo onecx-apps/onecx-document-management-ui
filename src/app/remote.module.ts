@@ -38,9 +38,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { commonImports } from './app.module';
 
-export function withModuleFederationPlugin(arg0: { exposes: any }) {
-  throw new Error('Function not implemented.');
-}
 export function apiConfigProvider(
   configService: ConfigurationService,
   appStateService: AppStateService

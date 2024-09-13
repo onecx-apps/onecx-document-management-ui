@@ -8,7 +8,7 @@ const config = withModuleFederationPlugin({
   name: 'onecx-document-management-ui',
   filename: 'remoteEntry.js',
   exposes: {
-    './DocumentRemoteModule': 'src/bootstrap.ts',
+    './DocumentRemoteModule': 'src/main.ts',
   },
 
   // For hosts (please adjust)
@@ -67,6 +67,10 @@ const config = withModuleFederationPlugin({
       requiredVersion: 'auto',
       includeSecondaries: true
     },
+    '@onecx/angular-accelerator': {
+        requiredVersion: 'auto',
+        includeSecondaries: true
+      },
     '@onecx/angular-remote-components': {
       requiredVersion: 'auto',
       includeSecondaries: true
