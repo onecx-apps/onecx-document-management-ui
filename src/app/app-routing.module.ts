@@ -23,6 +23,11 @@ export const routes: Routes = [
         (m) => m.DocumentMoreModule
       ),
   },
+  {
+    matcher: startsWith(''),
+    redirectTo: 'search',
+    pathMatch: 'full',
+  },
 ];
 
 @NgModule({
