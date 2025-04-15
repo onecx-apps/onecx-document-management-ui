@@ -20,35 +20,5 @@ const PROXY_CONFIG = {
     },
     bypass: bypassFn,
   },
-  '/portal-api': {
-    target: 'http://tkit-portal-server',
-    secure: false,
-    pathRewrite: {
-      '^/portal-api': '',
-    },
-    changeOrigin: true,
-    logLevel: 'debug',
-    bypass: bypassFn,
-  },
-  '/launchpad-api': {
-    target: 'http://onecx-document-management-bff',
-    secure: false,
-    pathRewrite: {
-      '^/launchpad-api': '',
-    },
-    changeOrigin: true,
-    logLevel: 'debug',
-    bypass: bypassFn,
-  },
-  '/ahm-api': {
-    target: 'http://onecx-document-management-bff',
-    secure: false,
-    pathRewrite: {
-      '^/ahm-api': '',
-    },
-    changeOrigin: true,
-    logLevel: 'debug',
-    bypass: bypassFn,
-  },
 };
 module.exports = PROXY_CONFIG;
