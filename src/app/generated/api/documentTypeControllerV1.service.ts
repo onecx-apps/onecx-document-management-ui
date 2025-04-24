@@ -190,7 +190,7 @@ export class DocumentTypeControllerV1APIService {
     }
 
     return this.httpClient.post<DocumentTypeDTO>(
-      `${this.configuration.basePath}/v1/document-type`,
+      `${this.configuration.basePath}/document-type`,
       documentTypeCreateUpdateDTO,
       {
         responseType: <any>responseType,
@@ -259,7 +259,7 @@ export class DocumentTypeControllerV1APIService {
     }
 
     return this.httpClient.delete<any>(
-      `${this.configuration.basePath}/v1/document-type/${encodeURIComponent(
+      `${this.configuration.basePath}/document-type/${encodeURIComponent(
         String(id)
       )}`,
       {
@@ -317,7 +317,7 @@ export class DocumentTypeControllerV1APIService {
     }
 
     return this.httpClient.get<Array<DocumentTypeDTO>>(
-      `${this.configuration.basePath}/v1/document-type`,
+      `${this.configuration.basePath}/document-type`,
       {
         responseType: <any>responseType,
         withCredentials: this.configuration.withCredentials,
@@ -385,7 +385,7 @@ export class DocumentTypeControllerV1APIService {
     }
 
     return this.httpClient.get<DocumentTypeDTO>(
-      `${this.configuration.basePath}/v1/document-type/${encodeURIComponent(
+      `${this.configuration.basePath}/document-type/${encodeURIComponent(
         String(id)
       )}`,
       {
@@ -465,7 +465,7 @@ export class DocumentTypeControllerV1APIService {
     }
 
     return this.httpClient.put<DocumentTypeDTO>(
-      `${this.configuration.basePath}/v1/document-type/${encodeURIComponent(
+      `${this.configuration.basePath}/document-type/${encodeURIComponent(
         String(id)
       )}`,
       documentTypeCreateUpdateDTO,

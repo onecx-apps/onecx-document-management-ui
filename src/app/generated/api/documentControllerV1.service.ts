@@ -225,7 +225,7 @@ export class DocumentControllerV1APIService {
     }
 
     return this.httpClient.post<DocumentDetailDTO>(
-      `${this.configuration.basePath}/v1/document`,
+      `${this.configuration.basePath}/document`,
       documentCreateUpdateDTO,
       {
         responseType: <any>responseType,
@@ -294,7 +294,7 @@ export class DocumentControllerV1APIService {
     }
 
     return this.httpClient.delete<any>(
-      `${this.configuration.basePath}/v1/document/${encodeURIComponent(
+      `${this.configuration.basePath}/document/${encodeURIComponent(
         String(id)
       )}`,
       {
@@ -370,7 +370,7 @@ export class DocumentControllerV1APIService {
     );
 
     return this.httpClient.delete(
-      `${this.configuration.basePath}/v1/document/file/delete-bulk-attachment`,
+      `${this.configuration.basePath}/document/file/delete-bulk-attachment`,
       {
         body: JSON.stringify(requestParameters.deletedAttachmentsIds),
         responseType: <any>responseType,
@@ -427,7 +427,7 @@ export class DocumentControllerV1APIService {
     }
 
     return this.httpClient.get<Array<ChannelDTO>>(
-      `${this.configuration.basePath}/v1/document/channels`,
+      `${this.configuration.basePath}/document/channels`,
       {
         responseType: <any>responseType,
         withCredentials: this.configuration.withCredentials,
@@ -587,7 +587,7 @@ export class DocumentControllerV1APIService {
     }
 
     return this.httpClient.get<PageResultDTO>(
-      `${this.configuration.basePath}/v1/document`,
+      `${this.configuration.basePath}/document`,
       {
         params: queryParameters,
         responseType: <any>responseType,
@@ -656,7 +656,7 @@ export class DocumentControllerV1APIService {
     }
 
     return this.httpClient.get<DocumentDetailDTO>(
-      `${this.configuration.basePath}/v1/document/${encodeURIComponent(
+      `${this.configuration.basePath}/document/${encodeURIComponent(
         String(id)
       )}`,
       {
@@ -737,7 +737,7 @@ export class DocumentControllerV1APIService {
     }
 
     return this.httpClient.get<object>(
-      `${this.configuration.basePath}/v1/document/file/${encodeURIComponent(
+      `${this.configuration.basePath}/document/file/${encodeURIComponent(
         String(attachmentId)
       )}`,
       {
@@ -816,7 +816,7 @@ export class DocumentControllerV1APIService {
     }
 
     return this.httpClient.put<DocumentDetailDTO>(
-      `${this.configuration.basePath}/v1/document/${encodeURIComponent(
+      `${this.configuration.basePath}/document/${encodeURIComponent(
         String(id)
       )}`,
       documentCreateUpdateDTO,
@@ -846,7 +846,7 @@ export class DocumentControllerV1APIService {
     };
 
     return this.httpClient.delete(
-      `${this.configuration.basePath}/v1/document/delete-bulk-documents`,
+      `${this.configuration.basePath}/document/delete-bulk-documents`,
       options
     );
   }
@@ -918,7 +918,7 @@ export class DocumentControllerV1APIService {
     }
 
     return this.httpClient.put<DocumentDetailDTO[]>(
-      `${this.configuration.basePath}/v1/document/bulkupdate`,
+      `${this.configuration.basePath}/document/bulkupdate`,
       bulkDocumentCreateUpdateDTO,
       {
         responseType: <any>responseType,

@@ -10,7 +10,7 @@ tags:
   - name: DocumentTypeControllerV1
   - name: SupportedMimeTypeControllerV1
 paths:
-  /v1/document:
+  /document:
     get:
       tags:
         - DocumentControllerV1
@@ -106,7 +106,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RFCProblemDTO'
-  /v1/document-specification:
+  /document-specification:
     get:
       tags:
         - DocumentSpecificationControllerV1
@@ -162,7 +162,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RFCProblemDTO'
-  /v1/document-specification/{id}:
+  /document-specification/{id}:
     get:
       tags:
         - DocumentSpecificationControllerV1
@@ -263,7 +263,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RFCProblemDTO'
-  /v1/document-type:
+  /document-type:
     get:
       tags:
         - DocumentTypeControllerV1
@@ -319,7 +319,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RFCProblemDTO'
-  /v1/document-type/{id}:
+  /document-type/{id}:
     get:
       tags:
         - DocumentTypeControllerV1
@@ -420,7 +420,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RFCProblemDTO'
-  /v1/document/channels:
+  /document/channels:
     get:
       tags:
         - DocumentControllerV1
@@ -441,7 +441,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ChannelDTO'
-  /v1/document/file/{attachmentId}:
+  /document/file/{attachmentId}:
     get:
       tags:
         - DocumentControllerV1
@@ -526,7 +526,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestException'
-  /v1/document/files/multiple-upload:
+  /document/files/multiple-upload:
     post:
       tags:
         - DocumentControllerV1
@@ -554,7 +554,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RestException'
-  /v1/document/{id}:
+  /document/{id}:
     get:
       tags:
         - DocumentControllerV1
@@ -649,7 +649,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RFCProblemDTO'
-  /v1/supported-mime-type:
+  /supported-mime-type:
     get:
       tags:
         - SupportedMimeTypeControllerV1
@@ -705,7 +705,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RFCProblemDTO'
-  /v1/supported-mime-type/{id}:
+  /supported-mime-type/{id}:
     get:
       tags:
         - SupportedMimeTypeControllerV1

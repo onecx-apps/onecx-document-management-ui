@@ -193,7 +193,7 @@ export class SupportedMimeTypeControllerV1APIService {
     }
 
     return this.httpClient.post<SupportedMimeTypeDTO>(
-      `${this.configuration.basePath}/v1/supported-mime-type`,
+      `${this.configuration.basePath}/supported-mime-type`,
       supportedMimeTypeCreateUpdateDTO,
       {
         responseType: <any>responseType,
@@ -264,7 +264,7 @@ export class SupportedMimeTypeControllerV1APIService {
     return this.httpClient.delete<any>(
       `${
         this.configuration.basePath
-      }/v1/supported-mime-type/${encodeURIComponent(String(id))}`,
+      }/supported-mime-type/${encodeURIComponent(String(id))}`,
       {
         responseType: <any>responseType,
         withCredentials: this.configuration.withCredentials,
@@ -320,7 +320,7 @@ export class SupportedMimeTypeControllerV1APIService {
     }
 
     return this.httpClient.get<Array<SupportedMimeTypeDTO>>(
-      `${this.configuration.basePath}/v1/supported-mime-type`,
+      `${this.configuration.basePath}/supported-mime-type`,
       {
         responseType: <any>responseType,
         withCredentials: this.configuration.withCredentials,
@@ -390,7 +390,7 @@ export class SupportedMimeTypeControllerV1APIService {
     return this.httpClient.get<SupportedMimeTypeDTO>(
       `${
         this.configuration.basePath
-      }/v1/supported-mime-type/${encodeURIComponent(String(id))}`,
+      }/supported-mime-type/${encodeURIComponent(String(id))}`,
       {
         responseType: <any>responseType,
         withCredentials: this.configuration.withCredentials,
@@ -470,7 +470,7 @@ export class SupportedMimeTypeControllerV1APIService {
     return this.httpClient.put<SupportedMimeTypeDTO>(
       `${
         this.configuration.basePath
-      }/v1/supported-mime-type/${encodeURIComponent(String(id))}`,
+      }/supported-mime-type/${encodeURIComponent(String(id))}`,
       supportedMimeTypeCreateUpdateDTO,
       {
         responseType: <any>responseType,

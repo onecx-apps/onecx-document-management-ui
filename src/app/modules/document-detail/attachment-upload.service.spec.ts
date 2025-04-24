@@ -31,7 +31,7 @@ describe('AttachmentUploadService', () => {
         (data) => expect(data).toEqual(formData, 'should return file data'),
         fail
       );
-    const url = `${service.configuration.basePath}/v1/document/files/upload/${documentId}`;
+    const url = `${service.configuration.basePath}/document/files/upload/${documentId}`;
     const req = httpTestingController.expectOne(url);
     expect(req.request.method).toEqual('POST');
   });
@@ -42,7 +42,7 @@ describe('AttachmentUploadService', () => {
     service
       .uploadEditAttachment(documentId, attachmentIdArray, files)
       .subscribe((data) => expect(data).withContext('should return file data'));
-    const url = `${service.configuration.basePath}/v1/document/files/upload/${documentId}`;
+    const url = `${service.configuration.basePath}/document/files/upload/${documentId}`;
     const req = httpTestingController.expectOne(url);
     expect(req.request.method).toEqual('POST');
   });
@@ -53,14 +53,14 @@ describe('AttachmentUploadService', () => {
     service
       .uploadEditAttachment(documentId, attachmentIdArray, files)
       .subscribe((data) => expect(data).withContext('should return file data'));
-    const url = `${service.configuration.basePath}/v1/document/files/upload/${documentId}`;
+    const url = `${service.configuration.basePath}/document/files/upload/${documentId}`;
     const req = httpTestingController.expectOne(url);
     expect(req.request.method).toEqual('POST');
   });
 
   it('should check request method is get for downloadDocAttachmentsAsZip', () => {
     service.downloadDocAttachmentsAsZip(documentId).subscribe();
-    const url = `${service.configuration.basePath}/v1/document/file/${documentId}/attachments`;
+    const url = `${service.configuration.basePath}/document/file/${documentId}/attachments`;
     const req = httpTestingController.expectOne(url);
     expect(req.request.method).toEqual('GET');
   });
@@ -68,7 +68,7 @@ describe('AttachmentUploadService', () => {
   it('should check request method is get for downloadFile', () => {
     const attachmentId = '1';
     service.downloadFile(attachmentId).subscribe();
-    const url = `${service.configuration.basePath}/v1/document/file/${attachmentId}`;
+    const url = `${service.configuration.basePath}/document/file/${attachmentId}`;
     const req = httpTestingController.expectOne(url);
     expect(req.request.method).toEqual('GET');
   });
@@ -123,7 +123,7 @@ describe('AttachmentUploadService', () => {
     const downloadLink = document.createElement('a');
     downloadLink.setAttribute(
       'href',
-      'http://localhost/v1/document/files/upload/failed/1'
+      'http://localhost/document/files/upload/failed/1'
     );
     downloadLink.setAttribute('download', 'Failed Attachment Error Logs.csv');
     expect(downloadLink).toBeTruthy();

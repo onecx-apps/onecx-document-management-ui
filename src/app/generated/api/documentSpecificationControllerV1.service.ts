@@ -193,7 +193,7 @@ export class DocumentSpecificationControllerV1APIService {
     }
 
     return this.httpClient.post<DocumentSpecificationDTO>(
-      `${this.configuration.basePath}/v1/document-specification`,
+      `${this.configuration.basePath}/document-specification`,
       documentSpecificationCreateUpdateDTO,
       {
         responseType: <any>responseType,
@@ -264,7 +264,7 @@ export class DocumentSpecificationControllerV1APIService {
     return this.httpClient.delete<any>(
       `${
         this.configuration.basePath
-      }/v1/document-specification/${encodeURIComponent(String(id))}`,
+      }/document-specification/${encodeURIComponent(String(id))}`,
       {
         responseType: <any>responseType,
         withCredentials: this.configuration.withCredentials,
@@ -320,7 +320,7 @@ export class DocumentSpecificationControllerV1APIService {
     }
 
     return this.httpClient.get<Array<DocumentSpecificationDTO>>(
-      `${this.configuration.basePath}/v1/document-specification`,
+      `${this.configuration.basePath}/document-specification`,
       {
         responseType: <any>responseType,
         withCredentials: this.configuration.withCredentials,
@@ -390,7 +390,7 @@ export class DocumentSpecificationControllerV1APIService {
     return this.httpClient.get<DocumentSpecificationDTO>(
       `${
         this.configuration.basePath
-      }/v1/document-specification/${encodeURIComponent(String(id))}`,
+      }/document-specification/${encodeURIComponent(String(id))}`,
       {
         responseType: <any>responseType,
         withCredentials: this.configuration.withCredentials,
@@ -470,7 +470,7 @@ export class DocumentSpecificationControllerV1APIService {
     return this.httpClient.put<DocumentSpecificationDTO>(
       `${
         this.configuration.basePath
-      }/v1/document-specification/${encodeURIComponent(String(id))}`,
+      }/document-specification/${encodeURIComponent(String(id))}`,
       documentSpecificationCreateUpdateDTO,
       {
         responseType: <any>responseType,
