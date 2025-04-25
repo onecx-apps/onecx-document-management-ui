@@ -53,7 +53,7 @@ export class AttachmentUploadService {
       formData.append('file', file);
     }
     return this.http.post<any>(
-      `${this.configuration.basePath}/v1/document/files/upload/${documentId}`,
+      `${this.configuration.basePath}/document/files/upload/${documentId}`,
       formData
     );
   }
@@ -74,7 +74,7 @@ export class AttachmentUploadService {
       formData.append('file', file);
     }
     return this.http.post<any>(
-      `${this.configuration.basePath}/v1/document/files/upload/${documentId}`,
+      `${this.configuration.basePath}/document/files/upload/${documentId}`,
       formData
     );
   }
@@ -86,7 +86,7 @@ export class AttachmentUploadService {
     documentId: string
   ): Observable<storageUploadAuditDTO[]> {
     return this.http.get<storageUploadAuditDTO[]>(
-      `${this.configuration.basePath}/v1/document/files/upload/failed/${documentId}`
+      `${this.configuration.basePath}/document/files/upload/failed/${documentId}`
     );
   }
   /*
@@ -98,7 +98,7 @@ export class AttachmentUploadService {
       'client-timezone': Intl.DateTimeFormat().resolvedOptions().timeZone,
     });
     return this.http.get<Blob>(
-      `${this.configuration.basePath}/v1/document/file/${documentId}/attachments`,
+      `${this.configuration.basePath}/document/file/${documentId}/attachments`,
       { observe: 'response', responseType: 'blob' as 'json', headers: headers }
     );
   }
@@ -108,7 +108,7 @@ export class AttachmentUploadService {
   */
   public downloadFile(attachmentId: string) {
     return this.http.get<Blob>(
-      `${this.configuration.basePath}/v1/document/file/${attachmentId}`,
+      `${this.configuration.basePath}/document/file/${attachmentId}`,
       { observe: 'response', responseType: 'blob' as 'json' }
     );
   }
