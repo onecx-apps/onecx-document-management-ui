@@ -1,1 +1,0 @@
-* xref:onecx-document-management-ui:index.adoc[Document Management UI]
