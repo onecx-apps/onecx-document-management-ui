@@ -18,7 +18,8 @@ effectively managing your documents.
 OneCX Document Management is a comprehensive solution for managing
 documents in a user-friendly and efficient manner. It is a solution that
 consists of three main components which are explained in more detail in
-the general documentation. Please refer to the following xref:documentation:onecx-document:page$/index.adoc[Documentation] to learn more.
+the general documentation.
+Please refer to the following xref:documentation:onecx-document-management:index.adoc[Documentation] to learn more.
 
 The user interface (UI) component is designed to provide an intuitive
 and user-friendly experience for managing documents in the cloud-native environment built with Quarkus.
