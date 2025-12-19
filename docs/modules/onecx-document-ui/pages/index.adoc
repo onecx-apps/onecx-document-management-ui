@@ -1,42 +1,36 @@
-== OneCX Document-Management-User-Interface
-image:https://github.com/onecx-apps/onecx-document-management-ui/actions/workflows/build.yml/badge.svg[OneCX Document Management UI]
+= OneCX Document Management UI
 
-=== What is Document Management
+== What is Document Management
 Document management refers to the systematic process of capturing,
 organizing, storing, and retrieving documents within an organization. It
 involves the efficient handling of digital documents, ensuring secure
 access, version control, collaboration based on TM-Forum standard
 https://github.com/tmforum-apis/TMF667_Document[TMF 667].
 
-With OneCX-Document-Management Software, you can streamline your
+With OneCX Document Management Software, you can streamline your
 document management workflows, reduce manual efforts, and enhance
 productivity. Whether it’s managing contracts, invoices, legal
 documents, or any other form of digital content, OneCX Document
 Management provides a centralized and user-friendly solution for
 effectively managing your documents.
 
-=== Overview
-OneCX-Document-Management is a comprehensive solution for managing
+== Overview
+OneCX Document Management is a comprehensive solution for managing
 documents in a user-friendly and efficient manner. It is a solution that
 consists of three main components which are explained in more detail in
-the general documentation. Please refer to the following documentation
-to learn more
-https://onecx.github.io/docs/document-management/current/general/index.html[Document-Management
-Documenation]. However, in this document we are only referring to one of
-the three components, the OneCX-Document-Management-User-Interface (UI) of
-OneCX-Document-Management.
+the general documentation. Please refer to the following xref:documentation:onecx-document:page$/index.adoc[Documentation] to learn more.
 
-The user interface (UI) for this document management component is designed to provide an intuitive
+The user interface (UI) component is designed to provide an intuitive
 and user-friendly experience for managing documents in the cloud-native environment built with Quarkus.
 
-=== Getting Started
+== Getting Started
 To start developing the OneCX Document Management User Interface, you need to
 set up your local development environment. It’s recommended that you use
 WSL as the runtime for your application, as shown in the figure below.
 If you are using a different runtime, please check that you meet the
 requirements below.
 
-==== Prerequisites
+=== Prerequisites
 
 Before you begin, ensure you have the following installed:
 
@@ -47,7 +41,7 @@ Before you begin, ensure you have the following installed:
 recommended)
 * NodeJS
 
-==== Clone the Repository
+=== Clone the Repository
 
 Start by cloning the required repositories to your local machine using
 the following command:
@@ -64,7 +58,7 @@ the document management user interface. The repository
 dependencies and the docker-compose script required to run the OneCX
 Document-Management-User-Interface on your local machine.
 
-==== Update local DNS resolution
+=== Update local DNS resolution
 Assuming you are using WSL, updating the local host file for local 
 development allows you to map domain names to specific IP addresses,
 making it easier to test and debug applications using custom domain names
@@ -77,7 +71,7 @@ appropriate Docker containers based on hostnames.
 Unless you have disabled this behaviour, the WSL host file will be automatically
 generated from the Windows host file when WSL is restarted.*
 
-===== Update Windows host file
+==== Update Windows host file
 Open the file `C:\Windows\System32\drivers\etc\hosts` in your favorite
 editor and add the following entries:
 
@@ -97,11 +91,11 @@ editor and add the following entries:
 127.0.0.1       onecx-document-management-svc
 ----
 
-===== Update WSL host file
+==== Update WSL host file
 If needed, update the file `\etc\hosts` in `your` favorite linux editor and add the
 same entries like above.
 
-==== Starting OneCX dependencies
+=== Starting OneCX dependencies
 In a local development environment, Docker Compose is used to define and
 manage multiple containers as a single application stack. It enables
 developers to easily start, stop, and configure all the necessary
@@ -144,7 +138,7 @@ the Keycloak admin console and are retrieved from tokens, while strings
 defined in APM are used to grant access to specific components or views
 on the frontend.
 
-==== Starting the OneCX Document Management User Interface
+=== Starting the OneCX Document Management User Interface
 Navigate to the project directory and build the application using NPM:
 
 [source,bash]
@@ -161,7 +155,7 @@ cd onecx-document-management-ui
 npm start
 ----
 
-==== Stopping OneCX dependencies
+=== Stopping OneCX dependencies
 The `docker compose stop` command is used to stop the containers defined
 in a Docker Compose file. It gracefully stops the running containers by
 sending a stop signal, allowing them to perform any necessary cleanup
