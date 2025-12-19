@@ -67,7 +67,7 @@
     "@angular/compiler-cli": "^15.2.7",
     "@openapitools/openapi-generator-cli": "^2.5.2",
     "@types/jasmine": "^3.10.2",
-    "@types/node": "^18.16.9",
+    "@types/node": "^25.0.3",
     "@typescript-eslint/eslint-plugin": "^5.43.0",
     "@typescript-eslint/parser": "^5.43.0",
     "eslint": "~8.48.0",
